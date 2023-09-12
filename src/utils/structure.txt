@@ -1,0 +1,22 @@
+{
+  enroll: 1901290181;
+  name: "Swastik Patil";
+  gender: "male";
+  roll_no: 2356;
+  year: 3;
+  branch: "CM";
+  dob: "20/02/20";
+  phone_no: 74983298291;
+  email: "abc@gmail.com"; 
+
+  //files
+  birthCerti: "https://url";
+
+  //internal
+  isPending:true;
+  isApproved:false;
+  isRejected: false;
+
+  //logs
+  IPAddress: "190.20.10.29";
+}

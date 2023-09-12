@@ -1,0 +1,41 @@
+.main-container {
+  display: inline-flex;
+  width: 100%;
+  text-align: center;
+}
+
+.main-container div {
+  width: 350px;
+  margin: 0px 5px;
+  border: 2px solid grey;
+  height: 250px;
+  border-radius: 8px;
+}
+
+#inner-container h3 {
+  font-size: 30px;
+  color: #2155CD;
+  padding: 20px;
+
+  border-bottom: 2px solid gray;
+}
+
+#inner-container p {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+#inner-container a {
+  padding: 15px 75px;
+  border-radius: 2px;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  background-color: #2155CD;
+  text-decoration: none;
+}
+
+#inner-container a:hover {
+  background-color: black;
+  transition: ease 0.25s;
+}
