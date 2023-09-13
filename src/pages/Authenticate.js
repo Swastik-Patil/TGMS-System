@@ -2,11 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import { useAuth } from "../contexts/AuthContext";
 import "../styles/AuthenticateStyle.css";
-import BG from "../res/AuthenticateBG.jpeg";
-import { ref as dbref, child, get, set } from "firebase/database";
 import { useToast } from "@chakra-ui/react";
 import useMounted from "../hooks/useMounted";
-import { database } from "../utils/init-firebase";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -14,9 +11,6 @@ import styled from "styled-components";
 function Authenticate() {
   const [loading, setLoading] = useState(true);
   const { register, login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [cPassword, setCPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { currentUser } = useAuth();
   const [logemail, setLogEmail] = useState("");
@@ -125,7 +119,7 @@ function Authenticate() {
                                 document.getElementById(
                                   "LoginButton"
                                 ).innerHTML =
-                                  '<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>';
+                                  '<div class="spinner-border spinner-border-sm" role="status"></div>';
                                 setIsSubmitting(true);
                                 login(logemail, logpassword)
                                   .then((res) => {

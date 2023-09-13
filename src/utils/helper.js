@@ -34,7 +34,7 @@ const tens = [
   "Ninety",
 ];
 
-const months = new Array(
+const months = [
   "",
   "January",
   "February",
@@ -47,8 +47,8 @@ const months = new Array(
   "September",
   "October",
   "November",
-  "December"
-);
+  "December",
+];
 
 const thousands = ["", "Thousand and", "Million and", "Billion and"];
 
@@ -112,20 +112,20 @@ const dateInWords = (dob) => {
 };
 
 const formatDate = (date) => {
-  let dob = new String(date);
-  if (dob.length == 6) return dob;
+  let dob = String(date);
+  if (dob.length === 6) return dob;
   else {
-    let dobList = new Array();
+    let dobList = [];
     if (dob.includes("-")) dobList = dob.split("-");
     else if (dob.includes("/")) dobList = dob.split("/");
     else dobList = dob.split(".");
 
-    let day = new String(dobList[0]);
-    let mon = new String(dobList[1]);
-    let year = new String(dobList[2]);
+    let day = String(dobList[0]);
+    let mon = String(dobList[1]);
+    let year = String(dobList[2]);
 
-    if (day.length == 1) day = "0" + day;
-    if (mon.length == 1) mon = "0" + mon;
+    if (day.length === 1) day = "0" + day;
+    if (mon.length === 1) mon = "0" + mon;
 
     let newDob = day + "/" + mon + "/" + year;
     return newDob;
@@ -133,7 +133,7 @@ const formatDate = (date) => {
 };
 
 const capitaliseName = (fullName) => {
-  let fullnamearr = new String(fullName).toLowerCase().split(" ");
+  let fullnamearr = String(fullName).toLowerCase().split(" ");
   let fname = fullnamearr[0];
   let mname = fullnamearr[1];
   let lname = fullnamearr[2];

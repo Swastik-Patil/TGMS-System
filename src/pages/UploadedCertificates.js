@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { Route, Link } from "react-router-dom";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage, database } from "../utils/init-firebase";
-import { getDatabase, ref as Ref, child, get, update } from "firebase/database";
+import { getDatabase, ref as Ref, child, get } from "firebase/database";
 import CertificateImage from "../res/certificate.png";
 import Header from "../components/Header";
 
 export default function UploadedCertificates({ data }) {
-  const [files, setFiles] = React.useState(null);
+  const [files, setFiles] = useState(null);
   const { currentUser } = useAuth();
 
   function getData() {

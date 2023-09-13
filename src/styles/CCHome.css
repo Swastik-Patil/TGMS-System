@@ -1,119 +1,31 @@
-.frame {
-  background-color: #ffffff;
-  height: 1080px;
-  position: relative;
-  width: 1920px;
-}
-
-.frame .div {
-  height: 99px;
-  left: 61px;
-  position: absolute;
-  top: 69px;
-  width: 527px;
-}
-
-.frame .text-wrapper {
-  color: #00000080;
-  font-family: "Rubik-Regular", Helvetica;
-  font-size: 24px;
-  font-weight: 400;
-  left: 135px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 62px;
-  width: 392px;
-}
-
-.frame .user {
-  height: 99px;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  width: 99px;
-}
-
-.frame .text-wrapper-2 {
-  color: #000000;
-  font-family: "Rubik-Regular", Helvetica;
-  font-size: 32px;
-  font-weight: 400;
-  left: 135px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 19px;
-  width: 405px;
-}
-
-.frame .div-2 {
-  height: 677px;
-  left: 189px;
-  position: absolute;
-  top: 261px;
-  width: 1612px;
-}
-
 .frame .overlap-group-wrapper {
-  height: 180px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 1167px;
+  padding: 1rem;
 }
 
 .frame .overlap-group {
-  height: 105px;
-  position: relative;
-  top: -1px;
-  width: 742px;
+  display: flex;
 }
 
 .frame .text-wrapper-3 {
   color: #33c6fe;
   font-family: "Rubik-Bold", Helvetica;
-  font-size: 79px;
+  font-size: 50px;
   font-weight: 700;
-  left: 319px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  top: 0;
-  white-space: nowrap;
-  width: 423px;
 }
 
 .frame .text-wrapper-4 {
   color: #000000;
   font-family: "Rubik-Bold", Helvetica;
-  font-size: 78px;
+  font-size: 50px;
   font-weight: 700;
-  left: 0;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  top: 0;
-  width: 400px;
 }
 
 .frame .div-3 {
-  height: 303px;
-  left: 231px;
-  position: absolute;
-  top: 252px;
-  width: 1126px;
-}
-
-.frame .overlap {
-  height: 304px;
-  left: 0;
-  position: absolute;
-  top: -1px;
-  width: 284px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 5rem;
 }
 
 .frame .rectangle {
@@ -122,91 +34,27 @@
   border-color: #35c3fe;
   border-radius: 30px;
   box-shadow: 10px 10px 10px #00000040;
-  height: 303px;
-  left: 0;
-  position: absolute;
-  top: 1px;
-  width: 284px;
+  height: 300px;
+  width: 275px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .frame .rectangle:hover {
   background-color: #35b5ec;
-  transform: scale(1.1); /* Optional: Scale the element slightly on hover */
-  cursor: pointer; /* Optional: Change cursor to a pointer on hover */
-  /* transition: transform .4s ease; */
-  transition: transform 0.9s, filter 0.2s ease-in-out;
-  /* overflow: hidden; */
+  transform: scale(1.1);
+  cursor: pointer;
+  transition: transform 0.3s, filter 0.2s ease-in-out;
 }
 
-.frame .upload-result1 {
+.frame .text-wrapper {
   color: #ffffff;
   font-family: "Rubik-Bold", Helvetica;
   font-size: 32px;
   font-weight: 700;
-  height: 1px;
-  left: -1px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  margin-left: 90px;
-  top: 120px;
-  width: 0.1px;
   justify-content: center;
-}
-
-/* .frame .upload-result1:hover {
-    
-    background-color: #35b5ec;
-    transform: scale(1.1); /* Optional: Scale the element slightly on hover 
-    cursor: pointer;
-    transition: transform .4s ease;
-  } */
-
-.frame .overlap-2 {
-  height: 324px;
-  left: 842px;
-  position: absolute;
-  top: -1px;
-  width: 304px;
-}
-
-.frame .img {
-  height: 323px;
-  left: 0;
-  position: absolute;
-  top: 1px;
-  width: 304px;
-}
-
-.frame .generate-notice {
-  color: #ffffff;
-  font-family: "Rubik-Bold", Helvetica;
-  font-size: 32px;
-  font-weight: 700;
-  height: 1px;
-  left: -1px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  margin-left: 80px;
-  top: 120px;
-  width: 0.1px;
-  justify-content: center;
-}
-
-.frame .add-slow-learners-wrapper {
-  background-color: #35c3fe;
-  border: 1px solid;
-  border-color: #35c3fe;
-  border-radius: 30px;
-  /* box-shadow: 10px 10px 10px #00000040; */
-  height: 303px;
-  left: 420px;
-  position: absolute;
-  top: 0;
-  width: 284px;
 }
 
 .frame .add-slow-learners1 {
@@ -214,14 +62,4 @@
   font-family: "Rubik-Bold", Helvetica;
   font-size: 32px;
   font-weight: 700;
-  height: 30px;
-  left: -1px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  top: 120px;
-  width: 278px;
-  /* margin-left: 35px; */
-  justify-content: center;
 }

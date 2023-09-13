@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { Route, Link } from "react-router-dom";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, database } from "../utils/init-firebase";
-import { getDatabase, ref as Ref, child, get, update } from "firebase/database";
+import { ref as Ref, update } from "firebase/database";
 import Header from "../components/Header";
 import { RadioGroup, Radio, Stack, Button, Input } from "@chakra-ui/react";
 
@@ -11,7 +10,6 @@ export default function UploadCertificate({ data }) {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [certType, setCertType] = useState("course");
-  const [isOpen, setIsOpen] = useState(false);
   const { currentUser } = useAuth();
 
   const handleFileChange = (e) => {
@@ -25,7 +23,7 @@ export default function UploadCertificate({ data }) {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (fileName === null || certType === null || !file) {
-      setIsOpen(true);
+      alert("Fill all the Details");
     } else {
       document.getElementById("uploadButton").disabled = true;
       const pathRef = currentUser.uid;

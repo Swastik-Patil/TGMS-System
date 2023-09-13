@@ -162,7 +162,6 @@ import {
   Stack,
   useColorModeValue,
   useBreakpointValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useAuth } from "../contexts/AuthContext";
 

@@ -15,7 +15,6 @@ import { Card } from "../components/Card";
 import DividerWithText from "../components/DividerWithText";
 import Header from "../components/Header";
 import { useAuth } from "../contexts/AuthContext";
-import BG from "../res/AuthenticateBG.jpeg";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -120,8 +119,6 @@ const Contain = styled.div`
   align-items: center;
   justify-content: center;
   align-items: center;
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
-  background: url(${BG}) center center/cover no-repeat;
   @media (max-width: 650px) {
     position: absolute;
     height: 100vh;
