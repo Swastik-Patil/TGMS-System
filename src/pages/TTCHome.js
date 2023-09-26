@@ -8,7 +8,7 @@ import { database } from "../utils/init-firebase";
 import { useAuth } from "../contexts/AuthContext";
 import styled from "styled-components";
 
-export const UploadPage = () => {
+export const TTCHome = () => {
   const [loading, setLoading] = useState(true);
   const [excelFile, setExcelFile] = useState(null);
   const { currentUser } = useAuth();
@@ -43,14 +43,6 @@ export const UploadPage = () => {
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
       const dataToSend = data.map((item) => {
-        item.dateOfAdmission = String(item.dateOfAdmission)
-          .replaceAll("-", ".")
-          .replaceAll("/", ".");
-
-        item.dateOfBirth = String(item.dateOfBirth)
-          .replaceAll("-", ".")
-          .replaceAll("/", ".");
-
         return {
           ...item,
         };
@@ -202,4 +194,4 @@ const Instructions = styled.div`
     height: 520px;
   }
 `;
-export default UploadPage;
+export default TTCHome;

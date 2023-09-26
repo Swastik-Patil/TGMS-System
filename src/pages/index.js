@@ -14,8 +14,13 @@ import CChome from "./CCHome";
 import UploadResults from "./UploadResults";
 import UploadPage from "./UploadPage";
 import SlowLearners from "./SlowLearners";
-
+import UploadStudentData from "./UploadStudentData";
 import TGHOME from "./TGHome";
+import TGCHome from "./TGCHome";
+import UpdateTG from "./UpdateTG";
+import TGDataHome from "./TGDataHome";
+import UploadTGData from "./UploadTGData";
+import TTCHome from "./TTCHome";
 export {
   Profilepage,
   ResetPasswordPage,
@@ -34,4 +39,10 @@ export {
   UploadPage,
   SlowLearners,
   TGHOME,
+  UploadStudentData,
+  TGCHome,
+  TTCHome,
+  UpdateTG,
+  TGDataHome,
+  UploadTGData,
 };

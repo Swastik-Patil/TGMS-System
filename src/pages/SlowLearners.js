@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "../styles/SlowLearner.css";
 import Header from "../components/Header";
 import {
@@ -14,23 +14,21 @@ import {
   Input,
 } from "@chakra-ui/react";
 import styled from "styled-components";
-
+import { ref as dbref, get, child, getDatabase } from "firebase/database";
+import { useAuth } from "../contexts/AuthContext";
 function SlowLearners() {
   const [data, setData] = useState(null);
-  const [filterValue, setFilterValue] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const currentUser = useAuth();
 
   const columns = [
     {
-      key: "id",
-      label: "Sr.No.",
-    },
-    {
-      key: "Class",
-      label: "Class",
-    },
-    {
       key: "RollNo",
       label: "Roll No",
+    },
+    {
+      key: "admissionNo",
+      label: "Admission No",
     },
     {
       key: "NameoftheStudents",
@@ -46,117 +44,114 @@ function SlowLearners() {
     },
   ];
 
-  const handleInputChange = (event) => {
-    setFilterValue(event.target.value);
-    match(event.target.value);
-  };
-
-  const match = (value) => {
-    var table, tr, td1, i, txtValue;
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-      td1 = tr[i].getElementsByTagName("td")[3];
-      if (td1) {
-        txtValue =
-          String(td1.textContent).trim() || String(td1.innerText).trim();
-        if (txtValue.indexOf(value) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
-  };
-
   useEffect(() => {
-    // checkUser();
+    checkUser();
   }, []);
 
-  // function checkUser() {
-  //   const db = dbref(getDatabase());
-  //   get(child(db, "tgEmails"))
-  //     .then(async (snapshot) => {
-  //       if (snapshot.exists()) {
-  //         let data = snapshot.val();
-  //         let name = data.map((ele) => {
-  //           if (String(ele.email).includes(currentUser.split("@")[0])) {
-  //             return ele.name;
-  //           }
-  //         });
-  //         name = String(name.filter((n) => n))
-  //           .split(".")[1]
-  //           .trim();
-  //         get(child(db, "/tgmsData/" + name)).then((snapshot) => {
-  //           if (snapshot.exists()) {
-  //             let data = snapshot.val();
-  //             let keys = Object.keys(statusColorMap);
-  //             data = data.map((ele) => {
-  //               ele["status"] = keys[(keys.length * Math.random()) << 0];
-  //               return {
-  //                 ...ele,
-  //               };
-  //             });
-  //             setData(data);
-  //           } else {
-  //             console.log("No data available");
-  //           }
-  //         });
-  //       } else {
-  //         console.log("No data available");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
+  function showApplicationDetails(uid) {
+    window.sessionStorage.setItem("selectedStudent", String(uid));
+    window.sessionStorage.setItem("path", "/StudentsData");
+    window.location.href = "/Details";
+  }
+
+  async function checkUser() {
+    const db = dbref(getDatabase());
+
+    try {
+      const snapshot = await get(child(db, "/ClassWiseData/TEA/"));
+      if (snapshot.exists()) {
+        let data = snapshot.val();
+        let sortedEntries = Object.entries(data).sort(
+          (a, b) => a[1].rNo - b[1].rNo
+        );
+        let sortedData = Object.fromEntries(sortedEntries);
+        sortedData = Object.keys(sortedData).map((key) => key);
+
+        let result = [];
+
+        const promises = sortedData.map((ele) =>
+          get(child(db, "/StudentsData/" + ele))
+        );
+
+        const snapshots = await Promise.all(promises);
+
+        snapshots.forEach((snapshot) => {
+          if (snapshot.exists()) {
+            let res = snapshot.val();
+            result.push(res);
+          }
+        });
+
+        setData(result);
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       <Header />
       <TableParent>
-        {data ? (
+        {data && (
           <>
             <div className="flex flex-col gap-4">
               <div className="flex justify-between gap-3 items-end">
                 <Input
                   className="w-full sm:max-w-[44%]"
-                  placeholder="Search by name..."
-                  value={filterValue}
-                  onChange={handleInputChange}
+                  placeholder="Search by name or roll number"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
                 />
               </div>
             </div>
             <TableContainer>
-              <Table id="myTable" variant="simple">
+              <Table id="myTable1" variant="simple">
                 <TableCaption>Student List</TableCaption>
                 <Thead>
                   <Tr>
-                    {columns.map((ele) => {
-                      return <Th key={ele.key}>{ele.label}</Th>;
-                    })}
+                    {columns.map((ele) => (
+                      <Th key={ele.key}>{ele.label}</Th>
+                    ))}
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data.map((ele, index) => {
-                    return (
-                      <Tr key={index}>
-                        <Td>{ele.id}</Td>
-                        <Td>{ele.Class}</Td>
-                        <Td>{ele.RollNo}</Td>
-                        <Td>{ele.NameoftheStudents}</Td>
-                        <Td>{ele.status}</Td>
-                        <Td>
-                          <Button colorScheme="blue">View Details</Button>
-                        </Td>
-                      </Tr>
-                    );
-                  })}
+                  {data
+                    .filter((ele) => {
+                      return searchTerm === ""
+                        ? ele
+                        : ele.name.toLowerCase().includes(searchTerm) ||
+                            String(ele.rNo).includes(searchTerm);
+                    })
+                    .map((ele, index) => {
+                      ele["name"] = String(ele.name)
+                        .toLowerCase()
+                        .replace(/\b(\w)/g, (s) => s.toUpperCase());
+                      return (
+                        <Tr key={index}>
+                          <Td>{ele.rNo}</Td>
+                          <Td>{ele.admissionNo}</Td>
+                          <Td>{ele.name}</Td>
+                          <Td>{ele.studentType}</Td>
+                          <Td>
+                            <Button
+                              colorScheme="blue"
+                              onClick={() => {
+                                showApplicationDetails(ele.admissionNo);
+                              }}
+                            >
+                              View Details
+                            </Button>
+                          </Td>
+                        </Tr>
+                      );
+                    })}
                 </Tbody>
               </Table>
             </TableContainer>
           </>
-        ) : (
-          <>No Data available</>
         )}
       </TableParent>
     </>

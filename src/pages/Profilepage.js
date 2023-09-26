@@ -13,9 +13,6 @@ export default function Profilepage() {
       "tgemail4@gmail.com",
       "tgemail5@gmail.com",
     ];
-    if (tgemails.indexOf(currentUser.email) !== -1) {
-      window.location.replace("/TGHome");
-    }
     const ccemails = [
       "ccemail1@gmail.com",
       "ccemail2@gmail.com",
@@ -23,13 +20,20 @@ export default function Profilepage() {
       "ccemail4@gmail.com",
       "ccemail5@gmail.com",
     ];
+    const tgcemail = ["tgcemail@gmail.com"];
+    const ttcemail = ["ttcemail@gmail.com"];
 
+    if (tgemails.indexOf(currentUser.email) !== -1) {
+      window.location.replace("/TGHome");
+    }
     if (ccemails.indexOf(currentUser.email) !== -1) {
       window.location.replace("/CCHome");
     }
-
-    if (currentUser.email === "tgcemail@gmail.com") {
+    if (tgcemail.indexOf(currentUser.email) !== -1) {
       window.location.replace("/TGCHome");
+    }
+    if (ttcemail.indexOf(currentUser.email) !== -1) {
+      window.location.replace("/TTCHome");
     }
   }
 

@@ -9,5 +9,5 @@ export const Card = (props) => (
     boxShadow={{ md: "2px 3px 12px", base: "2px 2px 6px" }}
     rounded={{ sm: "lg" }}
     {...props}
-  />
+  ></Box>
 );

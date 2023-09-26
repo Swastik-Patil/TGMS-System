@@ -4,16 +4,30 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, database } from "../utils/init-firebase";
 import { ref as Ref, update } from "firebase/database";
 import Header from "../components/Header";
-import { RadioGroup, Radio, Stack, Button, Input } from "@chakra-ui/react";
+import {
+  RadioGroup,
+  Radio,
+  HStack,
+  Stack,
+  Button,
+  Input,
+  Box,
+  Text,
+} from "@chakra-ui/react";
 
 export default function UploadCertificate({ data }) {
   const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState(null);
+  const [fileName, setFileName] = useState("");
   const [certType, setCertType] = useState("course");
+  const [completionDate, setCompletionDate] = useState("");
   const { currentUser } = useAuth();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  const handleDateChange = (e) => {
+    setCompletionDate(e.target.value);
   };
 
   const handleFileNameChange = (e) => {
@@ -26,13 +40,12 @@ export default function UploadCertificate({ data }) {
       alert("Fill all the Details");
     } else {
       document.getElementById("uploadButton").disabled = true;
-      const pathRef = currentUser.uid;
+      let data = JSON.parse(localStorage.getItem("data"));
       let storageRef = ref(
         storage,
-        `Certificates/${pathRef}/${certType}/${file.name}`
+        `Certificates/${data[0].admissionNo}/${certType}/${file.name}`
       );
       let uploadTask = uploadBytesResumable(storageRef, file);
-      console.log(uploadTask);
       uploadTask.on("state_changed", () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURLBC) => {
           handleSubmit(downloadURLBC);
@@ -42,23 +55,32 @@ export default function UploadCertificate({ data }) {
   };
 
   const handleSubmit = (downloadURLBC) => {
-    let d = data.filter((ele) => {
-      return ele.email === currentUser.email;
-    });
-
+    let data = JSON.parse(localStorage.getItem("data"));
     document.getElementById("uploadButton").innerHTML = `Finishing Up`;
 
     const db = database;
     update(
       Ref(
         db,
-        "/StudentsData/" + d[0].admissionNo + "/certificateList/" + fileName
+        "/StudentsData/" + data[0].admissionNo + "/certificateList/" + fileName
       ),
       {
         name: fileName,
         downloadURL: downloadURLBC,
+        fileName: file.name,
+        uploadedOn: String(new Date()),
+        completionDate: completionDate,
+        certificateType: certType,
       }
-    );
+    )
+      .then(() => {
+        alert("Certificate Uploaded Successfully");
+        document.getElementById("uploadButton").innerHTML = `Submit`;
+        document.getElementById("uploadButton").disabled = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const navItems = [
     {
@@ -81,34 +103,60 @@ export default function UploadCertificate({ data }) {
           flexDirection: "column",
         }}
       >
-        <Input
-          width="auto"
-          isRequired
-          type="text"
-          placeholder="Enter Certificate Name"
-          id="certificateTitle"
-          onChange={handleFileNameChange}
-        />
-
-        <RadioGroup onChange={setCertType} value={certType}>
-          <Stack direction="row">
-            <Radio value="course">Course</Radio>
-            <Radio value="internship">Internship</Radio>
-          </Stack>
-        </RadioGroup>
-
-        <Input
-          type="file"
-          isRequired
-          width="auto"
-          style={{ padding: "5px" }}
-          onChange={handleFileChange}
-          placeholder="Enter Certificate Name"
-        />
-        <br />
-        <Button colorScheme="blue" id="uploadButton" onClick={handleUpload}>
-          Submit
-        </Button>
+        <Box
+          bg={"white"}
+          p={"8"}
+          boxShadow={{ md: "2px 3px 12px", base: "2px 2px 6px" }}
+          rounded={{ sm: "lg" }}
+        >
+          <HStack p={"2"}>
+            <Text>Certificate Title : </Text>
+            <Input
+              width="auto"
+              isRequired
+              type="text"
+              placeholder="Enter Certificate Name"
+              id="certificateTitle"
+              value={fileName}
+              onChange={handleFileNameChange}
+            />
+          </HStack>
+          <HStack p={"2"}>
+            <Text>Certificate Type : </Text>
+            <RadioGroup onChange={setCertType} value={certType}>
+              <Stack direction="row">
+                <Radio value="course">Course</Radio>
+                <Radio value="internship">Internship</Radio>
+                <Radio value="event">Event</Radio>
+              </Stack>
+            </RadioGroup>
+          </HStack>
+          <HStack p={"2"}>
+            <Text>Completion Date : </Text>
+            <Input
+              width="auto"
+              isRequired
+              type="date"
+              placeholder="Completion Date"
+              value={completionDate}
+              onChange={handleDateChange}
+            />
+          </HStack>
+          <HStack p={"2"}>
+            <Input
+              type="file"
+              isRequired
+              width="auto"
+              style={{ padding: "5px" }}
+              onChange={handleFileChange}
+            />
+          </HStack>
+          <HStack pt={"4"} display={"flex"} justifyContent={"center"}>
+            <Button colorScheme="blue" id="uploadButton" onClick={handleUpload}>
+              Submit
+            </Button>
+          </HStack>
+        </Box>
       </div>
     </div>
   );

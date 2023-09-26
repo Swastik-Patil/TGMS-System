@@ -27,6 +27,12 @@ import {
   UploadPage,
   SlowLearners,
   TGHOME,
+  UploadStudentData,
+  TGCHome,
+  UpdateTG,
+  TTCHome,
+  TGDataHome,
+  UploadTGData,
 } from "../pages";
 
 export default function AppRouter() {
@@ -57,12 +63,23 @@ export default function AppRouter() {
           <ProtectedRoute exact path="/SlowLearners" component={SlowLearners} />
 
           <ProtectedRoute exact path="/TGHOME" component={TGHOME} />
+          <ProtectedRoute exact path="/UpdateTG" component={UpdateTG} />
+          <ProtectedRoute exact path="/TGDataHome" component={TGDataHome} />
+          <ProtectedRoute exact path="/UploadTGData" component={UploadTGData} />
+          <ProtectedRoute
+            exact
+            path="/UploadStudentData"
+            component={UploadStudentData}
+          />
 
           <ProtectedRoute
             exact
             path="/UnAuthorize"
             component={UnauthorizePage}
           />
+
+          <ProtectedRoute exact path="/TGCHome" component={TGCHome} />
+          <ProtectedRoute exact path="/TTCHome" component={TTCHome} />
 
           <ProtectedRoute exact path="/Details" component={StudentDetails} />
 

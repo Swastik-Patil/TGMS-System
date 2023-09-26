@@ -27,8 +27,6 @@ h6 span {
   font-weight: 700;
 }
 .section {
-  position: relative;
-  width: 100%;
   display: block;
 }
 .full-height {
@@ -79,42 +77,17 @@ h6 span {
   width: 440px;
   max-width: 100%;
   height: 500px;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-  perspective: 800px;
   margin-top: 40px;
 }
 .card-3d-wrapper {
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-  transition: all 600ms ease-out;
 }
-.card-front,
-.card-back {
+.card-front {
   width: 100%;
   height: 100%;
-  background-image: url("https://img.freepik.com/free-vector/dark-blue-watercolor-background-design_1034-737.jpg?t=st=1652711760~exp=1652712360~hmac=fb70984d9e29e8c5a994d354b27c6c9eac6b597ab8f09cabbbd2e9bf560ba55c&w=740");
-  background-size: auto;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-position: bottom center;
-  background-repeat: no-repeat;
-  background-size: 300%;
-  position: absolute;
+  background-color: #2155cd;
   border-radius: 6px;
-  left: 0;
-  top: 0;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -o-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 .card-back {
   transform: rotateY(180deg);
@@ -123,14 +96,11 @@ h6 span {
   transform: rotateY(180deg);
 }
 .center-wrap {
-  position: absolute;
   width: 100%;
-  padding: 0 35px;
-  top: 50%;
-  left: 0;
-  transform: translate3d(0, -50%, 35px) perspective(100px);
-  z-index: 20;
-  display: block;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .form-group {
@@ -142,7 +112,6 @@ h6 span {
 
 .form-style {
   padding: 13px 20px;
-  padding-left: 55px;
   height: 48px;
   width: 100%;
   font-weight: 600;

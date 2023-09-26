@@ -1,3 +1,8 @@
+.frame {
+  display: flex;
+  justify-content: center;
+}
+
 .frame .overlap-group-wrapper {
   padding: 1rem;
 }
@@ -9,14 +14,14 @@
 .frame .text-wrapper-3 {
   color: #33c6fe;
   font-family: "Rubik-Bold", Helvetica;
-  font-size: 50px;
+  font-size: 40px;
   font-weight: 700;
 }
 
 .frame .text-wrapper-4 {
   color: #000000;
   font-family: "Rubik-Bold", Helvetica;
-  font-size: 50px;
+  font-size: 40px;
   font-weight: 700;
 }
 
@@ -34,8 +39,8 @@
   border-color: #35c3fe;
   border-radius: 30px;
   box-shadow: 10px 10px 10px #00000040;
-  height: 300px;
-  width: 275px;
+  height: 250px;
+  width: 225px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +57,7 @@
 .frame .text-wrapper {
   color: #ffffff;
   font-family: "Rubik-Bold", Helvetica;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   justify-content: center;
 }
@@ -60,6 +65,6 @@
 .frame .add-slow-learners1 {
   color: #ffffff;
   font-family: "Rubik-Bold", Helvetica;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
 }

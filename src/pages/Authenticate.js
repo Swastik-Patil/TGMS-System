@@ -52,17 +52,20 @@ function Authenticate() {
         </>
       ) : (
         <Contain>
-          <Header />
+          <Header noLogin={true} />
           {currentUser && <Link to="/home"></Link>}
           <div className="section">
             <div className="row  justify-content-center">
               <div className="col-12 text-center align-self-center">
-                <div className="section text-center">
+                <div className="text-center">
                   <div className="card-3d-wrap mx-auto">
                     <div className="card-3d-wrapper">
                       <div className="card-front">
                         <div className="center-wrap">
-                          <div className="section text-center">
+                          <div
+                            className="text-center"
+                            style={{ width: "100%", padding: "50px" }}
+                          >
                             <h4
                               className="mb-4 pb-3"
                               style={{

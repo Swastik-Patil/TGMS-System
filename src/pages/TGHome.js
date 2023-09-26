@@ -15,21 +15,18 @@ import {
 import Header from "../components/Header";
 import styled from "styled-components";
 
-const statusColorMap = {
-  slow: "success",
-  advance: "danger",
-};
-
 function TGHOME() {
   //   const { currentUser } = useAuth();
   const currentUser = "test2@gmail.com";
   const [data, setData] = useState(null);
   const [filterValue, setFilterValue] = useState("");
 
-  const statusOptions = [
-    { name: "Active", uid: "active" },
-    { name: "Paused", uid: "paused" },
-  ];
+  // Under Maintainance
+  function showApplicationDetails(uid) {
+    window.sessionStorage.setItem("selectedStudent", String(uid));
+    window.sessionStorage.setItem("path", "/StudentsData");
+    window.location.href = "/Details";
+  }
 
   const columns = [
     {
@@ -58,29 +55,6 @@ function TGHOME() {
     },
   ];
 
-  const handleInputChange = (event) => {
-    setFilterValue(event.target.value);
-    match(event.target.value);
-  };
-
-  const match = (value) => {
-    var table, tr, td1, i, txtValue;
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-      td1 = tr[i].getElementsByTagName("td")[3];
-      if (td1) {
-        txtValue =
-          String(td1.textContent).trim() || String(td1.innerText).trim();
-        if (txtValue.indexOf(value) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
-  };
-
   useEffect(() => {
     checkUser();
   }, []);
@@ -101,15 +75,8 @@ function TGHOME() {
             .trim();
           get(child(db, "/tgmsData/" + name)).then((snapshot) => {
             if (snapshot.exists()) {
-              let data = snapshot.val();
-              let keys = Object.keys(statusColorMap);
-              data = data.map((ele) => {
-                ele["status"] = keys[(keys.length * Math.random()) << 0];
-                return {
-                  ...ele,
-                };
-              });
-              setData(data);
+              let res = snapshot.val();
+              setData(res);
             } else {
               console.log("No data available");
             }
@@ -142,11 +109,10 @@ function TGHOME() {
                   className="w-full sm:max-w-[44%]"
                   placeholder="Search by name..."
                   value={filterValue}
-                  onChange={handleInputChange}
+                  onChange={(e) => setFilterValue(e.target.value)}
                 />
               </div>
             </div>
-
             <TableContainer>
               <Table id="myTable" variant="simple">
                 <TableCaption>Student List</TableCaption>
@@ -158,20 +124,42 @@ function TGHOME() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data.map((ele, index) => {
-                    return (
-                      <Tr key={index}>
-                        <Td>{ele.id}</Td>
-                        <Td>{ele.Class}</Td>
-                        <Td>{ele.RollNo}</Td>
-                        <Td>{ele.NameoftheStudents}</Td>
-                        <Td>{ele.status}</Td>
-                        <Td>
-                          <Button colorScheme="blue">View Details</Button>
-                        </Td>
-                      </Tr>
-                    );
-                  })}
+                  {data
+                    .filter((ele) => {
+                      return filterValue === ""
+                        ? ele
+                        : ele.NameoftheStudents.toLowerCase().includes(
+                            filterValue.toLowerCase()
+                          ) ||
+                            String(ele.RollNo)
+                              .toLowerCase()
+                              .includes(filterValue.toLowerCase());
+                    })
+                    .map((ele, index) => {
+                      ele["NameoftheStudents"] = String(ele.NameoftheStudents)
+                        .toLowerCase()
+                        .replace(/\b(\w)/g, (s) => s.toUpperCase());
+                      return (
+                        <Tr key={index}>
+                          <Td>{ele.id}</Td>
+                          <Td>{ele.Class}</Td>
+                          <Td>{ele.RollNo}</Td>
+                          <Td>{ele.NameoftheStudents}</Td>
+                          <Td>{ele.studentType}</Td>
+                          <Td>
+                            <Button
+                              colorScheme="blue"
+                              onClick={() => {
+                                // showApplicationDetails(ele.admissionNo);
+                                alert("Under maintainance");
+                              }}
+                            >
+                              View Details
+                            </Button>
+                          </Td>
+                        </Tr>
+                      );
+                    })}
                 </Tbody>
               </Table>
             </TableContainer>

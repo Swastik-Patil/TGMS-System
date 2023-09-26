@@ -3,10 +3,12 @@ import styled from "styled-components";
 import BeatLoader from "react-spinners/BeatLoader";
 import Header from "./Header";
 import { getDatabase, ref as Ref, child, get } from "firebase/database";
+import { useAuth } from "../contexts/AuthContext";
 
 function Studentportal() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const { currentUser } = useAuth();
 
   function readUserPastData() {
     const dbRef = Ref(getDatabase());
@@ -17,7 +19,11 @@ function Studentportal() {
           data = Object.keys(data).map((key) => {
             return data[key];
           });
-          setData(data);
+          let d = data.filter((ele) => {
+            return ele.email === currentUser.email;
+          });
+          setData(d);
+          window.localStorage.setItem("data", JSON.stringify(d));
         } else {
           console.log("No data available");
         }

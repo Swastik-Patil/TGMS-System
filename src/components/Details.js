@@ -37,22 +37,6 @@ function Details({ showActionPanel }) {
     Edit.contentEditable = true;
   }
 
-  function readAuthUser() {
-    const db = dbref(database);
-    get(child(db, `/orgData/${enroll}`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const std_data = snapshot.val();
-          setFullName(capitaliseName(std_data.fullName));
-          setOrgData(std_data);
-          setDateOfBirth(formatDate(std_data.dateOfBirth));
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
   function readUserCurrentData() {
     const db = dbref(database);
     const IDRef = window.sessionStorage.getItem("selectedStudent");
@@ -65,7 +49,6 @@ function Details({ showActionPanel }) {
           setPendingData(data);
           setEnroll(data.enroll);
           setRollNo(data.rollNo);
-          readAuthUser();
         } else {
           // window.location.href = "/login";
         }
@@ -88,266 +71,109 @@ function Details({ showActionPanel }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
-        width: "100%",
+        flexDirection: "column",
       }}
     >
-      {loading ? (
-        <>
-          <BeatLoader color="#1A2B40" size={18} margin={2} loading={loading} />
-        </>
-      ) : (
-        <Contain>
-          <Header />
-          {orgData ? (
-            <Content>
-              <Title>Student Details</Title>
-              <Holder>
-                <TableHodler>
-                  <Table
-                    variant="simple"
-                    colorScheme="gray"
-                    size="md"
-                    maxW={{ base: "400px", lg: "1300px" }}
-                    borderRadius={{ lg: "20px" }}
-                    background="white"
-                    margin={{
-                      lg: "50px auto",
-                      md: "50px auto",
-                      base: "20px auto",
-                    }}
-                  >
-                    <Tbody>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Full Name :</Td>
-                        {showActionPanel && pendingData.isPending ? (
-                          <Td
-                            className="data"
-                            style={{
-                              display: "flex",
-                              gap: "2px",
-                              alignItems: "center",
-                            }}
-                          >
-                            <input
-                              type="text"
-                              className="input"
-                              value={fullName}
-                              readOnly={true}
-                              onChange={handleFullNameChange}
-                            />
-                            <img
-                              src={edit}
-                              alt=""
-                              id="editable"
-                              className="edit"
-                              onClick={editDetails}
-                            />
-                          </Td>
-                        ) : (
-                          <Td>{fullName}</Td>
-                        )}
-                      </Tr>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Email :</Td>
-                        <Td>{pendingData.email}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Contact no :</Td>
-                        <Td>{pendingData.phone_no}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Date of Birth :</Td>
-                        {showActionPanel && pendingData.isPending ? (
-                          <Td
-                            className="data"
-                            style={{
-                              display: "flex",
-                              gap: "2px",
-                              alignItems: "center",
-                            }}
-                          >
-                            <input
-                              type="text"
-                              className="input"
-                              value={dateOfBirth}
-                              readOnly={true}
-                              onChange={handleDateOfBirthChange}
-                            />
-                            <img
-                              src={edit}
-                              alt=""
-                              id="editable"
-                              className="edit"
-                              onClick={editDetails}
-                            />
-                          </Td>
-                        ) : (
-                          <Td>
-                            {new String(orgData.dateOfBirth).replaceAll(
-                              ".",
-                              "/"
-                            )}
-                          </Td>
-                        )}
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TableHodler>
-                <TableHodler>
-                  <Table
-                    variant="simple"
-                    colorScheme="gray"
-                    size="md"
-                    maxW={{ base: "400px", lg: "1300px" }}
-                    borderRadius={{ lg: "20px" }}
-                    background="white"
-                    margin={{
-                      lg: "50px auto",
-                      md: "50px auto",
-                      base: "20px auto",
-                    }}
-                  >
-                    <Tbody>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Enrollment no :</Td>
-                        <Td>{enroll}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Branch and Year :</Td>
-                        <Td>{pendingData.branch + " " + pendingData.year}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Roll no :</Td>
-                        {showActionPanel && pendingData.isPending ? (
-                          <Td
-                            className="data"
-                            style={{
-                              display: "flex",
-                              gap: "2px",
-                              alignItems: "center",
-                            }}
-                          >
-                            <input
-                              type="text"
-                              className="input"
-                              value={rollNo}
-                              readOnly={true}
-                              onChange={handleRollNoChange}
-                            />
-                            <img
-                              src={edit}
-                              alt=""
-                              id="editable"
-                              className="edit"
-                              onClick={editDetails}
-                            />
-                          </Td>
-                        ) : (
-                          <Td>{pendingData.rollNo}</Td>
-                        )}
-                      </Tr>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Current Academic Year :</Td>
-                        <Td>
-                          {pendingData.cacyear +
-                            " - " +
-                            parseInt(
-                              new Date(pendingData.cacyear).getFullYear() + 1
-                            )
-                              .toString()
-                              .slice(2)}
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontWeight={"bold"}>Reason :</Td>
-                        <Td>{pendingData.reason}</Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TableHodler>
-                <DocumentHolder>
-                  <h3>Documents</h3>
-                  <img src={certificate} alt="BirthCerti"></img>
-                  <div>
-                    <a
-                      href={pendingData.idCard}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Button bgColor="#0AA1DD" color="white">
-                        View ID Card
-                      </Button>
-                    </a>
-                    <a
-                      href={pendingData.birthCerti}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Button bgColor="#0AA1DD" color="white">
-                        View Birth Certificate
-                      </Button>
-                    </a>
-                  </div>
-                </DocumentHolder>
-              </Holder>
+      <Header />
+      {pendingData ? (
+        <Content>
+          <Title>Student Details</Title>
+          <Holder>
+            <TableHodler>
+              <Table
+                variant="simple"
+                colorScheme="gray"
+                size="md"
+                maxW={{ base: "400px", lg: "1300px" }}
+                borderRadius={{ lg: "20px" }}
+                background="white"
+              >
+                <Tbody>
+                  <Tr>
+                    <Td fontWeight={"bold"}>Full Name :</Td>
+                    <Td>{pendingData.name}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight={"bold"}>Email :</Td>
+                    <Td>{pendingData.email}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight={"bold"}>Contact no :</Td>
+                    <Td>{pendingData.mobile}</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TableHodler>
+            <TableHodler>
+              <Table
+                variant="simple"
+                colorScheme="gray"
+                size="md"
+                maxW={{ base: "400px", lg: "1300px" }}
+                borderRadius={{ lg: "20px" }}
+                background="white"
+              >
+                <Tbody>
+                  <Tr>
+                    <Td fontWeight={"bold"}>Admission no :</Td>
+                    <Td>{pendingData.admissionNo}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight={"bold"}>Roll no :</Td>
+                    <Td>{pendingData.rNo}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight={"bold"}>Date of Birth :</Td>
 
-              <ActionPanelHolder>
-                {!showActionPanel || !pendingData.isPending ? (
-                  <a href="/profile">
-                    <Button
-                      colorScheme={"red"}
-                      float="right"
-                      marginTop={"10px"}
-                    >
-                      Back
-                    </Button>
-                  </a>
-                ) : (
-                  <ActionControlPanel
-                    ele={pendingData}
-                    fullNameModified={fullName}
-                    rollNoModified={rollNo}
-                    dateOfBirthModified={dateOfBirth}
-                  />
-                )}
-              </ActionPanelHolder>
-            </Content>
-          ) : (
-            readAuthUser()
-          )}
-        </Contain>
-      )}
+                    <Td>
+                      {String(pendingData.dateOfBirth).replaceAll("-", "/")}
+                    </Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TableHodler>
+          </Holder>
+          <DocumentHolder>
+            <h3>Documents</h3>
+            <div>
+              {pendingData.certificateList ? (
+                Object.keys(pendingData.certificateList)
+                  .map((key) => {
+                    return pendingData.certificateList[key];
+                  })
+                  .map((ele, index) => {
+                    return (
+                      <a
+                        href={ele.downloadURL}
+                        target="_blank"
+                        rel="noreferrer"
+                        key={index}
+                      >
+                        <Button bgColor="#0AA1DD" color="white">
+                          {ele.name}
+                        </Button>
+                      </a>
+                    );
+                  })
+              ) : (
+                <div>No Certificate Uploaded</div>
+              )}
+            </div>
+          </DocumentHolder>
+          <ActionPanelHolder>
+            <ActionControlPanel ele={pendingData} />
+          </ActionPanelHolder>
+        </Content>
+      ) : // readAuthUser()
+      null}
     </div>
   );
 }
 
-const Contain = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  height: auto;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-items: center;
-  background-color: #e8f9fd;
-  @media (max-width: 650px) {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-  }
-`;
 const Content = styled.div`
-  color: black;
-  margin-top: 80px;
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 20px;
   justify-content: center;
   overflow: scroll;
   ::-webkit-scrollbar {
@@ -355,11 +181,8 @@ const Content = styled.div`
     background: transparent; /* Optional: just make scrollbar invisible */
   }
   background-color: white;
-  height: 550px;
-  width: 90%;
-  boder: 1px solid white;
   border-radius: 12px;
-  box-shadow: 2px 3px 3px black;
+  box-shadow: 4px 4px 20px 0px black;
   @media (max-width: 650px) {
     flex-direction: column;
     height: 600px;
@@ -405,16 +228,8 @@ const TableHodler = styled.div`
 `;
 
 const DocumentHolder = styled.div`
-  height: 350px;
-  width: 250px;
-  margin: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  border: 2px solid black;
-  border-radius: 12px;
-  box-shadow: 6px 6px 6px grey;
+  width: 90%;
+  margin: 1rem;
 
   h3 {
     margin: 10px;
@@ -427,11 +242,9 @@ const DocumentHolder = styled.div`
   }
 
   div {
-    margin: 10px;
     display: flex;
-    flex-direction: column;
+    margin: 10px;
     align-items: center;
-    justify-content: center;
     gap: 5px;
   }
 `;
