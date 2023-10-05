@@ -42,30 +42,50 @@ export const TTCHome = () => {
       const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
-      const dataToSend = data.map((item) => {
-        return {
-          ...item,
-        };
+      data.shift();
+      let arr = [];
+      let listtopop = ["MPr", "MOOC'S", "TPO", "MOOC' S"];
+      data.map((item) => {
+        item = Object.keys(item).map((key) => {
+          return item[key];
+        });
+        item.shift();
+        item.forEach((ele) => {
+          if (
+            !arr.includes(String.raw`${ele}`) &&
+            !listtopop.includes(String.raw`${ele}`)
+          ) {
+            arr.push(String.raw`${ele}`);
+          }
+        });
+        return item;
       });
+
+      let newArr = [];
+      arr.forEach((ele) => {
+        let e = ele.split(" ");
+        if (e.length <= 4) {
+          newArr.push(e);
+        }
+      });
+
+      let strArr = [];
+      newArr.forEach((ele) => {
+        strArr.push(ele.join(" "));
+      });
+
       document.getElementById("status").style.display = "block";
-      setExcelFile(dataToSend);
       const db = database;
       let len = 0,
         size = data.length;
-      data.forEach((ele) => {
-        const IDRef = ele.enrollNo;
-        const registerStatus = {
-          isRegistered: false,
-        };
-        update(dbref(db, "/orgData/" + IDRef), {
-          ...ele,
-          registerStatus: registerStatus,
+      strArr.forEach((ele, index) => {
+        update(dbref(db, "/ttdata/TEA/" + index + "/"), {
+          Subject: ele,
         }).then((snapshot) => {
           len += 1;
           document.getElementById(
             "status"
           ).innerText = `${len} out of ${size} data uploaded`;
-          // console.log(`${len} out of ${size} data uploaded`);
           if (len >= size)
             document.getElementById("status").innerText =
               "Uploaded Successfully";
