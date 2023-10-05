@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/SlowLearner.css";
 import Header from "../components/Header";
 import {
@@ -15,11 +15,10 @@ import {
 } from "@chakra-ui/react";
 import styled from "styled-components";
 import { ref as dbref, get, child, getDatabase } from "firebase/database";
-import { useAuth } from "../contexts/AuthContext";
+
 function SlowLearners() {
   const [data, setData] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const currentUser = useAuth();
 
   const columns = [
     {

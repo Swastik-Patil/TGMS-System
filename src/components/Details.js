@@ -1,41 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { ref as dbref, child, get } from "firebase/database";
 import { database } from "../utils/init-firebase";
-import BeatLoader from "react-spinners/BeatLoader";
 import styled from "styled-components";
 import Header from "../components/Header";
-import certificate from "../res/certificate.png";
 import { Table, Tbody, Tr, Td, Button } from "@chakra-ui/react";
 import ActionControlPanel from "./ActionControlPanel";
-import edit from "../res/edit.svg";
-import { capitaliseName, formatDate } from "../utils/helper";
 
 function Details({ showActionPanel }) {
-  const [loading, setLoading] = useState(true);
   const [pendingData, setPendingData] = useState(null);
-  const [orgData, setOrgData] = useState(null);
-  const [enroll, setEnroll] = useState(false);
-  const [fullName, setFullName] = useState("");
-  const [rollNo, setRollNo] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-
-  const handleFullNameChange = (event) => {
-    setFullName(event.target.value);
-  };
-  const handleRollNoChange = (event) => {
-    setRollNo(event.target.value);
-  };
-  const handleDateOfBirthChange = (event) => {
-    setDateOfBirth(event.target.value);
-  };
-
-  function editDetails(e) {
-    const Edit = e.target.parentElement.childNodes[0];
-    Edit.readOnly = false;
-    Edit.style.border = "2px solid yellow";
-    Edit.style.background = "whitesmoke";
-    Edit.contentEditable = true;
-  }
 
   function readUserCurrentData() {
     const db = dbref(database);
@@ -47,8 +19,6 @@ function Details({ showActionPanel }) {
         if (snapshot.exists()) {
           const data = snapshot.val();
           setPendingData(data);
-          setEnroll(data.enroll);
-          setRollNo(data.rollNo);
         } else {
           // window.location.href = "/login";
         }
@@ -56,9 +26,6 @@ function Details({ showActionPanel }) {
       .catch((error) => {
         console.error(error);
       });
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
   }
 
   useEffect(() => {

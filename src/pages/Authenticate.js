@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import { useAuth } from "../contexts/AuthContext";
 import "../styles/AuthenticateStyle.css";
-import { useToast } from "@chakra-ui/react";
+import { useToast, Select } from "@chakra-ui/react";
 import useMounted from "../hooks/useMounted";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Link } from "react-router-dom";
@@ -14,6 +14,7 @@ function Authenticate() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { currentUser } = useAuth();
   const [logemail, setLogEmail] = useState("");
+  const [usertype, setUserType] = useState("Select an option");
   const [logpassword, setLogPassword] = useState("");
 
   const toast = useToast();
@@ -32,7 +33,87 @@ function Authenticate() {
   }, []);
 
   function handleRedirectToOrBack() {
-    window.location.href = "/profile";
+    if (usertype === "Student") {
+      window.location.href = "/profile";
+    }
+    if (usertype === "Teacher Guide") {
+      window.location.href = "/TGHome";
+    }
+    if (usertype === "Class Coordinator") {
+      window.location.href = "/CCHome";
+    }
+
+    if (usertype === "Select an option") {
+      window.location.href = "/profile";
+    }
+  }
+
+  const Option = ["Student", "Teacher Guide", "Class Coordinator"];
+  function handleUserTypeChange(e) {
+    setUserType(e.target.outerText);
+    document.querySelector(".select-wrapper").classList.toggle("active");
+  }
+
+  function performLogin(e) {
+    e.preventDefault();
+    document.getElementById("LoginButton").style.disabled = true;
+    if (!logemail || !logpassword) {
+      toast({
+        description: "Credentials not valid.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+    document.getElementById("LoginButton").innerHTML =
+      '<div className="spinner-border spinner-border-sm" role="status"></div>';
+    setIsSubmitting(true);
+
+    login(logemail, logpassword)
+      .then((res) => {
+        handleRedirectToOrBack();
+      })
+      .catch((error) => {
+        if (error.message === "Firebase: Error (auth/wrong-password).") {
+          toast({
+            position: "top-right",
+            description: "Wrong Password.",
+            status: "error",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+
+        if (error.message === "Firebase: Error (auth/user-not-found).") {
+          register(logemail, logpassword).then((res) => {
+            //redirect to home page
+            toast({
+              position: "top-right",
+              description: "Login in successful !",
+              status: "success",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          });
+        }
+      })
+      .finally(() => {
+        document.getElementById("LoginButton").innerHTML = "Login";
+        mounted.current && setIsSubmitting(false);
+      });
+
+    e.preventDefault();
+
+    document.getElementById("LoginButton").style.disabled = false;
   }
 
   return (
@@ -89,6 +170,44 @@ function Authenticate() {
                               />
                               <i className="input-icon uil uil-at"></i>
                             </div>
+                            <div className="form-group">
+                              <div className="select-wrapper">
+                                <div
+                                  className="select-button"
+                                  onClick={() => {
+                                    document
+                                      .querySelector(".select-wrapper")
+                                      .classList.toggle("active");
+                                  }}
+                                  onBlur={() => {
+                                    document
+                                      .querySelector(".select-wrapper")
+                                      .classList.toggle("active");
+                                  }}
+                                >
+                                  <div className="select-button-text">
+                                    {usertype}
+                                  </div>
+                                  <i className="bx bx-chevron-down">{"↓"}</i>
+                                </div>
+
+                                <ul className="options">
+                                  {Option.map((ele, index) => {
+                                    return (
+                                      <div
+                                        className="option"
+                                        onClick={(e) => {
+                                          handleUserTypeChange(e);
+                                        }}
+                                        key={index}
+                                      >
+                                        <p className="option-text">{ele}</p>
+                                      </div>
+                                    );
+                                  })}
+                                </ul>
+                              </div>
+                            </div>
                             <div className="form-group mt-2">
                               <input
                                 type="password"
@@ -105,58 +224,8 @@ function Authenticate() {
                             <button
                               id="LoginButton"
                               className="Btn mt-4"
-                              onClick={async (e) => {
-                                e.preventDefault();
-                                document.getElementById(
-                                  "LoginButton"
-                                ).style.disabled = true;
-                                if (!logemail || !logpassword) {
-                                  toast({
-                                    description: "Credentials not valid.",
-                                    status: "error",
-                                    duration: 9000,
-                                    isClosable: true,
-                                  });
-                                  return;
-                                }
-                                document.getElementById(
-                                  "LoginButton"
-                                ).innerHTML =
-                                  '<div class="spinner-border spinner-border-sm" role="status"></div>';
-                                setIsSubmitting(true);
-                                login(logemail, logpassword)
-                                  .then((res) => {
-                                    handleRedirectToOrBack();
-                                  })
-                                  .catch((error) => {
-                                    // console.log(error.message);
-                                    register(logemail, logpassword).then(
-                                      (res) => {
-                                        //redirect to home page
-                                        toast("Login in successful !", {
-                                          position: "top-right",
-                                          autoClose: 5000,
-                                          hideProgressBar: false,
-                                          closeOnClick: true,
-                                          pauseOnHover: true,
-                                          draggable: true,
-                                          progress: undefined,
-                                        });
-                                      }
-                                    );
-                                  })
-                                  .finally(() => {
-                                    document.getElementById(
-                                      "LoginButton"
-                                    ).innerHTML = "Login";
-                                    mounted.current && setIsSubmitting(false);
-                                  });
-
-                                e.preventDefault();
-
-                                document.getElementById(
-                                  "LoginButton"
-                                ).style.disabled = false;
+                              onClick={(e) => {
+                                performLogin(e);
                               }}
                             >
                               Log In

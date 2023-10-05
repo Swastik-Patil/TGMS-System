@@ -14,10 +14,10 @@ import {
 } from "@chakra-ui/react";
 import Header from "../components/Header";
 import styled from "styled-components";
+import { useAuth } from "../contexts/AuthContext";
 
 function TGHOME() {
-  //   const { currentUser } = useAuth();
-  const currentUser = "test2@gmail.com";
+  const { currentUser } = useAuth();
   const [data, setData] = useState(null);
   const [filterValue, setFilterValue] = useState("");
 
@@ -65,17 +65,22 @@ function TGHOME() {
       .then(async (snapshot) => {
         if (snapshot.exists()) {
           let data = snapshot.val();
+          // eslint-disable-next-line array-callback-return
           let name = data.map((ele) => {
-            if (String(ele.email).includes(currentUser.split("@")[0])) {
+            if (String(ele.email) === String(currentUser.email)) {
               return ele.name;
             }
           });
-          name = String(name.filter((n) => n))
-            .split(".")[1]
-            .trim();
+          name = String(name.filter((n) => n));
+
           get(child(db, "/tgmsData/" + name)).then((snapshot) => {
             if (snapshot.exists()) {
               let res = snapshot.val();
+              if (!Array.isArray(res)) {
+                res = Object.keys(res).map((key) => {
+                  return res[key];
+                });
+              }
               setData(res);
             } else {
               console.log("No data available");
@@ -141,7 +146,7 @@ function TGHOME() {
                         .replace(/\b(\w)/g, (s) => s.toUpperCase());
                       return (
                         <Tr key={index}>
-                          <Td>{ele.id}</Td>
+                          <Td>{++index}</Td>
                           <Td>{ele.Class}</Td>
                           <Td>{ele.RollNo}</Td>
                           <Td>{ele.NameoftheStudents}</Td>
@@ -150,8 +155,7 @@ function TGHOME() {
                             <Button
                               colorScheme="blue"
                               onClick={() => {
-                                // showApplicationDetails(ele.admissionNo);
-                                alert("Under maintainance");
+                                showApplicationDetails(ele.admissionNo);
                               }}
                             >
                               View Details

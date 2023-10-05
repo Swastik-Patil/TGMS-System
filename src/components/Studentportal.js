@@ -38,7 +38,6 @@ function Studentportal() {
     setTimeout(() => {
       setLoading(false);
     }, 1500);
-    return () => {};
   }, []);
 
   const navItems = [

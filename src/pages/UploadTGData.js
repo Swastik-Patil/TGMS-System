@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { ref as dbref, update } from "firebase/database";
 import { database } from "../utils/init-firebase";
@@ -47,7 +47,6 @@ function UploadTGData() {
           ...item,
         };
       });
-      dataToSend.pop();
 
       document.getElementById("status").style.display = "block";
       setExcelFile(dataToSend);
@@ -175,6 +174,7 @@ const Holder = styled.div`
     height: 520px;
   }
 `;
+
 const Instructions = styled.div`
   width: 60%;
   box-shadow: 2px 2px 3px grey;
@@ -196,4 +196,5 @@ const Instructions = styled.div`
     height: 520px;
   }
 `;
+
 export default UploadTGData;

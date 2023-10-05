@@ -46,7 +46,7 @@ export default function AuthContextProvider({ children }) {
 
   function forgotPassword(email) {
     return sendPasswordResetEmail(auth, email, {
-      url: `https://gov-poly-pen-portal.web.app/login`,
+      url: `http://localhost:3000/login`,
     });
   }
 

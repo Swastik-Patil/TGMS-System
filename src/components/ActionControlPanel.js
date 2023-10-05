@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import {
-  ref as dbref,
-  remove,
-  update,
-  push,
-  set,
-  get,
-  child,
-} from "firebase/database";
+import React from "react";
+import { ref as dbref, set } from "firebase/database";
 import { database } from "../utils/init-firebase";
 import styled from "styled-components";
 import {
