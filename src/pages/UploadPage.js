@@ -42,33 +42,66 @@ export const UploadPage = () => {
       const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
-      const dataToSend = data.map((item) => {
-        item.dateOfAdmission = String(item.dateOfAdmission)
-          .replaceAll("-", ".")
-          .replaceAll("/", ".");
 
-        item.dateOfBirth = String(item.dateOfBirth)
-          .replaceAll("-", ".")
-          .replaceAll("/", ".");
-
-        return {
-          ...item,
-        };
-      });
       document.getElementById("status").style.display = "block";
-      setExcelFile(dataToSend);
+      setExcelFile(data);
       const db = database;
       let len = 0,
         size = data.length;
       data.forEach((ele) => {
-        const IDRef = ele.enrollNo;
-        const registerStatus = {
-          isRegistered: false,
-        };
-        update(dbref(db, "/orgData/" + IDRef), {
-          ...ele,
-          registerStatus: registerStatus,
-        }).then((snapshot) => {
+        const IDRef = ele.admissionNo;
+        const ResType = "IA1"; // Set Dynamically
+        delete ele["name"];
+        delete ele["admissionNo"];
+        delete ele["rNo"];
+
+        if (ResType === "IA1" || ResType === "IA2") {
+          let obj = Object.keys(ele).map((key) => {
+            return ele[key];
+          });
+          try {
+            obj.forEach((e) => {
+              if (e <= 8) {
+                throw new Error("Break the loop.");
+              }
+            });
+          } catch (error) {
+            ele["studentType"] = "Slow";
+          }
+        } else {
+          let obj = Object.keys(ele).map((key) => {
+            return ele[key];
+          });
+          try {
+            obj.forEach((e) => {
+              if (e <= 32) {
+                throw new Error("Break the loop.");
+              }
+            });
+          } catch (error) {
+            ele["studentType"] = "Slow";
+          }
+        }
+
+        if (ele.studentType !== "Slow") {
+          ele["studentType"] = "Advance";
+        }
+
+        update(dbref(db, "/StudentsData/" + IDRef + "/"), {
+          studentType: ele.studentType,
+        });
+
+        update(
+          dbref(db, "/StudentsData/" + IDRef + "/Results/" + ResType + "/"),
+          {
+            CN: ele.CN,
+            DWM: ele.DWM,
+            TCS: ele.TCS,
+            SE: ele.SE,
+            IP: ele.IP,
+            Total: ele.Total,
+          }
+        ).then((snapshot) => {
           len += 1;
           document.getElementById(
             "status"

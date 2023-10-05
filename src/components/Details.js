@@ -3,7 +3,7 @@ import { ref as dbref, child, get } from "firebase/database";
 import { database } from "../utils/init-firebase";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { Table, Tbody, Tr, Td, Button } from "@chakra-ui/react";
+import { Table, Tbody, Tr, Td, Button, Text } from "@chakra-ui/react";
 import ActionControlPanel from "./ActionControlPanel";
 
 function Details({ showActionPanel }) {
@@ -18,6 +18,7 @@ function Details({ showActionPanel }) {
       .then((snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
+          console.log(data);
           setPendingData(data);
         } else {
           // window.location.href = "/login";
@@ -101,6 +102,66 @@ function Details({ showActionPanel }) {
             </TableHodler>
           </Holder>
           <DocumentHolder>
+            <h3>Results</h3>
+            <div>
+              {pendingData.Results ? (
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <Text fontWeight={"bold"}>{"IA 1"}</Text>
+                  <TableHodler>
+                    <Table
+                      variant="simple"
+                      colorScheme="gray"
+                      size="md"
+                      maxW={{ base: "400px", lg: "1300px" }}
+                      borderRadius={{ lg: "20px" }}
+                      background="white"
+                    >
+                      <Tbody>
+                        <Tr>
+                          <Td fontWeight={"bold"}>CN :</Td>
+                          <Td>{pendingData.Results.IA1.CN}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>DWM:</Td>
+                          <Td>{pendingData.Results.IA1.DWM}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>SE :</Td>
+                          <Td>{pendingData.Results.IA1.SE}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                    <Table
+                      variant="simple"
+                      colorScheme="gray"
+                      size="md"
+                      maxW={{ base: "400px", lg: "1300px" }}
+                      borderRadius={{ lg: "20px" }}
+                      background="white"
+                    >
+                      <Tbody>
+                        <Tr>
+                          <Td fontWeight={"bold"}>TCS :</Td>
+                          <Td>{pendingData.Results.IA1.TCS}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>IP :</Td>
+                          <Td>{pendingData.Results.IA1.IP}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>Total :</Td>
+                          <Td>{pendingData.Results.IA1.Total}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </TableHodler>
+                </div>
+              ) : (
+                <div>No Results Uploaded</div>
+              )}
+            </div>
+          </DocumentHolder>
+          <DocumentHolder>
             <h3>Documents</h3>
             <div>
               {pendingData.certificateList ? (
@@ -166,7 +227,6 @@ const Holder = styled.div`
   }
   align-items: center;
   justify-content: center;
-  padding: 10px 10px;
   height: auto;
   width: 100%;
   @media (max-width: 650px) {
@@ -187,7 +247,6 @@ const Title = styled.div`
   align-items: center;
 `;
 const TableHodler = styled.div`
-  margin: 5px 12px;
   @media (max-width: 650px) {
     margin: 0px 0px;
     width: 300px;
@@ -196,7 +255,6 @@ const TableHodler = styled.div`
 
 const DocumentHolder = styled.div`
   width: 90%;
-  margin: 1rem;
 
   h3 {
     margin: 10px;

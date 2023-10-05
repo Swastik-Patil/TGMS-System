@@ -46,10 +46,6 @@ function TGHOME() {
       label: "Name of the Students",
     },
     {
-      key: "status",
-      label: "Student Type",
-    },
-    {
       key: "details",
       label: "Details",
     },
@@ -150,7 +146,6 @@ function TGHOME() {
                           <Td>{ele.Class}</Td>
                           <Td>{ele.RollNo}</Td>
                           <Td>{ele.NameoftheStudents}</Td>
-                          <Td>{ele.studentType}</Td>
                           <Td>
                             <Button
                               colorScheme="blue"
