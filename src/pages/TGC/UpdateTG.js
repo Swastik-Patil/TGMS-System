@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../styles/SlowLearner.css";
-import Header from "../components/Header";
+import "../../styles/SlowLearner.css";
+import Header from "../../components/Header";
 import {
   Table,
   Thead,
@@ -26,7 +26,7 @@ import {
   getDatabase,
   remove,
 } from "firebase/database";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { BeatLoader } from "react-spinners";
 
 function UpdateTG() {

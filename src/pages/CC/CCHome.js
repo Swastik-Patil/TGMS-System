@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import "../styles/CCHome.css";
+import "../../styles/CCHome.css";
 import { Link } from "react-router-dom";
-import Header from "../components/Header";
-import { useAuth } from "../contexts/AuthContext";
+import Header from "../../components/Header";
+import { useAuth } from "../../contexts/AuthContext";
 
 function CChome() {
   const { currentUser } = useAuth();

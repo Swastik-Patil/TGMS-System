@@ -10,7 +10,6 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 
 import {
-  Profilepage,
   ResetPasswordPage,
   ForgotPasswordPage,
   HomePage,
@@ -20,6 +19,7 @@ import {
   Authenticate,
   UnauthorizePage,
   NotEligiblePage,
+  Studentportal,
   UploadedCertificates,
   UploadCertificate,
   CChome,
@@ -42,6 +42,11 @@ export default function AppRouter() {
         <Switch>
           <ProtectedRoute exact path="/" component={HomePage} />
           <ProtectedRoute
+            exact
+            path="/Studentportal"
+            component={Studentportal}
+          />
+          <ProtectedRoute
             path="/uploadCertificate"
             component={UploadCertificate}
           />
@@ -51,7 +56,6 @@ export default function AppRouter() {
           />
           <ProtectedRoute exact path="/login" component={Authenticate} />
           <ProtectedRoute exact path="/register" component={Authenticate} />
-          <ProtectedRoute exact path="/profile" component={Profilepage} />
           <ProtectedRoute exact path="/home" component={HomePage} />
           <ProtectedRoute exact path="/CCHome" component={CChome} />
           <ProtectedRoute

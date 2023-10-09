@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ref as dbref, get, child } from "firebase/database";
-import { database } from "../utils/init-firebase";
-import { useAuth } from "../contexts/AuthContext";
+import { database } from "../../utils/init-firebase";
+import { useAuth } from "../../contexts/AuthContext";
 import BeatLoader from "react-spinners/BeatLoader";
-import "../styles/pagenotfound.css";
+import "../../styles/pagenotfound.css";
 
 export default function NotEligiblePage() {
   const { currentUser } = useAuth();

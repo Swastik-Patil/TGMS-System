@@ -11,10 +11,10 @@ import {
   Container,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Card } from "../components/Card";
-import DividerWithText from "../components/DividerWithText";
-import Header from "../components/Header";
-import { useAuth } from "../contexts/AuthContext";
+import { Card } from "../../components/Card";
+import DividerWithText from "../../components/DividerWithText";
+import Header from "../../components/Header";
+import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 

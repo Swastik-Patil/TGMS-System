@@ -1,13 +1,8 @@
 import React from "react";
 import Details from "../components/Details";
 
-function StudentDetails() {
-  console.log("HERE");
-  return (
-    <>
-      <Details showActionPanel={true} />
-    </>
-  );
+function StudentDetails({ showActionPanel, navItems }) {
+  return <Details showActionPanel={showActionPanel} navItems={navItems} />;
 }
 
 export default StudentDetails;

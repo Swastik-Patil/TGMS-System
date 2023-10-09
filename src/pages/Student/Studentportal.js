@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import BeatLoader from "react-spinners/BeatLoader";
-import Header from "./Header";
+import Header from "../../components/Header";
 import { getDatabase, ref as Ref, child, get } from "firebase/database";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
+import Details from "../../components/Details";
+import StudentDetails from "../StudentDetail";
 
 function Studentportal() {
   const [loading, setLoading] = useState(true);
@@ -22,6 +24,8 @@ function Studentportal() {
           let d = data.filter((ele) => {
             return ele.email === currentUser.email;
           });
+          window.sessionStorage.setItem("selectedStudent", d[0].admissionNo);
+          window.sessionStorage.setItem("path", "StudentsData");
           setData(d);
           window.localStorage.setItem("data", JSON.stringify(d));
         } else {
@@ -41,6 +45,10 @@ function Studentportal() {
   }, []);
 
   const navItems = [
+    {
+      label: "Home",
+      href: "home",
+    },
     {
       label: "Upload Certificates",
       href: "uploadCertificate",
@@ -67,7 +75,7 @@ function Studentportal() {
         </>
       ) : (
         <Contain>
-          <Header navItems={navItems} />
+          <StudentDetails navItems={navItems} />
         </Contain>
       )}
     </div>

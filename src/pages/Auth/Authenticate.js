@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import Header from "../components/Header";
-import { useAuth } from "../contexts/AuthContext";
-import "../styles/AuthenticateStyle.css";
-import { useToast, Select } from "@chakra-ui/react";
-import useMounted from "../hooks/useMounted";
+import Header from "../../components/Header";
+import { useAuth } from "../../contexts/AuthContext";
+import "../../styles/AuthenticateStyle.css";
+import { useToast } from "@chakra-ui/react";
 import BeatLoader from "react-spinners/BeatLoader";
+import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 function Authenticate() {
   const [loading, setLoading] = useState(true);
   const { register, login } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { currentUser } = useAuth();
   const [logemail, setLogEmail] = useState("");
   const [usertype, setUserType] = useState("Select an option");
@@ -19,12 +18,12 @@ function Authenticate() {
 
   const toast = useToast();
   const regmounted = useRef(false);
-  const mounted = useMounted();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setLoading(false);
     }, 2000);
+
     regmounted.current = true;
     return () => {
       regmounted.current = false;
@@ -33,8 +32,9 @@ function Authenticate() {
   }, []);
 
   function handleRedirectToOrBack() {
+    window.localStorage.setItem("usertype", usertype);
     if (usertype === "Student") {
-      window.location.href = "/profile";
+      window.location.href = "/home";
     }
     if (usertype === "Teacher Guide") {
       window.location.href = "/TGHome";
@@ -42,13 +42,21 @@ function Authenticate() {
     if (usertype === "Class Coordinator") {
       window.location.href = "/CCHome";
     }
-
+    if (usertype === "Teacher Guide Coordinator") {
+      window.location.href = "/TGCHome";
+    }
     if (usertype === "Select an option") {
       window.location.href = "/profile";
     }
   }
 
-  const Option = ["Student", "Teacher Guide", "Class Coordinator"];
+  const Option = [
+    "Student",
+    "Teacher Guide",
+    "Class Coordinator",
+    "Teacher Guide Coordinator",
+  ];
+
   function handleUserTypeChange(e) {
     setUserType(e.target.outerText);
     document.querySelector(".select-wrapper").classList.toggle("active");
@@ -59,16 +67,30 @@ function Authenticate() {
     document.getElementById("LoginButton").style.disabled = true;
     if (!logemail || !logpassword) {
       toast({
+        position: "top-right",
         description: "Credentials not valid.",
         status: "error",
         duration: 9000,
         isClosable: true,
       });
+      document.getElementById("LoginButton").style.disabled = false;
       return;
     }
+
+    if (String(logemail).toLowerCase().includes("@student")) {
+      toast({
+        position: "top-right",
+        description: "Please Select Student as a Option",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      document.getElementById("LoginButton").style.disabled = false;
+      return;
+    }
+
     document.getElementById("LoginButton").innerHTML =
-      '<div className="spinner-border spinner-border-sm" role="status"></div>';
-    setIsSubmitting(true);
+      '<div class="spinner-border spinner-border-sm" role="status"></div>';
 
     login(logemail, logpassword)
       .then((res) => {
@@ -90,25 +112,28 @@ function Authenticate() {
         }
 
         if (error.message === "Firebase: Error (auth/user-not-found).") {
-          register(logemail, logpassword).then((res) => {
-            //redirect to home page
-            toast({
-              position: "top-right",
-              description: "Login in successful !",
-              status: "success",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
+          register(logemail, logpassword)
+            .then((res) => {
+              //redirect to home page
+              toast({
+                position: "top-right",
+                description: "Login in successful !",
+                status: "success",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+            })
+            .then((res) => {
+              handleRedirectToOrBack();
             });
-          });
         }
       })
       .finally(() => {
         document.getElementById("LoginButton").innerHTML = "Login";
-        mounted.current && setIsSubmitting(false);
       });
 
     e.preventDefault();
@@ -188,7 +213,9 @@ function Authenticate() {
                                   <div className="select-button-text">
                                     {usertype}
                                   </div>
-                                  <i className="bx bx-chevron-down">{"↓"}</i>
+                                  <i className="bx bx-chevron-down">
+                                    <ChevronDownIcon />
+                                  </i>
                                 </div>
 
                                 <ul className="options">

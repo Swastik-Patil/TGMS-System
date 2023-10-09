@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage, database } from "../utils/init-firebase";
+import { storage, database } from "../../utils/init-firebase";
 import { ref as Ref, update } from "firebase/database";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import {
   RadioGroup,
   Radio,
@@ -83,6 +83,10 @@ export default function UploadCertificate({ data }) {
       });
   };
   const navItems = [
+    {
+      label: "Home",
+      href: "home",
+    },
     {
       label: "Upload Certificates",
       href: "uploadCertificate",

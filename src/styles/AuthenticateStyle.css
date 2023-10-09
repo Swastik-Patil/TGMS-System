@@ -114,14 +114,13 @@ h6 span {
   padding: 13px 20px;
   height: 48px;
   width: 100%;
-  font-weight: 600;
   border-radius: 4px;
   font-size: 14px;
   line-height: 22px;
   letter-spacing: 0.5px;
   outline: none;
-  color: #2155cd;
-  background-color: #e8f9fd;
+  color: #2155cd !important;
+  background-color: #e8f9fd !important;
   border: none;
   -webkit-transition: all 200ms linear;
   transition: all 200ms linear;
@@ -142,7 +141,7 @@ h6 span {
   font-size: 24px;
   line-height: 48px;
   text-align: left;
-  color: #3620c9;
+  color: #3620c9 !important;
   -webkit-transition: all 200ms linear;
   transition: all 200ms linear;
 }
@@ -273,9 +272,8 @@ h6 span {
   height: 50px;
   background: #e8f9fd;
   color: #2155cd;
-  font-weight: 600;
   padding: 20px;
-  font-size: 14px;
+  font-size: 15px;
   border-radius: 8px;
   align-items: center;
   cursor: pointer;

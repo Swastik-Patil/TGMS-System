@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { getDatabase, ref as Ref, child, get, remove } from "firebase/database";
 import { getStorage, ref as storageRef, deleteObject } from "firebase/storage";
-import CertificateImage from "../res/certificate.png";
-import Header from "../components/Header";
+import CertificateImage from "../../res/certificate.png";
+import Header from "../../components/Header";
 import {
   Button,
   SimpleGrid,
@@ -92,6 +92,10 @@ export default function UploadedCertificates() {
   }, []);
 
   const navItems = [
+    {
+      label: "Home",
+      href: "home",
+    },
     {
       label: "Upload Certificates",
       href: "uploadCertificate",

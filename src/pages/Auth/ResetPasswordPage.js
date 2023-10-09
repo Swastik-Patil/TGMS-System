@@ -10,10 +10,10 @@ import {
   Container,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Card } from "../components/Card";
+import { Card } from "../../components/Card";
 import { useHistory, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import Header from "../components/Header";
+import { useAuth } from "../../contexts/AuthContext";
+import Header from "../../components/Header";
 
 // A custom hook that builds on useLocation to parse
 // the query string for you.

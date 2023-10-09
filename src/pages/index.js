@@ -1,28 +1,27 @@
-import Profilepage from "../pages/Profilepage";
-import ResetPasswordPage from "../pages/ResetPasswordPage";
-import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import ResetPasswordPage from "./Auth/ResetPasswordPage";
+import ForgotPasswordPage from "./Auth/ForgotPasswordPage";
 import HomePage from "../pages/HomePage";
-import PageNotFound from "../pages/PageNotFound";
+import PageNotFound from "./Auth/PageNotFound";
 import StudentDetails from "../pages/StudentDetail";
 import HODControlPanel from "../pages/HODControlPanel";
-import Authenticate from "../pages/Authenticate";
-import UnauthorizePage from "../pages/UnauthorizePage";
-import NotEligiblePage from "../pages/NotEligiblePage";
-import UploadCertificate from "./UploadCertificate";
-import UploadedCertificates from "./UploadedCertificates";
-import CChome from "./CCHome";
-import UploadResults from "./UploadResults";
-import UploadPage from "./UploadPage";
-import SlowLearners from "./SlowLearners";
+import Authenticate from "./Auth/Authenticate";
+import UnauthorizePage from "./Auth/UnauthorizePage";
+import NotEligiblePage from "./Auth/NotEligiblePage";
+import Studentportal from "./Student/Studentportal";
+import UploadCertificate from "./Student/UploadCertificate";
+import UploadedCertificates from "./Student/UploadedCertificates";
+import CChome from "./CC/CCHome";
+import UploadResults from "./CC/UploadResults";
+import UploadPage from "./CC/UploadPage";
+import SlowLearners from "./CC/SlowLearners";
 import UploadStudentData from "./UploadStudentData";
-import TGHOME from "./TGHome";
-import TGCHome from "./TGCHome";
-import UpdateTG from "./UpdateTG";
-import TGDataHome from "./TGDataHome";
+import TGHOME from "./TG/TGHome";
+import TGCHome from "./TGC/TGCHome";
+import UpdateTG from "./TGC/UpdateTG";
+import TGDataHome from "./TGC/TGDataHome";
 import UploadTGData from "./UploadTGData";
-import TTCHome from "./TTCHome";
+import TTCHome from "./TTC/TTCHome";
 export {
-  Profilepage,
   ResetPasswordPage,
   ForgotPasswordPage,
   HomePage,
@@ -32,6 +31,7 @@ export {
   Authenticate,
   UnauthorizePage,
   NotEligiblePage,
+  Studentportal,
   UploadCertificate,
   UploadedCertificates,
   CChome,

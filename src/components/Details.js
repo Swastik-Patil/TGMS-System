@@ -6,19 +6,22 @@ import Header from "../components/Header";
 import { Table, Tbody, Tr, Td, Button, Text } from "@chakra-ui/react";
 import ActionControlPanel from "./ActionControlPanel";
 
-function Details({ showActionPanel }) {
+function Details({ showActionPanel, navItems }) {
   const [pendingData, setPendingData] = useState(null);
+  const [showPanel, setShowPanel] = useState(false);
 
   function readUserCurrentData() {
     const db = dbref(database);
+    if (window.sessionStorage.getItem("showPanel") === "true") {
+      setShowPanel(true);
+    }
     const IDRef = window.sessionStorage.getItem("selectedStudent");
     const path = window.sessionStorage.getItem("path");
-    if (!IDRef) window.location.href = "/profile";
+    if (!IDRef) window.location.href = "/home";
     get(child(db, `${path}/${IDRef}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
-          console.log(data);
           setPendingData(data);
         } else {
           // window.location.href = "/login";
@@ -42,7 +45,7 @@ function Details({ showActionPanel }) {
         flexDirection: "column",
       }}
     >
-      <Header />
+      <Header navItems={navItems} />
       {pendingData ? (
         <Content>
           <Title>Student Details</Title>
@@ -161,36 +164,40 @@ function Details({ showActionPanel }) {
               )}
             </div>
           </DocumentHolder>
-          <DocumentHolder>
-            <h3>Documents</h3>
-            <div>
-              {pendingData.certificateList ? (
-                Object.keys(pendingData.certificateList)
-                  .map((key) => {
-                    return pendingData.certificateList[key];
-                  })
-                  .map((ele, index) => {
-                    return (
-                      <a
-                        href={ele.downloadURL}
-                        target="_blank"
-                        rel="noreferrer"
-                        key={index}
-                      >
-                        <Button bgColor="#0AA1DD" color="white">
-                          {ele.name}
-                        </Button>
-                      </a>
-                    );
-                  })
-              ) : (
-                <div>No Certificate Uploaded</div>
-              )}
-            </div>
-          </DocumentHolder>
-          <ActionPanelHolder>
-            <ActionControlPanel ele={pendingData} />
-          </ActionPanelHolder>
+          {(showActionPanel || showPanel) && (
+            <DocumentHolder>
+              <h3>Documents</h3>
+              <div>
+                {pendingData.certificateList ? (
+                  Object.keys(pendingData.certificateList)
+                    .map((key) => {
+                      return pendingData.certificateList[key];
+                    })
+                    .map((ele, index) => {
+                      return (
+                        <a
+                          href={ele.downloadURL}
+                          target="_blank"
+                          rel="noreferrer"
+                          key={index}
+                        >
+                          <Button bgColor="#0AA1DD" color="white">
+                            {ele.name}
+                          </Button>
+                        </a>
+                      );
+                    })
+                ) : (
+                  <div>No Certificate Uploaded</div>
+                )}
+              </div>
+            </DocumentHolder>
+          )}
+          {(showActionPanel || showPanel) && (
+            <ActionPanelHolder>
+              <ActionControlPanel ele={pendingData} />
+            </ActionPanelHolder>
+          )}
         </Content>
       ) : // readAuthUser()
       null}
@@ -199,18 +206,20 @@ function Details({ showActionPanel }) {
 }
 
 const Content = styled.div`
+  width: 80%;
+  margin-top: 0.5rem;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  overflow: scroll;
-  ::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
-  }
   background-color: white;
   border-radius: 12px;
-  box-shadow: 4px 4px 20px 0px black;
+  box-shadow: 9px 14px 20px 0px #1d1d1d;
+  overflow: scroll;
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
   @media (max-width: 650px) {
     flex-direction: column;
     height: 600px;
@@ -219,16 +228,9 @@ const Content = styled.div`
   }
 `;
 const Holder = styled.div`
+  width: 90%;
   display: flex;
-  overflow: scroll;
-  ::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
-  }
-  align-items: center;
-  justify-content: center;
-  height: auto;
-  width: 100%;
+
   @media (max-width: 650px) {
     flex-direction: column;
     justify-content: initial;
@@ -239,7 +241,7 @@ const Holder = styled.div`
 const Title = styled.div`
   width: 95%;
   height: 40px;
-  margin-top: 22px;
+  margin-top: 20px;
   border-bottom: 4px solid #147af2;
   font-size: 30px;
   padding-bottom: 12px;

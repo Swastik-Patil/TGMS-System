@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import img from "../res/Unauthorize.png";
+import img from "../../res/Unauthorize.png";
 function Unauthorize() {
   // using img as usauthorize
   return (

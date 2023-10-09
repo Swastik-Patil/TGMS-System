@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import "../styles/UploadPage.css";
-import Header from "../components/Header";
+import "../../styles/UploadPage.css";
 import * as XLSX from "xlsx";
 import { Button } from "@chakra-ui/react";
 import { ref as dbref, update } from "firebase/database";
-import { database } from "../utils/init-firebase";
-import { useAuth } from "../contexts/AuthContext";
 import styled from "styled-components";
+import Header from "../../components/Header";
+import { useAuth } from "../../contexts/AuthContext";
+import { database } from "../../utils/init-firebase";
 
-export const UploadPage = () => {
+export const TTCHome = () => {
   const [loading, setLoading] = useState(true);
   const [excelFile, setExcelFile] = useState(null);
   const { currentUser } = useAuth();
@@ -42,71 +42,50 @@ export const UploadPage = () => {
       const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
+      data.shift();
+      let arr = [];
+      let listtopop = ["MPr", "MOOC'S", "TPO", "MOOC' S"];
+      data.map((item) => {
+        item = Object.keys(item).map((key) => {
+          return item[key];
+        });
+        item.shift();
+        item.forEach((ele) => {
+          if (
+            !arr.includes(String.raw`${ele}`) &&
+            !listtopop.includes(String.raw`${ele}`)
+          ) {
+            arr.push(String.raw`${ele}`);
+          }
+        });
+        return item;
+      });
+
+      let newArr = [];
+      arr.forEach((ele) => {
+        let e = ele.split(" ");
+        if (e.length <= 4) {
+          newArr.push(e);
+        }
+      });
+
+      let strArr = [];
+      newArr.forEach((ele) => {
+        strArr.push(ele.join(" "));
+      });
 
       document.getElementById("status").style.display = "block";
-      setExcelFile(data);
       const db = database;
       let len = 0,
         size = data.length;
-      data.forEach((ele) => {
-        const IDRef = ele.admissionNo;
-        const ResType = "IA1"; // Set Dynamically
-        delete ele["name"];
-        delete ele["admissionNo"];
-        delete ele["rNo"];
-
-        if (ResType === "IA1" || ResType === "IA2") {
-          let obj = Object.keys(ele).map((key) => {
-            return ele[key];
-          });
-          try {
-            obj.forEach((e) => {
-              if (e <= 8) {
-                throw new Error("Break the loop.");
-              }
-            });
-          } catch (error) {
-            ele["studentType"] = "Slow";
-          }
-        } else {
-          let obj = Object.keys(ele).map((key) => {
-            return ele[key];
-          });
-          try {
-            obj.forEach((e) => {
-              if (e <= 32) {
-                throw new Error("Break the loop.");
-              }
-            });
-          } catch (error) {
-            ele["studentType"] = "Slow";
-          }
-        }
-
-        if (ele.studentType !== "Slow") {
-          ele["studentType"] = "Advance";
-        }
-
-        update(dbref(db, "/StudentsData/" + IDRef + "/"), {
-          studentType: ele.studentType,
-        });
-
-        update(
-          dbref(db, "/StudentsData/" + IDRef + "/Results/" + ResType + "/"),
-          {
-            CN: ele.CN,
-            DWM: ele.DWM,
-            TCS: ele.TCS,
-            SE: ele.SE,
-            IP: ele.IP,
-            Total: ele.Total,
-          }
-        ).then((snapshot) => {
+      strArr.forEach((ele, index) => {
+        update(dbref(db, "/ttdata/TEA/" + index + "/"), {
+          Subject: ele,
+        }).then((snapshot) => {
           len += 1;
           document.getElementById(
             "status"
           ).innerText = `${len} out of ${size} data uploaded`;
-          // console.log(`${len} out of ${size} data uploaded`);
           if (len >= size)
             document.getElementById("status").innerText =
               "Uploaded Successfully";
@@ -235,4 +214,4 @@ const Instructions = styled.div`
     height: 520px;
   }
 `;
-export default UploadPage;
+export default TTCHome;

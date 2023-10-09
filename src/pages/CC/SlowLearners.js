@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "../styles/SlowLearner.css";
-import Header from "../components/Header";
+import "../../styles/SlowLearner.css";
+import Header from "../../components/Header";
 import {
   Table,
   Thead,
@@ -49,6 +49,7 @@ function SlowLearners() {
 
   function showApplicationDetails(uid) {
     window.sessionStorage.setItem("selectedStudent", String(uid));
+    window.sessionStorage.setItem("showPanel", true);
     window.sessionStorage.setItem("path", "/StudentsData");
     window.location.href = "/Details";
   }

@@ -12,9 +12,10 @@ import {
   Button,
   Input,
 } from "@chakra-ui/react";
-import Header from "../components/Header";
+
 import styled from "styled-components";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
+import Header from "../../components/Header";
 
 function TGHOME() {
   const { currentUser } = useAuth();
@@ -24,6 +25,7 @@ function TGHOME() {
   // Under Maintainance
   function showApplicationDetails(uid) {
     window.sessionStorage.setItem("selectedStudent", String(uid));
+    window.sessionStorage.setItem("showPanel", true);
     window.sessionStorage.setItem("path", "/StudentsData");
     window.location.href = "/Details";
   }
@@ -52,8 +54,47 @@ function TGHOME() {
   ];
 
   useEffect(() => {
+    let cnt = parseInt(window.localStorage.getItem("cnt"));
+    window.localStorage.setItem("cnt", ++cnt);
     checkUser();
   }, []);
+
+  async function sendNotice() {
+    let str = "https://mail.google.com/mail/?view=cm&fs=1&to=";
+    const dbRef = dbref(getDatabase());
+
+    try {
+      let arr = [];
+
+      data.forEach((ele) => {
+        arr.push(ele.admissionNo);
+      });
+
+      if (arr.length > 0) {
+        const promises = arr.map((ele) =>
+          get(child(dbRef, "/StudentsData/" + ele + "/email"))
+        );
+
+        const snapshots = await Promise.all(promises);
+
+        snapshots.forEach((snapshot) => {
+          if (snapshot.exists()) {
+            let res = snapshot.val();
+            str += String(res) + ",";
+          }
+        });
+        if (str.length > 46) {
+          window.open(str, "_blank");
+        } else {
+          throw Error("No Emails Found");
+        }
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   function checkUser() {
     const db = dbref(getDatabase());
@@ -72,6 +113,9 @@ function TGHOME() {
           get(child(db, "/tgmsData/" + name)).then((snapshot) => {
             if (snapshot.exists()) {
               let res = snapshot.val();
+              res = res.filter((ele) => {
+                return ele != null;
+              });
               if (!Array.isArray(res)) {
                 res = Object.keys(res).map((key) => {
                   return res[key];
@@ -105,13 +149,16 @@ function TGHOME() {
         {data && (
           <>
             <div className="flex flex-col gap-4">
-              <div className="flex justify-between gap-3 items-end">
+              <div style={{ display: "flex", gap: "1rem" }}>
                 <Input
                   className="w-full sm:max-w-[44%]"
                   placeholder="Search by name..."
                   value={filterValue}
                   onChange={(e) => setFilterValue(e.target.value)}
                 />
+                <Button colorScheme="blue" onClick={sendNotice}>
+                  Send Notice
+                </Button>
               </div>
             </div>
             <TableContainer>
