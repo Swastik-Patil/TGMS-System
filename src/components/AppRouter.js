@@ -33,6 +33,9 @@ import {
   TTCHome,
   TGDataHome,
   UploadTGData,
+  Notice,
+  AdminHome,
+  ManagePage,
 } from "../pages";
 
 export default function AppRouter() {
@@ -67,6 +70,7 @@ export default function AppRouter() {
           <ProtectedRoute exact path="/SlowLearners" component={SlowLearners} />
 
           <ProtectedRoute exact path="/TGHOME" component={TGHOME} />
+          <ProtectedRoute exact path="/Notice" component={Notice} />
           <ProtectedRoute exact path="/UpdateTG" component={UpdateTG} />
           <ProtectedRoute exact path="/TGDataHome" component={TGDataHome} />
           <ProtectedRoute exact path="/UploadTGData" component={UploadTGData} />
@@ -84,6 +88,9 @@ export default function AppRouter() {
 
           <ProtectedRoute exact path="/TGCHome" component={TGCHome} />
           <ProtectedRoute exact path="/TTCHome" component={TTCHome} />
+
+          <ProtectedRoute exact path="/AdminHome" component={AdminHome} />
+          <ProtectedRoute exact path="/ManagePage" component={ManagePage} />
 
           <ProtectedRoute exact path="/Details" component={StudentDetails} />
 

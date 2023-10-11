@@ -37,6 +37,9 @@ export default function Header({ navItems }) {
     ) {
       window.location.href = "/TGCHome";
     }
+    if (usertype === "Admin" && window.location.pathname !== "/AdminHome") {
+      window.location.href = "/AdminHome";
+    }
     if (usertype === "Select an option") {
       window.location.href = "/home";
     }

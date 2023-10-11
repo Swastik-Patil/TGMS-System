@@ -7,6 +7,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { child, get, ref as Ref, getDatabase } from "firebase/database";
 
 function Authenticate() {
   const [loading, setLoading] = useState(true);
@@ -55,6 +56,7 @@ function Authenticate() {
     "Teacher Guide",
     "Class Coordinator",
     "Teacher Guide Coordinator",
+    "Admin",
   ];
 
   function handleUserTypeChange(e) {
@@ -62,7 +64,7 @@ function Authenticate() {
     document.querySelector(".select-wrapper").classList.toggle("active");
   }
 
-  function performLogin(e) {
+  async function performLogin(e) {
     e.preventDefault();
     document.getElementById("LoginButton").style.disabled = true;
     if (!logemail || !logpassword) {
@@ -86,6 +88,43 @@ function Authenticate() {
         isClosable: true,
       });
       document.getElementById("LoginButton").style.disabled = false;
+      return;
+    }
+    const db = Ref(getDatabase());
+    let authUserArray = [];
+    let path;
+    if (usertype === "Admin") {
+      path = "AdminData";
+    }
+    if (usertype === "Teacher Guide") {
+      path = "tgEmails";
+    }
+    if (usertype === "Class Coordinator") {
+      path = "CCData";
+    }
+    if (usertype === "Teacher Guide Coordinator") {
+      path = "TGCData";
+    }
+
+    const snapshot = await get(child(db, path));
+    if (snapshot.exists()) {
+      let data = snapshot.val();
+      data = Object.keys(data).map((key) => data[key]);
+      data = data.map((ele) => authUserArray.push(ele.email));
+    }
+
+    if (!authUserArray.includes(logemail)) {
+      toast({
+        position: "top-right",
+        description: "Wrong Username. You are Not " + usertype,
+        status: "error",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
 

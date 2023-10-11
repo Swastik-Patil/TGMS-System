@@ -6,6 +6,8 @@ import { useToast } from "@chakra-ui/react";
 import { getDatabase, ref as Ref, child, get } from "firebase/database";
 
 function TGCHome() {
+  const [data, setData] = useState(null);
+
   const toast = useToast();
   function sendNotice() {
     const dbRef = Ref(getDatabase());
@@ -28,7 +30,40 @@ function TGCHome() {
         window.location.href = str;
       });
   }
-
+  async function generateNotice() {
+    const db = Ref(getDatabase());
+    try {
+      const snapshot = await get(child(db, "/ClassWiseData/TEA/"));
+      if (snapshot.exists()) {
+        let data = snapshot.val();
+        let sortedEntries = Object.entries(data).sort(
+          (a, b) => a[1].rNo - b[1].rNo
+        );
+        let sortedData = Object.fromEntries(sortedEntries);
+        sortedData = Object.keys(sortedData).map((key) => key);
+        let result = [];
+        const promises = sortedData.map((ele) =>
+          get(child(db, "/StudentsData/" + ele))
+        );
+        const snapshots = await Promise.all(promises);
+        snapshots.forEach((snapshot) => {
+          if (snapshot.exists()) {
+            let res = snapshot.val();
+            if (String(res.studentType) === "Slow") {
+              result.push(JSON.stringify(res));
+            }
+          }
+        });
+        window.localStorage.setItem("SlowStudents", JSON.stringify(result));
+        window.location.href = "Notice";
+        // console.log(data);
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <div className="frame" style={{ flexDirection: "column" }}>
       <Header />
@@ -55,6 +90,13 @@ function TGCHome() {
               </div>
             </div>
           </Link>
+          <div onClick={generateNotice}>
+            <div className="overlap">
+              <div className="rectangle">
+                <div className="text-wrapper">Generate Notice</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

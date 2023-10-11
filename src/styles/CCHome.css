@@ -30,7 +30,8 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-  gap: 5rem;
+  gap: 3rem;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .frame .rectangle {
@@ -49,7 +50,7 @@
 
 .frame .rectangle:hover {
   background-color: #35b5ec;
-  transform: scale(1.1);
+  transform: scale(1.05);
   cursor: pointer;
   transition: transform 0.3s, filter 0.2s ease-in-out;
 }

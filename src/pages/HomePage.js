@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import Studentportal from "./Student/Studentportal";
 
 export default function HomePage() {
-  const { currentUser } = useAuth();
   const [userType, setUserType] = useState(false);
   function checkAuthorization() {
     let usertype = window.localStorage.getItem("usertype");
@@ -19,6 +17,9 @@ export default function HomePage() {
     }
     if (usertype === "Class Coordinator") {
       window.location.href = "/CCHome";
+    }
+    if (usertype === "Admin") {
+      window.location.href = "/AdminHome";
     }
     if (usertype === "Select an option") {
       window.location.href = "/home";

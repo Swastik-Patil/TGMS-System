@@ -22,7 +22,6 @@ function TGHOME() {
   const [data, setData] = useState(null);
   const [filterValue, setFilterValue] = useState("");
 
-  // Under Maintainance
   function showApplicationDetails(uid) {
     window.sessionStorage.setItem("selectedStudent", String(uid));
     window.sessionStorage.setItem("showPanel", true);
@@ -54,8 +53,6 @@ function TGHOME() {
   ];
 
   useEffect(() => {
-    let cnt = parseInt(window.localStorage.getItem("cnt"));
-    window.localStorage.setItem("cnt", ++cnt);
     checkUser();
   }, []);
 

@@ -17,10 +17,13 @@ import SlowLearners from "./CC/SlowLearners";
 import UploadStudentData from "./UploadStudentData";
 import TGHOME from "./TG/TGHome";
 import TGCHome from "./TGC/TGCHome";
+import Notice from "./TGC/Notice";
 import UpdateTG from "./TGC/UpdateTG";
 import TGDataHome from "./TGC/TGDataHome";
 import UploadTGData from "./UploadTGData";
 import TTCHome from "./TTC/TTCHome";
+import AdminHome from "./Admin/AdminHome";
+import ManagePage from "./Admin/ManagePage";
 export {
   ResetPasswordPage,
   ForgotPasswordPage,
@@ -42,7 +45,10 @@ export {
   UploadStudentData,
   TGCHome,
   TTCHome,
+  Notice,
   UpdateTG,
   TGDataHome,
   UploadTGData,
+  AdminHome,
+  ManagePage,
 };

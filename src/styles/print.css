@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif:wght@700&display=swap");
+@media print {
+  .btn,
+  button,
+  input {
+    display: none;
+  }
+  #bc__doc {
+    min-width: 32rem;
+    max-width: 32rem;
+    margin: auto;
+  }
+  .bc__Border1 {
+    padding: 0.1em;
+    border: solid black thick;
+  }
+  .bc__Border2 {
+    padding: 1em;
+    border: solid black;
+  }
+  .bc__heading {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .bc__logo {
+    max-height: 70px;
+  }
+
+  .bc__heading * {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+  }
+  .dash {
+    border-top: 0.1rem solid black;
+  }
+  .bc__title {
+    text-align: center;
+  }
+  #bc__RegNo {
+    font-family: fantasy;
+  }
+  .date {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .bc__Signatures {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  .bc__clerk {
+    display: flex;
+    align-items: end;
+  }
+  .bc__Signatures > div {
+    text-align: center;
+  }
+}
+@page {
+  margin: 0.5em;
+}
+.book-date {
+  page-break-after: always;
+}
+
+.post-content {
+  page-break-before: always;
+}
+p {
+  page-break-inside: avoid;
+}
+.btn {
+  display: block;
+  padding: 2px 20px;
+}
+#bc__doc {
+  min-width: 42rem;
+  max-width: 42rem;
+  margin: auto;
+}
+.bc__Border1 {
+  padding: 0.1em;
+  border: solid black thick;
+}
+.bc__Border2 {
+  padding: 1em;
+  border: solid black;
+}
+.bc__heading {
+  display: flex;
+  justify-content: space-evenly;
+}
+.bc__heading * {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+.bc__heading > h1 {
+  font-family: sans-serif;
+  font-weight: 1000;
+  font-size: x-large;
+}
+.dash {
+  border-top: 0.1rem solid black;
+}
+.bc__title {
+  text-align: center;
+}
+#bc__RegNo {
+  font-family: fantasy;
+}
+.date {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.bc__Signatures {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+.bc__clerk {
+  display: flex;
+  align-items: end;
+}
+.bc__Signatures > div {
+  text-align: center;
+}

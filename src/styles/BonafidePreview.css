@@ -1,0 +1,57 @@
+#doc {
+  min-width: 42rem;
+  max-width: 42rem;
+  margin: auto;
+  box-shadow: 0 0 20px 0 rgba(72, 94, 116, 0.7);
+  padding: 1em;
+  background-color: #fff;
+  color: black;
+}
+
+#logo {
+  height: 80px;
+  width: 80px;
+}
+
+#bcTitle {
+  font-family: "PT Serif", serif;
+  font-size: larger;
+  font-weight: bolder;
+}
+#clgTitle {
+  font-size: larger;
+  font-weight: bolder;
+}
+
+.signText {
+  font-weight: bold;
+}
+.Signatures {
+  height: 120px;
+  width: 150px;
+  justify-content: space-between;
+}
+.btns {
+  color: white;
+  padding: 2px 20px;
+  background-color: #8011e1;
+}
+.Stamp {
+  height: 100px;
+  width: 120px;
+}
+#Actions {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: "center";
+}
+#Actions > a {
+  background-color: #b50e0e;
+  color: white;
+  border-radius: 5px;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -17,17 +17,6 @@ function CChome() {
     <div className="frame" style={{ flexDirection: "column" }}>
       <Header />
       <div className="div-2">
-        <div className="overlap-group-wrapper">
-          <div className="overlap-group">
-            <div className="text-wrapper-4">Welcome,</div>
-            <div className="text-wrapper-3">
-              {currentUser.displayName
-                ? currentUser.displayName
-                : currentUser.email.split("@")[0]}
-            </div>
-          </div>
-        </div>
-
         <div className="div-3">
           <Link to="UploadResults">
             <div className="overlap">
