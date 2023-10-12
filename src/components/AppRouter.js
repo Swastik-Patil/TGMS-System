@@ -69,7 +69,7 @@ export default function AppRouter() {
           <ProtectedRoute exact path="/UploadPage" component={UploadPage} />
           <ProtectedRoute exact path="/SlowLearners" component={SlowLearners} />
 
-          <ProtectedRoute exact path="/TGHOME" component={TGHOME} />
+          <ProtectedRoute exact path="/TGHome" component={TGHOME} />
           <ProtectedRoute exact path="/Notice" component={Notice} />
           <ProtectedRoute exact path="/UpdateTG" component={UpdateTG} />
           <ProtectedRoute exact path="/TGDataHome" component={TGDataHome} />

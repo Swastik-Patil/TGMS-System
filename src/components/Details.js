@@ -107,7 +107,7 @@ function Details({ showActionPanel, navItems }) {
           <DocumentHolder>
             <h3>Results</h3>
             <div>
-              {pendingData.Results ? (
+              {pendingData.Results && pendingData.Results["IA 1"] ? (
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <Text fontWeight={"bold"}>{"IA 1"}</Text>
                   <TableHodler>
@@ -122,15 +122,15 @@ function Details({ showActionPanel, navItems }) {
                       <Tbody>
                         <Tr>
                           <Td fontWeight={"bold"}>CN :</Td>
-                          <Td>{pendingData.Results.IA1.CN}</Td>
+                          <Td>{pendingData.Results["IA 1"].CN}</Td>
                         </Tr>
                         <Tr>
                           <Td fontWeight={"bold"}>DWM:</Td>
-                          <Td>{pendingData.Results.IA1.DWM}</Td>
+                          <Td>{pendingData.Results["IA 1"].DWM}</Td>
                         </Tr>
                         <Tr>
                           <Td fontWeight={"bold"}>SE :</Td>
-                          <Td>{pendingData.Results.IA1.SE}</Td>
+                          <Td>{pendingData.Results["IA 1"].SE}</Td>
                         </Tr>
                       </Tbody>
                     </Table>
@@ -145,23 +145,127 @@ function Details({ showActionPanel, navItems }) {
                       <Tbody>
                         <Tr>
                           <Td fontWeight={"bold"}>TCS :</Td>
-                          <Td>{pendingData.Results.IA1.TCS}</Td>
+                          <Td>{pendingData.Results["IA 1"].TCS}</Td>
                         </Tr>
                         <Tr>
                           <Td fontWeight={"bold"}>IP :</Td>
-                          <Td>{pendingData.Results.IA1.IP}</Td>
+                          <Td>{pendingData.Results["IA 1"].IP}</Td>
                         </Tr>
                         <Tr>
                           <Td fontWeight={"bold"}>Total :</Td>
-                          <Td>{pendingData.Results.IA1.Total}</Td>
+                          <Td>{pendingData.Results["IA 1"].Total}</Td>
                         </Tr>
                       </Tbody>
                     </Table>
                   </TableHodler>
                 </div>
-              ) : (
-                <div>No Results Uploaded</div>
-              )}
+              ) : null}
+              {pendingData.Results && pendingData.Results["IA 2"] ? (
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <Text fontWeight={"bold"}>{"IA 2"}</Text>
+                  <TableHodler>
+                    <Table
+                      variant="simple"
+                      colorScheme="gray"
+                      size="md"
+                      maxW={{ base: "400px", lg: "1300px" }}
+                      borderRadius={{ lg: "20px" }}
+                      background="white"
+                    >
+                      <Tbody>
+                        <Tr>
+                          <Td fontWeight={"bold"}>CN :</Td>
+                          <Td>{pendingData.Results["IA 2"].CN}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>DWM:</Td>
+                          <Td>{pendingData.Results["IA 2"].DWM}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>SE :</Td>
+                          <Td>{pendingData.Results["IA 2"].SE}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                    <Table
+                      variant="simple"
+                      colorScheme="gray"
+                      size="md"
+                      maxW={{ base: "400px", lg: "1300px" }}
+                      borderRadius={{ lg: "20px" }}
+                      background="white"
+                    >
+                      <Tbody>
+                        <Tr>
+                          <Td fontWeight={"bold"}>TCS :</Td>
+                          <Td>{pendingData.Results["IA 2"].TCS}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>IP :</Td>
+                          <Td>{pendingData.Results["IA 2"].IP}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>Total :</Td>
+                          <Td>{pendingData.Results["IA 2"].Total}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </TableHodler>
+                </div>
+              ) : null}
+              {pendingData.Results && pendingData.Results["SEM"] ? (
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <Text fontWeight={"bold"}>{"IA 2"}</Text>
+                  <TableHodler>
+                    <Table
+                      variant="simple"
+                      colorScheme="gray"
+                      size="md"
+                      maxW={{ base: "400px", lg: "1300px" }}
+                      borderRadius={{ lg: "20px" }}
+                      background="white"
+                    >
+                      <Tbody>
+                        <Tr>
+                          <Td fontWeight={"bold"}>CN :</Td>
+                          <Td>{pendingData.Results["SEM"].CN}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>DWM:</Td>
+                          <Td>{pendingData.Results["SEM"].DWM}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>SE :</Td>
+                          <Td>{pendingData.Results["SEM"].SE}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                    <Table
+                      variant="simple"
+                      colorScheme="gray"
+                      size="md"
+                      maxW={{ base: "400px", lg: "1300px" }}
+                      borderRadius={{ lg: "20px" }}
+                      background="white"
+                    >
+                      <Tbody>
+                        <Tr>
+                          <Td fontWeight={"bold"}>TCS :</Td>
+                          <Td>{pendingData.Results["SEM"].TCS}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>IP :</Td>
+                          <Td>{pendingData.Results["SEM"].IP}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td fontWeight={"bold"}>Total :</Td>
+                          <Td>{pendingData.Results["SEM"].Total}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </TableHodler>
+                </div>
+              ) : null}
             </div>
           </DocumentHolder>
           {(showActionPanel || showPanel) && (

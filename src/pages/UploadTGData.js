@@ -110,7 +110,14 @@ function UploadTGData() {
               </li>
             </ol>
           </Instructions>
-          <form id="excelForm" onSubmit={handleSubmit}>
+          <form
+            id="excelForm"
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              gap: ".5rem",
+            }}
+          >
             <input
               type="file"
               onChange={handleFile}
@@ -118,13 +125,14 @@ function UploadTGData() {
               accept=".xls,.xlsx"
               style={{
                 border: "1px solid black",
-                margin: "0px 20px",
+                width: "15rem",
                 borderRadius: "5px",
+                alignSelf: "center",
               }}
               required
             />
 
-            <button type="submit">submit</button>
+            <Button type="submit">submit</Button>
             <h3
               style={{
                 paddingLeft: "50px",
@@ -196,5 +204,19 @@ const Instructions = styled.div`
     height: 520px;
   }
 `;
+const Button = styled.button`
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #2c9eda;
+  border: 1px solid #2c9eda;
+  color: white;
+  font-weight: 500;
 
+  :hover {
+    color: #1d1d1d;
+    background-color: inherit;
+    border: 1px solid #1d1d1d;
+    box-shadow: 2px 10px 20px 0px #1d1d1d;
+  }
+`;
 export default UploadTGData;

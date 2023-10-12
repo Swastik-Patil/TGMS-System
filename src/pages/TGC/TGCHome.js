@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/CCHome.css";
 import Header from "../../components/Header";
 import { useToast } from "@chakra-ui/react";
 import { getDatabase, ref as Ref, child, get } from "firebase/database";
+import CheckAuthorization from "../../utils/CheckAuthorization";
 
 function TGCHome() {
   const [data, setData] = useState(null);
@@ -64,6 +65,23 @@ function TGCHome() {
       console.error(error);
     }
   }
+
+  useEffect(() => {
+    let usertype = window.localStorage.getItem("usertype");
+    if (usertype === "Teacher Guide") {
+      window.location.href = "/TGHome";
+    }
+    if (usertype === "Class Coordinator") {
+      window.location.href = "/CCHome";
+    }
+    if (usertype === "Admin") {
+      window.location.href = "/AdminHome";
+    }
+    if (usertype === "Select an option") {
+      window.location.href = "/home";
+    }
+  }, []);
+
   return (
     <div className="frame" style={{ flexDirection: "column" }}>
       <Header />

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/print.css";
 import "../../styles/BonafidePreview.css";
-import { ref as dbref, child, get } from "firebase/database";
+// import { ref as dbref, child, get } from "firebase/database";
 import BeatLoader from "react-spinners/BeatLoader";
 
 export default function Notice() {
   const [userData, setUserData] = useState(null);
-  const [enroll, setEnroll] = useState(null);
-  const [branch, setBranch] = useState(null);
-  const [actionDate, setActionDate] = useState(null);
+  // const [branch, setBranch] = useState(null);
+  // const [enroll, setEnroll] = useState(null);
+  // const [actionDate, setActionDate] = useState(null);
   const [loading, setLoading] = useState(true);
 
   function readNoticeData() {
@@ -28,6 +28,7 @@ export default function Notice() {
     });
 
     setUserData(data);
+    console.log(userData);
     setLoading(false);
   }
 
@@ -35,19 +36,18 @@ export default function Notice() {
     window.location.href = "/home";
   }
 
-  function formatNo(No) {
-    let no = new String(No);
-    if (no.length != 3) {
-      while (no.length < 3) {
-        no = "0" + no;
-      }
-    }
-    return no;
-  }
+  // function formatNo(No) {
+  //   let no = new String(No);
+  //   if (no.length != 3) {
+  //     while (no.length < 3) {
+  //       no = "0" + no;
+  //     }
+  //   }
+  //   return no;
+  // }
 
   useEffect(() => {
     readNoticeData();
-    return () => {};
   }, []);
 
   function PrintDoc() {

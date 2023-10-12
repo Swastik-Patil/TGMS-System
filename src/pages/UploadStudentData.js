@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { ref as dbref, update } from "firebase/database";
 import { database } from "../utils/init-firebase";
@@ -6,18 +6,6 @@ import styled from "styled-components";
 
 function UploadStudentData() {
   const [excelFile, setExcelFile] = useState(null);
-  //   const { currentUser } = useAuth();
-
-  useEffect(() => {
-    // checkAuthorization();
-  });
-
-  //   function checkAuthorization() {
-  //     const emails = ["principalGPP@gmail.com", "admin@gmail.com"];
-  //     if (emails.indexOf(currentUser.email) === -1) {
-  //       window.location.replace("/profile");
-  //     }
-  //   }
 
   const handleFile = (e) => {
     let selectedFile = e.target.files[0];
@@ -71,9 +59,10 @@ function UploadStudentData() {
           email: ele.email,
         });
       });
+      let currClass = window.localStorage.getItem("currClass");
       data.forEach((ele, index) => {
         let IDRef = ele.admissionNo;
-        update(dbref(db, "/ClassWiseData/TEA/" + IDRef), {
+        update(dbref(db, "/ClassWiseData/" + currClass + "/" + IDRef), {
           rNo: ele.rNo,
         });
       });
@@ -120,7 +109,14 @@ function UploadStudentData() {
               </li>
             </ol>
           </Instructions>
-          <form id="excelForm" onSubmit={handleSubmit}>
+          <form
+            id="excelForm"
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              gap: ".5rem",
+            }}
+          >
             <input
               type="file"
               onChange={handleFile}
@@ -128,13 +124,14 @@ function UploadStudentData() {
               accept=".xls,.xlsx"
               style={{
                 border: "1px solid black",
-                margin: "0px 20px",
+                width: "15rem",
                 borderRadius: "5px",
+                alignSelf: "center",
               }}
               required
             />
 
-            <button type="submit">submit</button>
+            <Button type="submit">submit</Button>
             <h3
               style={{
                 paddingLeft: "50px",
@@ -159,23 +156,10 @@ const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  // background-image: linear-gradient(
-  //   -138deg,
-  //   rgb(19, 176, 238) 40.7%,
-  //   rgba(0, 8, 187, 1) 84.4%,
-  //   rgba(255, 255, 255, 1) 119.7%
-  // );
-  bottom: 0;
-  right: 0;
   width: 100%;
 `;
-
 const Holder = styled.div`
-  width: 90%;
+  width: 95%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -185,7 +169,7 @@ const Holder = styled.div`
   height: 450px;
   background-color: whitesmoke;
   z-index: 0;
-
+  padding-inline: 1.5rem;
   @media (max-width: 650px) {
     height: 520px;
   }
@@ -209,6 +193,21 @@ const Instructions = styled.div`
 
   @media (max-width: 650px) {
     height: 520px;
+  }
+`;
+const Button = styled.button`
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #2c9eda;
+  border: 1px solid #2c9eda;
+  color: white;
+  font-weight: 500;
+
+  :hover {
+    color: #1d1d1d;
+    background-color: inherit;
+    border: 1px solid #1d1d1d;
+    box-shadow: 2px 10px 20px 0px #1d1d1d;
   }
 `;
 export default UploadStudentData;

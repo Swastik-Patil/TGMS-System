@@ -25,10 +25,8 @@ import {
   get,
   child,
 } from "firebase/database";
-import { useAuth } from "../../contexts/AuthContext";
-
+import CheckAuthorization from "../../utils/CheckAuthorization";
 function AdminHome() {
-  const { currentUser } = useAuth();
   const toast = useToast();
   const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;
   const {
@@ -142,6 +140,16 @@ function AdminHome() {
   }
 
   useEffect(() => {
+    let usertype = window.localStorage.getItem("usertype");
+    if (usertype === "Teacher Guide") {
+      window.location.href = "/TGHome";
+    }
+    if (usertype === "Teacher Guide Coordinator") {
+      window.location.href = "/TGCHome";
+    }
+    if (usertype === "Class Coordinator") {
+      window.location.href = "/CCHome";
+    }
     getAvailableClasses();
   }, []);
 
@@ -156,7 +164,7 @@ function AdminHome() {
           alignItems: "center",
         }}
       >
-        <div className="div-3" style={{ display: "flex", width: "70%" }}>
+        <div className="div-3" style={{ display: "grid", width: "70%" }}>
           <div
             onClick={onOpen1}
             style={{ display: "flex", justifyContent: "center" }}
@@ -253,7 +261,7 @@ function AdminHome() {
       >
         <OverlayOne />
         <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
+          <ModalHeader>Add Class Coordinator</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
@@ -325,7 +333,7 @@ function AdminHome() {
       >
         <OverlayOne />
         <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
+          <ModalHeader>Add New TG Coordinator</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
@@ -353,7 +361,7 @@ function AdminHome() {
       >
         <OverlayOne />
         <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
+          <ModalHeader>Add New TT Coordinator</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>

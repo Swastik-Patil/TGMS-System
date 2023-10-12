@@ -58,7 +58,10 @@ function SlowLearners() {
     const db = dbref(getDatabase());
 
     try {
-      const snapshot = await get(child(db, "/ClassWiseData/TEA/"));
+      let currClass = window.localStorage.getItem("currClass");
+      const snapshot = await get(
+        child(db, "/ClassWiseData/" + currClass + "/")
+      );
       if (snapshot.exists()) {
         let data = snapshot.val();
         let sortedEntries = Object.entries(data).sort(

@@ -79,7 +79,10 @@ function Authenticate() {
       return;
     }
 
-    if (String(logemail).toLowerCase().includes("@student")) {
+    if (
+      String(logemail).toLowerCase().includes("@student") &&
+      usertype !== "Student"
+    ) {
       toast({
         position: "top-right",
         description: "Please Select Student as a Option",
@@ -90,6 +93,7 @@ function Authenticate() {
       document.getElementById("LoginButton").style.disabled = false;
       return;
     }
+
     const db = Ref(getDatabase());
     let authUserArray = [];
     let path;
@@ -105,15 +109,22 @@ function Authenticate() {
     if (usertype === "Teacher Guide Coordinator") {
       path = "TGCData";
     }
-
-    const snapshot = await get(child(db, path));
-    if (snapshot.exists()) {
-      let data = snapshot.val();
-      data = Object.keys(data).map((key) => data[key]);
-      data = data.map((ele) => authUserArray.push(ele.email));
+    if (usertype !== "Student") {
+      const snapshot = await get(child(db, path));
+      if (snapshot.exists()) {
+        let data = snapshot.val();
+        data = Object.keys(data).map((key) => data[key]);
+        data = data.map((ele) => {
+          if (ele.email !== undefined) {
+            authUserArray.push(ele.email);
+          } else {
+            authUserArray.push(ele);
+          }
+        });
+      }
     }
 
-    if (!authUserArray.includes(logemail)) {
+    if (!authUserArray.includes(logemail) && usertype !== "Student") {
       toast({
         position: "top-right",
         description: "Wrong Username. You are Not " + usertype,
@@ -174,9 +185,6 @@ function Authenticate() {
       .finally(() => {
         document.getElementById("LoginButton").innerHTML = "Login";
       });
-
-    e.preventDefault();
-
     document.getElementById("LoginButton").style.disabled = false;
   }
 

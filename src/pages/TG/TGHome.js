@@ -16,6 +16,7 @@ import {
 import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
 import Header from "../../components/Header";
+import CheckAuthorization from "../../utils/CheckAuthorization";
 
 function TGHOME() {
   const { currentUser } = useAuth();
@@ -53,6 +54,19 @@ function TGHOME() {
   ];
 
   useEffect(() => {
+    let usertype = window.localStorage.getItem("usertype");
+    if (usertype === "Teacher Guide Coordinator") {
+      window.location.href = "/TGCHome";
+    }
+    if (usertype === "Class Coordinator") {
+      window.location.href = "/CCHome";
+    }
+    if (usertype === "Admin") {
+      window.location.href = "/AdminHome";
+    }
+    if (usertype === "Select an option") {
+      window.location.href = "/home";
+    }
     checkUser();
   }, []);
 
