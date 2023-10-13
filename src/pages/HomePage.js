@@ -5,10 +5,7 @@ export default function HomePage() {
   const [userType, setUserType] = useState(false);
   function checkAuthorization() {
     let usertype = window.localStorage.getItem("usertype");
-    if (usertype === "Student") {
-      setUserType(true);
-      return;
-    }
+
     if (usertype === "Teacher Guide") {
       window.location.href = "/TGHome";
     }
@@ -28,8 +25,7 @@ export default function HomePage() {
 
   useEffect(() => {
     checkAuthorization();
-    return () => {};
   }, []);
 
-  return <React.Fragment>{userType && <Studentportal />}</React.Fragment>;
+  return <React.Fragment>{<Studentportal />}</React.Fragment>;
 }
