@@ -65,12 +65,8 @@ function UpdateTG() {
     }, 1500);
   }, []);
 
-  function showApplicationDetails(index) {
-    if (index - 1 === 1) {
-      tgData[index - 1].shift();
-    }
+  function showApplicationDetails(index, ele) {
     let data = tgData[index - 1];
-
     if (!Array.isArray(data)) {
       data = Object.keys(data).map((key) => {
         return data[key];
@@ -78,6 +74,7 @@ function UpdateTG() {
     }
 
     window.sessionStorage.setItem("tgData", JSON.stringify(data));
+    window.sessionStorage.setItem("selectedTG", ele);
     window.location.href = "/TGDataHome";
   }
 
@@ -104,8 +101,8 @@ function UpdateTG() {
   }
 
   async function deleteTG() {
-    const database = getDatabase();
-    const databaseReference = dbref(database, "tg/" + selectedTG);
+    const db = getDatabase();
+    const databaseReference = dbref(db, "tgmsData/" + String(selectedTG));
 
     await remove(databaseReference);
     setIsOpen(false);
@@ -164,7 +161,7 @@ function UpdateTG() {
                               <Button
                                 colorScheme="blue"
                                 onClick={() => {
-                                  showApplicationDetails(index);
+                                  showApplicationDetails(index, ele);
                                 }}
                               >
                                 View Details

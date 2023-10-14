@@ -13,6 +13,7 @@ import {
   Input,
   Box,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 
 export default function UploadCertificate({ data }) {
@@ -21,7 +22,7 @@ export default function UploadCertificate({ data }) {
   const [certType, setCertType] = useState("course");
   const [completionDate, setCompletionDate] = useState("");
   const { currentUser } = useAuth();
-
+  const toast = useToast();
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -37,9 +38,19 @@ export default function UploadCertificate({ data }) {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (fileName === null || certType === null || !file) {
-      alert("Fill all the Details");
+      // alert("Fill all the Details");
+      toast({
+        position: "top-right",
+        description: "Fill all the Details.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     } else {
       document.getElementById("uploadButton").disabled = true;
+      document.getElementById(
+        "uploadButton"
+      ).innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div>`;
       let data = JSON.parse(localStorage.getItem("data"));
       let storageRef = ref(
         storage,
@@ -56,8 +67,6 @@ export default function UploadCertificate({ data }) {
 
   const handleSubmit = (downloadURLBC) => {
     let data = JSON.parse(localStorage.getItem("data"));
-    document.getElementById("uploadButton").innerHTML = `Finishing Up`;
-
     const db = database;
     update(
       Ref(
@@ -74,7 +83,13 @@ export default function UploadCertificate({ data }) {
       }
     )
       .then(() => {
-        alert("Certificate Uploaded Successfully");
+        toast({
+          position: "top-right",
+          description: "Uploaded Successfully.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
         document.getElementById("uploadButton").innerHTML = `Submit`;
         document.getElementById("uploadButton").disabled = false;
       })
@@ -109,9 +124,9 @@ export default function UploadCertificate({ data }) {
       >
         <Box
           bg={"white"}
-          p={"8"}
+          p={{ sm: "2", md: "6", lg: "8" }}
           boxShadow={{ md: "2px 3px 12px", base: "2px 2px 6px" }}
-          rounded={{ sm: "lg" }}
+          rounded={"lg"}
         >
           <HStack p={"2"}>
             <Text>Certificate Title : </Text>

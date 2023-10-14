@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../../components/Header";
 import {
   Table,
@@ -9,15 +9,44 @@ import {
   Td,
   TableCaption,
   TableContainer,
-  Button,
+  FormControl,
+  FormLabel,
   Input,
+  Button,
+  Box,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
+import {
+  update,
+  ref as dbRef,
+  getDatabase,
+  get,
+  child,
+} from "firebase/database";
 import styled from "styled-components";
 
 function TGDataHome() {
   const [data, setData] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const {
+    isOpen: isOpen1,
+    onOpen: onOpen1,
+    onClose: onClose1,
+  } = useDisclosure();
+  const toast = useToast();
+  const admissionNoRef = useRef(null);
+  const nameRef = useRef(null);
+  const rollRef = useRef(null);
+  const classRef = useRef(null);
+  const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;
   const columns = [
     {
       key: "RNo",
@@ -37,6 +66,33 @@ function TGDataHome() {
     },
   ];
 
+  function saveStudent() {
+    let div = window.sessionStorage.getItem("selectedTG");
+    const db = getDatabase();
+    update(
+      dbRef(db, "/tgmsData/" + div + "/" + admissionNoRef.current?.value + "/"),
+      {
+        NameoftheStudents: nameRef.current?.value,
+        NameoftheFaculty: window.sessionStorage.getItem("selectedTG"),
+        Class: classRef.current?.value,
+        RollNo: rollRef.current?.value,
+        AdmissionNo: admissionNoRef.current?.value,
+      }
+    ).then(() => {
+      onClose1();
+      toast({
+        position: "top-right",
+        description: "Student Added Successfully",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        window.location.href = "/TGCHome";
+      }, 1500);
+    });
+  }
+
   useEffect(() => {
     let data = JSON.parse(window.sessionStorage.getItem("tgData"));
     setData(data);
@@ -49,14 +105,24 @@ function TGDataHome() {
         {data && (
           <>
             <div className="flex flex-col gap-4">
-              <div className="flex justify-between gap-3 items-end">
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                justifyContent={"space-between"}
+                alignItems={"items-end"}
+                gap="2"
+              >
                 <Input
                   className="w-full sm:max-w-[44%]"
                   placeholder="Search by name or roll number"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
                 />
-              </div>
+                <div style={{ width: "40px" }}> </div>
+                <Button colorScheme="blue" onClick={onOpen1}>
+                  Add New
+                </Button>
+              </Box>
             </div>
             <TableContainer>
               <Table id="myTable1" variant="simple">
@@ -108,6 +174,44 @@ function TGDataHome() {
           </>
         )}
       </TableParent>
+      <Modal
+        initialFocusRef={admissionNoRef}
+        isOpen={isOpen1}
+        onClose={onClose1}
+        motionPreset="slideInBottom"
+      >
+        <OverlayOne />
+        <ModalContent>
+          <ModalHeader>Add Class Coordinator</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>Admission No</FormLabel>
+              <Input ref={admissionNoRef} placeholder="Enter Admission No" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Input ref={nameRef} placeholder="Last First Middle" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Roll No</FormLabel>
+              <Input ref={rollRef} placeholder="Enter Roll No" />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Class</FormLabel>
+              <Input ref={classRef} placeholder="Enter Class and Div" />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={saveStudent}>
+              Save
+            </Button>
+            <Button onClick={onClose1}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

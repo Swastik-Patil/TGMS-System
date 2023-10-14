@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import { ref as dbref, update } from "firebase/database";
 import { database } from "../utils/init-firebase";
 import styled from "styled-components";
+import Header from "../components/Header";
 
 function UploadStudentData() {
   const [excelFile, setExcelFile] = useState(null);
@@ -32,35 +33,31 @@ function UploadStudentData() {
       const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
-      document.getElementById("status").style.display = "block";
       setExcelFile(data);
       const db = database;
-      let len = 0,
-        size = data.length;
-      data.forEach((ele) => {
+      const dataToSend = data.map((item) => {
+        item.dateOfBirth = String(item.dateOfBirth)
+          .replaceAll("-", ".")
+          .replaceAll("/", ".");
+        return {
+          ...item,
+        };
+      });
+      dataToSend.forEach((ele) => {
         let IDRef = ele.admissionNo;
         update(dbref(db, "/StudentsData/" + IDRef), {
           ...ele,
-        }).then((snapshot) => {
-          len += 1;
-          document.getElementById(
-            "status"
-          ).innerText = `${len} out of ${size} data uploaded`;
-          // console.log(`${len} out of ${size} data uploaded`);
-          if (len >= size)
-            document.getElementById("status").innerText =
-              "Uploaded Successfully";
         });
       });
-      data.forEach((ele) => {
+      dataToSend.forEach((ele) => {
         let IDRef = ele.admissionNo;
         update(dbref(db, "/EmailAdmissionNo/" + IDRef), {
           admissionNo: ele.admissionNo,
-          email: ele.email,
+          mesId: ele.mesId,
         });
       });
       let currClass = window.localStorage.getItem("currClass");
-      data.forEach((ele, index) => {
+      dataToSend.forEach((ele, index) => {
         let IDRef = ele.admissionNo;
         update(dbref(db, "/ClassWiseData/" + currClass + "/" + IDRef), {
           rNo: ele.rNo,
@@ -72,15 +69,8 @@ function UploadStudentData() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100%",
-      }}
-    >
+    <div>
+      <Header />
       <Container>
         <Holder>
           <Instructions>
@@ -88,12 +78,11 @@ function UploadStudentData() {
               Instructions
             </b>
             <ol>
-              <li>Create Excel file with extension (.xls or .xlsx)</li>
               <li>
                 Download the template for filling data from here :{" "}
                 <a
                   style={{ color: "blue" }}
-                  href="https://docs.google.com/spreadsheets/d/1FraYcIGRoTIrRTCKZFQbPofmfxOS3FfE/edit?usp=sharing&ouid=109387194985691076986&rtpof=true&sd=true"
+                  href="https://docs.google.com/spreadsheets/d/1YG5GVo-U5w_qRW4wBSBJrpj6A50v3djvi0VRliDDeYU/edit?usp=sharing"
                   target="_blank"
                   rel={"noreferrer"}
                 >
@@ -132,18 +121,6 @@ function UploadStudentData() {
             />
 
             <Button type="submit">submit</Button>
-            <h3
-              style={{
-                paddingLeft: "50px",
-                paddingTop: "25px",
-                color: "green",
-                fontWeight: "bold",
-                display: "none",
-              }}
-              id="status"
-            >
-              Uploading data... Please wait
-            </h3>
           </form>
         </Holder>
       </Container>
@@ -154,26 +131,26 @@ function UploadStudentData() {
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
   width: 100%;
 `;
+
 const Holder = styled.div`
-  width: 95%;
+  width: 90%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   border: 2px solid grey;
   border-radius: 12px;
   justify-content: center;
-  height: 450px;
   background-color: whitesmoke;
   z-index: 0;
-  padding-inline: 1.5rem;
+  padding-block: 1rem;
   @media (max-width: 650px) {
     height: 520px;
   }
 `;
+
 const Instructions = styled.div`
   width: 60%;
   box-shadow: 2px 2px 3px grey;
@@ -186,10 +163,10 @@ const Instructions = styled.div`
   font-family: sans-serif;
   gap: 10px;
   justify-content: center;
-  height: 350px;
+  height: 250px;
   background-color: white;
   z-index: 0;
-  margin: 20px;
+  margin: 5px;
 
   @media (max-width: 650px) {
     height: 520px;

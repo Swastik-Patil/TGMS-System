@@ -3,10 +3,11 @@ import * as XLSX from "xlsx";
 import { ref as dbref, update } from "firebase/database";
 import { database } from "../utils/init-firebase";
 import styled from "styled-components";
-
+import { useToast } from "@chakra-ui/react";
+import Header from "../components/Header";
 function UploadTGData() {
   const [excelFile, setExcelFile] = useState(null);
-
+  const toast = useToast();
   const handleFile = (e) => {
     let selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -27,8 +28,11 @@ function UploadTGData() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (excelFile !== null) {
+      document.getElementById("uploadBtn").disabled = true;
+      document.getElementById("uploadBtn").innerHTML =
+        '<div class="spinner-border spinner-border-sm" role="status"></div>';
       const workbook = XLSX.read(excelFile, { type: "buffer" });
-      const worksheetName = workbook.SheetNames[1];
+      const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
 
@@ -41,47 +45,40 @@ function UploadTGData() {
           item.Nameofthefaculty = name;
           item.Class = Class;
         }
-        item["id"] = item.SrNo;
         delete item.SrNo;
         return {
           ...item,
         };
       });
 
-      document.getElementById("status").style.display = "block";
       setExcelFile(dataToSend);
       const db = database;
-      let len = 0,
-        size = data.length - 1;
       dataToSend.forEach((ele) => {
         let IDRef = String(ele.Nameofthefaculty).split(".")[1].trim();
-        update(dbref(db, "/tgmsData/" + IDRef + "/" + ele.id), {
+        update(dbref(db, "/tgmsData/" + IDRef + "/" + ele.admissionNo), {
           ...ele,
-        }).then((snapshot) => {
-          len += 1;
-          document.getElementById(
-            "status"
-          ).innerText = `${len} out of ${size} data uploaded`;
-          if (len >= size)
-            document.getElementById("status").innerText =
-              "Uploaded Successfully";
+        });
+        update(dbref(db, "/StudentsData/" + ele.admissionNo + "/"), {
+          tg: IDRef,
         });
       });
+      toast({
+        position: "top-right",
+        description: "Data Uploaded Successfully.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      document.getElementById("uploadBtn").innerHTML = "Submit";
+      document.getElementById("uploadBtn").disabled = false;
     } else {
       alert("Empty file not allowed");
     }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100%",
-      }}
-    >
+    <div>
+      <Header />
       <Container>
         <Holder>
           <Instructions>
@@ -89,7 +86,6 @@ function UploadTGData() {
               Instructions
             </b>
             <ol>
-              <li>Create Excel file with extension (.xls or .xlsx)</li>
               <li>
                 Download the template for filling data from here :{" "}
                 <a
@@ -132,19 +128,9 @@ function UploadTGData() {
               required
             />
 
-            <Button type="submit">submit</Button>
-            <h3
-              style={{
-                paddingLeft: "50px",
-                paddingTop: "25px",
-                color: "green",
-                fontWeight: "bold",
-                display: "none",
-              }}
-              id="status"
-            >
-              Uploading data... Please wait
-            </h3>
+            <Button type="submit" id="uploadBtn">
+              Submit
+            </Button>
           </form>
         </Holder>
       </Container>
@@ -155,29 +141,21 @@ function UploadTGData() {
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
   width: 100%;
 `;
 
 const Holder = styled.div`
   width: 90%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   border: 2px solid grey;
   border-radius: 12px;
   justify-content: center;
-  height: 450px;
   background-color: whitesmoke;
   z-index: 0;
-
+  padding-block: 1rem;
   @media (max-width: 650px) {
     height: 520px;
   }
@@ -195,10 +173,10 @@ const Instructions = styled.div`
   font-family: sans-serif;
   gap: 10px;
   justify-content: center;
-  height: 350px;
+  height: 250px;
   background-color: white;
   z-index: 0;
-  margin: 20px;
+  margin: 5px;
 
   @media (max-width: 650px) {
     height: 520px;

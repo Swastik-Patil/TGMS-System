@@ -34,6 +34,10 @@ function SlowLearners() {
       label: "Name of the Students",
     },
     {
+      key: "TG",
+      label: "TG Name",
+    },
+    {
       key: "status",
       label: "Student Type",
     },
@@ -137,6 +141,7 @@ function SlowLearners() {
                           <Td>{ele.rNo}</Td>
                           <Td>{ele.admissionNo}</Td>
                           <Td>{ele.name}</Td>
+                          <Td>{ele.tg}</Td>
                           <Td>{ele.studentType}</Td>
                           <Td>
                             <Button

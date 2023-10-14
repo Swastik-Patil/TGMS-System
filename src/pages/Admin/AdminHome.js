@@ -25,7 +25,6 @@ import {
   get,
   child,
 } from "firebase/database";
-import CheckAuthorization from "../../utils/CheckAuthorization";
 function AdminHome() {
   const toast = useToast();
   const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;

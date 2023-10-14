@@ -6,10 +6,12 @@ import { ref as dbref, update } from "firebase/database";
 import { database } from "../../utils/init-firebase";
 import styled from "styled-components";
 import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
+import { useToast } from "@chakra-ui/react";
 export const UploadResults = () => {
   const [excelFile, setExcelFile] = useState(null);
   const [examType, setExamType] = useState("Select an Examination");
-
+  const [sem, setSem] = useState("Selecta SEM");
+  const toast = useToast();
   const handleFile = (e) => {
     let selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -36,7 +38,13 @@ export const UploadResults = () => {
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
 
-      document.getElementById("status").style.display = "block";
+      toast({
+        position: "top-right",
+        description: "Result Uploading Started.",
+        status: "info",
+        duration: 1000,
+        isClosable: true,
+      });
       setExcelFile(data);
       const db = database;
 
@@ -81,20 +89,23 @@ export const UploadResults = () => {
         update(dbref(db, "/StudentsData/" + IDRef + "/"), {
           studentType: ele.studentType,
         });
-
+        delete ele["studentType"];
         update(
-          dbref(db, "/StudentsData/" + IDRef + "/Results/" + examType + "/"),
+          dbref(
+            db,
+            "/StudentsData/" + IDRef + "/Results/" + sem + "/" + examType + "/"
+          ),
           {
-            CN: ele.CN,
-            DWM: ele.DWM,
-            TCS: ele.TCS,
-            SE: ele.SE,
-            IP: ele.IP,
-            Total: ele.Total,
+            ...ele,
           }
-        ).then((snapshot) => {
-          "Uploaded Successfully";
-        });
+        );
+      });
+      toast({
+        position: "top-right",
+        description: "Result Uploaded Successfully.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
     } else {
       alert("Empty file not allowed");
@@ -102,9 +113,23 @@ export const UploadResults = () => {
   };
 
   const Option = ["IA 1", "IA 2", "SEM"];
+  const Option2 = [
+    "SEM 1",
+    "SEM 2",
+    "SEM 3",
+    "SEM 4",
+    "SEM 5",
+    "SEM 6",
+    "SEM 7",
+    "SEM 8",
+  ];
   function handleExamTypeChange(e) {
     setExamType(e.target.outerText);
-    document.querySelector(".select-wrapper").classList.toggle("active");
+    document.querySelectorAll(".select-wrapper")[1].classList.toggle("active");
+  }
+  function handleSemChange(e) {
+    setSem(e.target.outerText);
+    document.querySelectorAll(".select-wrapper")[0].classList.toggle("active");
   }
 
   return (
@@ -117,12 +142,11 @@ export const UploadResults = () => {
               Instructions
             </b>
             <ol>
-              <li>Create Excel file with extension (.xls or .xlsx)</li>
               <li>
                 Download the template for filling data from here :{" "}
                 <a
                   style={{ color: "blue" }}
-                  href="https://docs.google.com/spreadsheets/d/1FraYcIGRoTIrRTCKZFQbPofmfxOS3FfE/edit?usp=sharing&ouid=109387194985691076986&rtpof=true&sd=true"
+                  href="https://docs.google.com/spreadsheets/d/1QU4lv22xa71U4KGUV7VOkO84V7we5mP1r_Bi5zOaWK0/edit?usp=sharing"
                   target="_blank"
                   rel={"noreferrer"}
                 >
@@ -152,13 +176,69 @@ export const UploadResults = () => {
                 <div
                   className="select-button"
                   onClick={() => {
+                    if (
+                      document
+                        .querySelectorAll(".select-wrapper")[1]
+                        .classList.contains("active")
+                    ) {
+                      document
+                        .querySelectorAll(".select-wrapper")[1]
+                        .classList.toggle("active");
+                    }
+
                     document
-                      .querySelector(".select-wrapper")
+                      .querySelectorAll(".select-wrapper")[0]
                       .classList.toggle("active");
                   }}
                   onBlur={() => {
                     document
-                      .querySelector(".select-wrapper")
+                      .querySelectorAll(".select-wrapper")[0]
+                      .classList.toggle("active");
+                  }}
+                >
+                  <div className="select-button-text">{sem}</div>
+                  <i className="bx bx-chevron-down">
+                    <ChevronDownIcon />
+                  </i>
+                </div>
+                <ul className="options">
+                  {Option2.map((ele, index) => {
+                    return (
+                      <div
+                        className="option"
+                        onClick={(e) => {
+                          handleSemChange(e);
+                        }}
+                        key={index}
+                      >
+                        <p className="option-text">{ele}</p>
+                      </div>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="select-wrapper">
+                <div
+                  className="select-button"
+                  onClick={() => {
+                    if (
+                      document
+                        .querySelectorAll(".select-wrapper")[0]
+                        .classList.contains("active")
+                    ) {
+                      document
+                        .querySelectorAll(".select-wrapper")[0]
+                        .classList.toggle("active");
+                    }
+                    document
+                      .querySelectorAll(".select-wrapper")[1]
+                      .classList.toggle("active");
+                  }}
+                  onBlur={() => {
+                    document
+                      .querySelectorAll(".select-wrapper")[1]
                       .classList.toggle("active");
                   }}
                 >
@@ -199,18 +279,6 @@ export const UploadResults = () => {
               />
             </div>
             <Button type="submit">submit</Button>
-            <h3
-              style={{
-                paddingLeft: "50px",
-                paddingTop: "25px",
-                color: "green",
-                fontWeight: "bold",
-                display: "none",
-              }}
-              id="status"
-            >
-              Uploading data... Please wait
-            </h3>
           </form>
         </Holder>
       </Container>
@@ -233,10 +301,9 @@ const Holder = styled.div`
   border: 2px solid grey;
   border-radius: 12px;
   justify-content: center;
-  height: 450px;
   background-color: whitesmoke;
   z-index: 0;
-
+  padding-block: 1rem;
   @media (max-width: 650px) {
     height: 520px;
   }
@@ -254,7 +321,6 @@ const Instructions = styled.div`
   font-family: sans-serif;
   gap: 10px;
   justify-content: center;
-  height: 350px;
   background-color: white;
   z-index: 0;
   margin: 5px;

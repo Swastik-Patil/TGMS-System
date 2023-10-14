@@ -116,7 +116,7 @@ export default function UploadedCertificates() {
           <SimpleGrid
             spacing={4}
             padding={8}
-            templateColumns="repeat(4, minmax(200px, 1fr))"
+            templateColumns={{ lg: "repeat(4, minmax(200px, 1fr))" }}
           >
             {files ? (
               files.map((file, index) => {
@@ -125,7 +125,7 @@ export default function UploadedCertificates() {
                     bg={"white"}
                     py="2"
                     boxShadow={{ md: "2px 3px 12px", base: "2px 2px 6px" }}
-                    rounded={{ sm: "lg" }}
+                    rounded={"lg"}
                     key={index}
                   >
                     <div style={{ paddingInline: "15px" }}>
@@ -152,7 +152,7 @@ export default function UploadedCertificates() {
                       }}
                     >
                       <Button
-                        display={{ base: "none", md: "inline-flex" }}
+                        display={"inline-flex"}
                         fontSize={"sm"}
                         fontWeight={600}
                         color={"white"}
@@ -170,7 +170,7 @@ export default function UploadedCertificates() {
                       </Button>
                       <Button
                         as={"a"}
-                        display={{ base: "none", md: "inline-flex" }}
+                        display={"inline-flex"}
                         fontSize={"sm"}
                         fontWeight={600}
                         color={"white"}
@@ -181,7 +181,6 @@ export default function UploadedCertificates() {
                           bg: "blue.300",
                         }}
                       >
-                        {/* {file.name} */}
                         Open
                       </Button>
                     </div>

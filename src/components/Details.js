@@ -8,6 +8,8 @@ import ActionControlPanel from "./ActionControlPanel";
 
 function Details({ showActionPanel, navItems }) {
   const [pendingData, setPendingData] = useState(null);
+  const [exams, setExams] = useState(null);
+  const [results, setResults] = useState([]);
   const [showPanel, setShowPanel] = useState(false);
 
   function readUserCurrentData() {
@@ -22,9 +24,9 @@ function Details({ showActionPanel, navItems }) {
       .then((snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
+          let results = data.Results;
+          setResults(results);
           setPendingData(data);
-        } else {
-          // window.location.href = "/login";
         }
       })
       .catch((error) => {
@@ -46,7 +48,7 @@ function Details({ showActionPanel, navItems }) {
       }}
     >
       <Header navItems={navItems} />
-      {pendingData ? (
+      {pendingData && (
         <Content>
           <Title>Student Details</Title>
           <Holder>
@@ -60,17 +62,125 @@ function Details({ showActionPanel, navItems }) {
                 background="white"
               >
                 <Tbody>
-                  <Tr>
-                    <Td fontWeight={"bold"}>Full Name :</Td>
-                    <Td>{pendingData.name}</Td>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Full Name :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.name}
+                    </Td>
                   </Tr>
-                  <Tr>
-                    <Td fontWeight={"bold"}>Email :</Td>
-                    <Td>{pendingData.email}</Td>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Mes ID :
+                    </Td>
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      textOverflow={"ellipsis"}
+                      maxW={"250px"}
+                    >
+                      {pendingData.mesId}
+                    </Td>
                   </Tr>
-                  <Tr>
-                    <Td fontWeight={"bold"}>Contact no :</Td>
-                    <Td>{pendingData.mobile}</Td>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Personal Email :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.email}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Contact no :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.mobile}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Gender :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.gender}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Mother's Name :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.motherName}
+                    </Td>
                   </Tr>
                 </Tbody>
               </Table>
@@ -85,19 +195,245 @@ function Details({ showActionPanel, navItems }) {
                 background="white"
               >
                 <Tbody>
-                  <Tr>
-                    <Td fontWeight={"bold"}>Admission no :</Td>
-                    <Td>{pendingData.admissionNo}</Td>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Roll no :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.rNo}
+                    </Td>
                   </Tr>
-                  <Tr>
-                    <Td fontWeight={"bold"}>Roll no :</Td>
-                    <Td>{pendingData.rNo}</Td>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      style={{
+                        paddingBottom: "0rem",
+                        paddingTop: "0rem",
+                        border: "none",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Admission no :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.admissionNo}
+                    </Td>
                   </Tr>
-                  <Tr>
-                    <Td fontWeight={"bold"}>Date of Birth :</Td>
-
-                    <Td>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Date of Birth :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
                       {String(pendingData.dateOfBirth).replaceAll("-", "/")}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Category :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.category}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      State of Domacile :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.domacile}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    paddingBlock={0}
+                    display={"flex"}
+                    flexDirection={"column"}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Mother's Contact :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.motherContact || "Unknown"}
+                    </Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TableHodler>
+            <TableHodler>
+              <Table
+                variant="simple"
+                colorScheme="gray"
+                size="md"
+                maxW={{ base: "400px", lg: "1300px" }}
+                borderRadius={{ lg: "20px" }}
+                background="white"
+              >
+                <Tbody>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Current Address :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.currAddress}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Permanant Address :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.permAddress}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Father's Name :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.fatherName}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Father's Contact :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.fatherContact}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Father's Occupation :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.fatherOcc}
+                    </Td>
+                  </Tr>
+                  <Tr
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingBlock: " 0.5rem",
+                    }}
+                  >
+                    <Td
+                      paddingBottom={0}
+                      paddingTop={0}
+                      border={0}
+                      fontWeight={"bold"}
+                    >
+                      Mother's Occupation :
+                    </Td>
+                    <Td paddingBottom={0} paddingTop={0} border={0}>
+                      {pendingData.motherOcc}
                     </Td>
                   </Tr>
                 </Tbody>
@@ -107,165 +443,53 @@ function Details({ showActionPanel, navItems }) {
           <DocumentHolder>
             <h3>Results</h3>
             <div>
-              {pendingData.Results && pendingData.Results["IA 1"] ? (
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <Text fontWeight={"bold"}>{"IA 1"}</Text>
-                  <TableHodler>
-                    <Table
-                      variant="simple"
-                      colorScheme="gray"
-                      size="md"
-                      maxW={{ base: "400px", lg: "1300px" }}
-                      borderRadius={{ lg: "20px" }}
-                      background="white"
-                    >
-                      <Tbody>
-                        <Tr>
-                          <Td fontWeight={"bold"}>CN :</Td>
-                          <Td>{pendingData.Results["IA 1"].CN}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>DWM:</Td>
-                          <Td>{pendingData.Results["IA 1"].DWM}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>SE :</Td>
-                          <Td>{pendingData.Results["IA 1"].SE}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                    <Table
-                      variant="simple"
-                      colorScheme="gray"
-                      size="md"
-                      maxW={{ base: "400px", lg: "1300px" }}
-                      borderRadius={{ lg: "20px" }}
-                      background="white"
-                    >
-                      <Tbody>
-                        <Tr>
-                          <Td fontWeight={"bold"}>TCS :</Td>
-                          <Td>{pendingData.Results["IA 1"].TCS}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>IP :</Td>
-                          <Td>{pendingData.Results["IA 1"].IP}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>Total :</Td>
-                          <Td>{pendingData.Results["IA 1"].Total}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                  </TableHodler>
+              {Object.keys(results).map((semester) => (
+                <div
+                  key={semester}
+                  style={{
+                    gap: "0",
+                  }}
+                >
+                  <Text fontWeight={"bold"} color={"red"}>
+                    {semester}
+                  </Text>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "4rem",
+                      margin: "0",
+                    }}
+                  >
+                    {Object.keys(results[semester]).map((exam) => (
+                      <TableHodler key={exam}>
+                        <Text fontWeight={"bold"} fontSize={"16px"}>
+                          {exam}
+                        </Text>
+                        <Table
+                          variant="simple"
+                          colorScheme="gray"
+                          size="md"
+                          maxW={{ base: "400px", lg: "1300px" }}
+                          borderRadius={{ lg: "20px" }}
+                          background="white"
+                        >
+                          <Tbody>
+                            {Object.entries(results[semester][exam]).map(
+                              ([subject, marks]) => (
+                                <Tr key={subject}>
+                                  <Td fontWeight={"bold"}>{subject} :</Td>
+                                  <Td>{marks}</Td>
+                                </Tr>
+                              )
+                            )}
+                          </Tbody>
+                        </Table>
+                      </TableHodler>
+                    ))}
+                  </div>
                 </div>
-              ) : null}
-              {pendingData.Results && pendingData.Results["IA 2"] ? (
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <Text fontWeight={"bold"}>{"IA 2"}</Text>
-                  <TableHodler>
-                    <Table
-                      variant="simple"
-                      colorScheme="gray"
-                      size="md"
-                      maxW={{ base: "400px", lg: "1300px" }}
-                      borderRadius={{ lg: "20px" }}
-                      background="white"
-                    >
-                      <Tbody>
-                        <Tr>
-                          <Td fontWeight={"bold"}>CN :</Td>
-                          <Td>{pendingData.Results["IA 2"].CN}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>DWM:</Td>
-                          <Td>{pendingData.Results["IA 2"].DWM}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>SE :</Td>
-                          <Td>{pendingData.Results["IA 2"].SE}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                    <Table
-                      variant="simple"
-                      colorScheme="gray"
-                      size="md"
-                      maxW={{ base: "400px", lg: "1300px" }}
-                      borderRadius={{ lg: "20px" }}
-                      background="white"
-                    >
-                      <Tbody>
-                        <Tr>
-                          <Td fontWeight={"bold"}>TCS :</Td>
-                          <Td>{pendingData.Results["IA 2"].TCS}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>IP :</Td>
-                          <Td>{pendingData.Results["IA 2"].IP}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>Total :</Td>
-                          <Td>{pendingData.Results["IA 2"].Total}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                  </TableHodler>
-                </div>
-              ) : null}
-              {pendingData.Results && pendingData.Results["SEM"] ? (
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <Text fontWeight={"bold"}>{"IA 2"}</Text>
-                  <TableHodler>
-                    <Table
-                      variant="simple"
-                      colorScheme="gray"
-                      size="md"
-                      maxW={{ base: "400px", lg: "1300px" }}
-                      borderRadius={{ lg: "20px" }}
-                      background="white"
-                    >
-                      <Tbody>
-                        <Tr>
-                          <Td fontWeight={"bold"}>CN :</Td>
-                          <Td>{pendingData.Results["SEM"].CN}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>DWM:</Td>
-                          <Td>{pendingData.Results["SEM"].DWM}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>SE :</Td>
-                          <Td>{pendingData.Results["SEM"].SE}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                    <Table
-                      variant="simple"
-                      colorScheme="gray"
-                      size="md"
-                      maxW={{ base: "400px", lg: "1300px" }}
-                      borderRadius={{ lg: "20px" }}
-                      background="white"
-                    >
-                      <Tbody>
-                        <Tr>
-                          <Td fontWeight={"bold"}>TCS :</Td>
-                          <Td>{pendingData.Results["SEM"].TCS}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>IP :</Td>
-                          <Td>{pendingData.Results["SEM"].IP}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td fontWeight={"bold"}>Total :</Td>
-                          <Td>{pendingData.Results["SEM"].Total}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                  </TableHodler>
-                </div>
-              ) : null}
+              ))}
             </div>
           </DocumentHolder>
           {(showActionPanel || showPanel) && (
@@ -303,14 +527,13 @@ function Details({ showActionPanel, navItems }) {
             </ActionPanelHolder>
           )}
         </Content>
-      ) : // readAuthUser()
-      null}
+      )}
     </div>
   );
 }
 
 const Content = styled.div`
-  width: 80%;
+  width: 95%;
   margin-top: 0.5rem;
   display: flex;
   align-items: center;
@@ -319,27 +542,26 @@ const Content = styled.div`
   background-color: white;
   border-radius: 12px;
   box-shadow: 9px 14px 20px 0px #1d1d1d;
-  overflow: scroll;
   ::-webkit-scrollbar {
     width: 0;
     background: transparent;
   }
   @media (max-width: 650px) {
     flex-direction: column;
-    height: 600px;
     gap: 0px;
     font-size: 12px;
+    width: 80%;
   }
 `;
 const Holder = styled.div`
   width: 90%;
-  display: flex;
-
-  @media (max-width: 650px) {
-    flex-direction: column;
-    justify-content: initial;
-    height: 600px;
-    padding: 0px 0px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 426px) {
+    grid-template-columns: 1fr;
   }
 `;
 const Title = styled.div`
@@ -353,12 +575,29 @@ const Title = styled.div`
   align-items: center;
 `;
 const TableHodler = styled.div`
+  table {
+    tbody {
+      tr {
+        td {
+          padding: 5px !important;
+        }
+      }
+    }
+  }
   @media (max-width: 650px) {
     margin: 0px 0px;
-    width: 300px;
+
+    table {
+      tbody {
+        tr {
+          td {
+            padding: 0 !important;
+          }
+        }
+      }
+    }
   }
 `;
-
 const DocumentHolder = styled.div`
   width: 90%;
 
@@ -373,13 +612,26 @@ const DocumentHolder = styled.div`
   }
 
   div {
-    display: flex;
-    margin: 10px;
-    align-items: center;
-    gap: 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      margin: 10px;
+      align-items: start;
+      gap: 5px;
+
+      @media (max-width: 649px) {
+        flex-direction: column;
+      }
+    }
   }
 `;
-
 const ActionPanelHolder = styled.div`
   height: 55px;
   width: 95%;
