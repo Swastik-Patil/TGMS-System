@@ -124,14 +124,14 @@ function TGHOME() {
           get(child(db, "/tgmsData/" + name)).then((snapshot) => {
             if (snapshot.exists()) {
               let res = snapshot.val();
-              res = res.filter((ele) => {
-                return ele != null;
-              });
               if (!Array.isArray(res)) {
                 res = Object.keys(res).map((key) => {
                   return res[key];
                 });
               }
+              res = res.filter((ele) => {
+                return ele != null;
+              });
               setData(res);
             } else {
               console.log("No data available");

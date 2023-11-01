@@ -8,7 +8,6 @@ import ActionControlPanel from "./ActionControlPanel";
 
 function Details({ showActionPanel, navItems }) {
   const [pendingData, setPendingData] = useState(null);
-  const [exams, setExams] = useState(null);
   const [results, setResults] = useState([]);
   const [showPanel, setShowPanel] = useState(false);
 
@@ -443,53 +442,54 @@ function Details({ showActionPanel, navItems }) {
           <DocumentHolder>
             <h3>Results</h3>
             <div>
-              {Object.keys(results).map((semester) => (
-                <div
-                  key={semester}
-                  style={{
-                    gap: "0",
-                  }}
-                >
-                  <Text fontWeight={"bold"} color={"red"}>
-                    {semester}
-                  </Text>
+              {results &&
+                Object.keys(results).map((semester) => (
                   <div
+                    key={semester}
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: "4rem",
-                      margin: "0",
+                      gap: "0",
                     }}
                   >
-                    {Object.keys(results[semester]).map((exam) => (
-                      <TableHodler key={exam}>
-                        <Text fontWeight={"bold"} fontSize={"16px"}>
-                          {exam}
-                        </Text>
-                        <Table
-                          variant="simple"
-                          colorScheme="gray"
-                          size="md"
-                          maxW={{ base: "400px", lg: "1300px" }}
-                          borderRadius={{ lg: "20px" }}
-                          background="white"
-                        >
-                          <Tbody>
-                            {Object.entries(results[semester][exam]).map(
-                              ([subject, marks]) => (
-                                <Tr key={subject}>
-                                  <Td fontWeight={"bold"}>{subject} :</Td>
-                                  <Td>{marks}</Td>
-                                </Tr>
-                              )
-                            )}
-                          </Tbody>
-                        </Table>
-                      </TableHodler>
-                    ))}
+                    <Text fontWeight={"bold"} color={"red"}>
+                      {semester}
+                    </Text>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "4rem",
+                        margin: "0",
+                      }}
+                    >
+                      {Object.keys(results[semester]).map((exam) => (
+                        <TableHodler key={exam}>
+                          <Text fontWeight={"bold"} fontSize={"16px"}>
+                            {exam}
+                          </Text>
+                          <Table
+                            variant="simple"
+                            colorScheme="gray"
+                            size="md"
+                            maxW={{ base: "400px", lg: "1300px" }}
+                            borderRadius={{ lg: "20px" }}
+                            background="white"
+                          >
+                            <Tbody>
+                              {Object.entries(results[semester][exam]).map(
+                                ([subject, marks]) => (
+                                  <Tr key={subject}>
+                                    <Td fontWeight={"bold"}>{subject} :</Td>
+                                    <Td>{marks}</Td>
+                                  </Tr>
+                                )
+                              )}
+                            </Tbody>
+                          </Table>
+                        </TableHodler>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </DocumentHolder>
           {(showActionPanel || showPanel) && (
