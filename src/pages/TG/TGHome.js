@@ -48,6 +48,10 @@ function TGHOME() {
       label: "Name of the Students",
     },
     {
+      key: "StudentType",
+      label: "Student Type",
+    },
+    {
       key: "details",
       label: "Details",
     },
@@ -121,7 +125,7 @@ function TGHOME() {
           });
           name = String(name.filter((n) => n));
 
-          get(child(db, "/tgmsData/" + name)).then((snapshot) => {
+          get(child(db, "/tgmsData/" + name)).then(async (snapshot) => {
             if (snapshot.exists()) {
               let res = snapshot.val();
               if (!Array.isArray(res)) {
@@ -131,6 +135,23 @@ function TGHOME() {
               }
               res = res.filter((ele) => {
                 return ele != null;
+              });
+
+              const promises = res.map((ele) =>
+                get(child(db, "/StudentsData/" + ele.admissionNo + "/"))
+              );
+
+              const snapshots = await Promise.all(promises);
+
+              res = snapshots.map((snapshot, index) => {
+                if (snapshot.exists()) {
+                  let r = snapshot.val();
+                  if (r.studentType === undefined) {
+                    r.studentType = "Not Determined";
+                  }
+                  return { ...res[index], studentType: r.studentType };
+                }
+                return { ...res[index] };
               });
               setData(res);
             } else {
@@ -204,6 +225,7 @@ function TGHOME() {
                           <Td>{ele.Class}</Td>
                           <Td>{ele.RollNo}</Td>
                           <Td>{ele.NameoftheStudents}</Td>
+                          <Td> {ele.studentType}</Td>
                           <Td>
                             <Button
                               colorScheme="blue"

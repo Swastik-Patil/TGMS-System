@@ -92,6 +92,19 @@ function Authenticate() {
       });
       document.getElementById("LoginButton").style.disabled = false;
       return;
+    } else if (
+      !String(logemail).toLowerCase().includes("@student") &&
+      usertype === "Student"
+    ) {
+      toast({
+        position: "top-right",
+        description: "Please Enter MES ID",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      document.getElementById("LoginButton").style.disabled = false;
+      return;
     }
 
     const db = Ref(getDatabase());

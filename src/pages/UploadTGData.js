@@ -90,7 +90,7 @@ function UploadTGData() {
                 Download the template for filling data from here :{" "}
                 <a
                   style={{ color: "blue" }}
-                  href="https://docs.google.com/spreadsheets/d/1FraYcIGRoTIrRTCKZFQbPofmfxOS3FfE/edit?usp=sharing&ouid=109387194985691076986&rtpof=true&sd=true"
+                  href="https://docs.google.com/spreadsheets/d/1k_kyHXl3rMP5VSm_6EbVmeutU9yTzjfUwEEx8YYjgIM/edit?usp=sharing"
                   target="_blank"
                   rel={"noreferrer"}
                 >
