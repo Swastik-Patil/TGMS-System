@@ -205,3 +205,8 @@
   top: 60px;
   width: 300px;
 }
+
+th,
+td {
+  text-wrap: wrap;
+}

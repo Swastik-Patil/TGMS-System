@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../styles/SlowLearner.css";
 import Header from "../../components/Header";
 import {
@@ -12,13 +12,34 @@ import {
   TableContainer,
   Button,
   Input,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Textarea,
 } from "@chakra-ui/react";
 import styled from "styled-components";
-import { ref as dbref, get, child, getDatabase } from "firebase/database";
+import { ref as dbref, get, child, getDatabase, set } from "firebase/database";
+import { database } from "../../utils/init-firebase";
 
 function SlowLearners() {
   const [data, setData] = useState(null);
+  const [currUID, setCurrUID] = useState("");
+  const observationsRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;
+  const {
+    isOpen: isOpen1,
+    onOpen: onOpen1,
+    onClose: onClose1,
+  } = useDisclosure();
 
   const columns = [
     {
@@ -40,6 +61,10 @@ function SlowLearners() {
     {
       key: "status",
       label: "Student Type",
+    },
+    {
+      key: "observations",
+      label: "Faculty Observations",
     },
     {
       key: "details",
@@ -98,6 +123,18 @@ function SlowLearners() {
     }
   }
 
+  function addNewObservations() {
+    if ((observationsRef.current?.value).trim() !== "") {
+      set(
+        dbref(database, `StudentsData/${currUID}/observations`),
+        observationsRef.current?.value
+      ).then(() => {
+        onClose1();
+        window.location.reload();
+      });
+    }
+  }
+
   return (
     <>
       <Header />
@@ -144,6 +181,21 @@ function SlowLearners() {
                           <Td>{ele.tg}</Td>
                           <Td>{ele.studentType}</Td>
                           <Td>
+                            {ele.observations ? (
+                              ele.observations
+                            ) : (
+                              <Button
+                                colorScheme="blue"
+                                onClick={() => {
+                                  setCurrUID(ele.admissionNo);
+                                  onOpen1();
+                                }}
+                              >
+                                Add
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
                             <Button
                               colorScheme="blue"
                               onClick={() => {
@@ -162,6 +214,30 @@ function SlowLearners() {
           </>
         )}
       </TableParent>
+      <Modal
+        initialFocusRef={observationsRef}
+        isOpen={isOpen1}
+        onClose={onClose1}
+        motionPreset="slideInBottom"
+      >
+        <OverlayOne />
+        <ModalContent>
+          <ModalHeader>Faculty Observations</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <Textarea placeholder="Observations" ref={observationsRef} />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={addNewObservations}>
+              Save
+            </Button>
+            <Button onClick={onClose1}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

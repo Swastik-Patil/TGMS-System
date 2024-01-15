@@ -11,17 +11,38 @@ import {
   TableContainer,
   Button,
   Input,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
+  Textarea,
 } from "@chakra-ui/react";
 
 import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
 import Header from "../../components/Header";
-import CheckAuthorization from "../../utils/CheckAuthorization";
+import { set } from "firebase/database";
+import { database } from "../../utils/init-firebase";
 
 function TGHOME() {
   const { currentUser } = useAuth();
   const [data, setData] = useState(null);
   const [filterValue, setFilterValue] = useState("");
+
+  const [currUID, setCurrUID] = useState("");
+  const observationsRef = React.useRef(null);
+
+  const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;
+  const {
+    isOpen: isOpen1,
+    onOpen: onOpen1,
+    onClose: onClose1,
+  } = useDisclosure();
 
   function showApplicationDetails(uid) {
     window.sessionStorage.setItem("selectedStudent", String(uid));
@@ -50,6 +71,10 @@ function TGHOME() {
     {
       key: "StudentType",
       label: "Student Type",
+    },
+    {
+      key: "observations",
+      label: "Faculty Observations",
     },
     {
       key: "details",
@@ -167,6 +192,18 @@ function TGHOME() {
       });
   }
 
+  function addNewObservations() {
+    if ((observationsRef.current?.value).trim() !== "") {
+      set(
+        dbref(database, `StudentsData/${currUID}/observations`),
+        observationsRef.current?.value
+      ).then(() => {
+        onClose1();
+        window.location.reload();
+      });
+    }
+  }
+
   return (
     <div
       style={{
@@ -227,6 +264,21 @@ function TGHOME() {
                           <Td>{ele.NameoftheStudents}</Td>
                           <Td> {ele.studentType}</Td>
                           <Td>
+                            {ele.observations ? (
+                              ele.observations
+                            ) : (
+                              <Button
+                                colorScheme="blue"
+                                onClick={() => {
+                                  setCurrUID(ele.admissionNo);
+                                  onOpen1();
+                                }}
+                              >
+                                Add
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
                             <Button
                               colorScheme="blue"
                               onClick={() => {
@@ -242,6 +294,37 @@ function TGHOME() {
                 </Tbody>
               </Table>
             </TableContainer>
+            <Modal
+              initialFocusRef={observationsRef}
+              isOpen={isOpen1}
+              onClose={onClose1}
+              motionPreset="slideInBottom"
+            >
+              <OverlayOne />
+              <ModalContent>
+                <ModalHeader>Faculty Observations</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Observations"
+                      ref={observationsRef}
+                    />
+                  </FormControl>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button
+                    colorScheme="blue"
+                    mr={3}
+                    onClick={addNewObservations}
+                  >
+                    Save
+                  </Button>
+                  <Button onClick={onClose1}>Cancel</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </>
         )}
       </TableParent>
