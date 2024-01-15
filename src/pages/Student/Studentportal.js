@@ -28,15 +28,13 @@ function Studentportal() {
           window.sessionStorage.setItem("path", "StudentsData");
           setData(d);
           window.localStorage.setItem("data", JSON.stringify(d));
+          setLoading(false);
         } else {
           console.log("No data available");
         }
       })
       .catch((error) => {
-        console.error(error);
-      })
-      .then(() => {
-        setLoading(false);
+        console.log(error);
       });
   }
 
