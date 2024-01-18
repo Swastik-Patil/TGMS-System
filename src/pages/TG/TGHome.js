@@ -77,6 +77,10 @@ function TGHOME() {
       label: "Faculty Observations",
     },
     {
+      key: "points",
+      label: "Points",
+    },
+    {
       key: "details",
       label: "Details",
     },
@@ -174,7 +178,11 @@ function TGHOME() {
                   if (r.studentType === undefined) {
                     r.studentType = "Not Determined";
                   }
-                  return { ...res[index], studentType: r.studentType };
+                  return {
+                    ...res[index],
+                    studentType: r.studentType,
+                    points: r.points,
+                  };
                 }
                 return { ...res[index] };
               });
@@ -278,6 +286,7 @@ function TGHOME() {
                               </Button>
                             )}
                           </Td>
+                          <Td>{ele.points ? ele.points : 0}</Td>
                           <Td>
                             <Button
                               colorScheme="blue"

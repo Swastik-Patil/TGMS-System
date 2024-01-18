@@ -67,6 +67,10 @@ function SlowLearners() {
       label: "Faculty Observations",
     },
     {
+      key: "points",
+      label: "Points",
+    },
+    {
       key: "details",
       label: "Details",
     },
@@ -195,6 +199,7 @@ function SlowLearners() {
                               </Button>
                             )}
                           </Td>
+                          <Td>{ele.points ? ele.points : 0}</Td>
                           <Td>
                             <Button
                               colorScheme="blue"

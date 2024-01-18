@@ -24,6 +24,9 @@ function Studentportal() {
           let d = data.filter((ele) => {
             return ele.email === currentUser.email;
           });
+          if (d.length === 0) {
+            window.location.href = "/";
+          }
           window.sessionStorage.setItem("selectedStudent", d[0].admissionNo);
           window.sessionStorage.setItem("path", "StudentsData");
           setData(d);

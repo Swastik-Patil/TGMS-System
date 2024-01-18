@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, database } from "../../utils/init-firebase";
-import { ref as Ref, update } from "firebase/database";
+import { ref as Ref, child, get, update, getDatabase } from "firebase/database";
 import Header from "../../components/Header";
 import {
   RadioGroup,
@@ -15,6 +15,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { createWorker } from "tesseract.js";
 
 export default function UploadCertificate({ data }) {
   const [file, setFile] = useState(null);
@@ -23,8 +24,18 @@ export default function UploadCertificate({ data }) {
   const [completionDate, setCompletionDate] = useState("");
   const { currentUser } = useAuth();
   const toast = useToast();
+
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setFile(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDateChange = (e) => {
@@ -35,10 +46,27 @@ export default function UploadCertificate({ data }) {
     setFileName(e.target.value);
   };
 
+  const validCertificates = [
+    "International",
+    "National",
+    "State",
+    "Internship",
+    "Course",
+    "Participation",
+  ]; // Add your valid certificate names here
+
+  const points = {
+    International: 4,
+    National: 3,
+    State: 2,
+    Internship: 2,
+    Course: 1,
+    Participation: 1,
+  };
+
   const handleUpload = async (e) => {
     e.preventDefault();
     if (fileName === null || certType === null || !file) {
-      // alert("Fill all the Details");
       toast({
         position: "top-right",
         description: "Fill all the Details.",
@@ -51,6 +79,47 @@ export default function UploadCertificate({ data }) {
       document.getElementById(
         "uploadButton"
       ).innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div>`;
+
+      const worker = await createWorker("eng");
+      const ret = await worker.recognize(file);
+      const detected = validCertificates.filter((certificate) =>
+        String(ret.data.text)
+          .toLowerCase()
+          .includes(String(certificate).toLowerCase())
+      );
+
+      if (!detected.includes(certType)) {
+        alert("Upload Correct Document of course");
+        document.getElementById("uploadButton").innerHTML = `Submit`;
+        document.getElementById("uploadButton").disabled = false;
+        return;
+      }
+
+      let point = points[detected[0]];
+      detected.forEach((cert) => {
+        if (cert === "winner") {
+          point += 1;
+        }
+      });
+
+      const db = database;
+      const IDRef = window.sessionStorage.getItem("selectedStudent");
+      if (!IDRef) window.location.href = "/home";
+      get(child(Ref(db), `StudentsData/${IDRef}/points`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            data = snapshot.val();
+            point += data;
+
+            update(Ref(db, `StudentsData/${IDRef}`), {
+              points: point,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
       let data = JSON.parse(localStorage.getItem("data"));
       let storageRef = ref(
         storage,
@@ -97,6 +166,7 @@ export default function UploadCertificate({ data }) {
         console.log(err);
       });
   };
+
   const navItems = [
     {
       label: "Home",
@@ -111,6 +181,7 @@ export default function UploadCertificate({ data }) {
       href: "uploadedCertificates",
     },
   ];
+
   return (
     <div className="flex flex-col justify-center items-center gap-3 max-w-lg ">
       <Header navItems={navItems} />
@@ -144,9 +215,9 @@ export default function UploadCertificate({ data }) {
             <Text>Certificate Type : </Text>
             <RadioGroup onChange={setCertType} value={certType}>
               <Stack direction="row">
-                <Radio value="course">Course</Radio>
-                <Radio value="internship">Internship</Radio>
-                <Radio value="event">Event</Radio>
+                <Radio value="Course">Course</Radio>
+                <Radio value="Internship">Internship</Radio>
+                <Radio value="Event">Event</Radio>
               </Stack>
             </RadioGroup>
           </HStack>

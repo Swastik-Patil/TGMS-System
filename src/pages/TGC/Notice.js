@@ -3,6 +3,7 @@ import "../../styles/print.css";
 import "../../styles/BonafidePreview.css";
 // import { ref as dbref, child, get } from "firebase/database";
 import BeatLoader from "react-spinners/BeatLoader";
+import logo from "../../res/MES Flower.png";
 
 export default function Notice() {
   const [userData, setUserData] = useState(null);
@@ -91,33 +92,29 @@ export default function Notice() {
                   </div>
                 </div>
                 <div className="dash"></div>
-                <div className="body">
-                  <div className="bc__title">
-                    <h2 id="bcTitle">NOTICE</h2>
-                  </div>
-                  <p className="date">
-                    <span>
-                      {new Date().getFullYear()}/
-                      <span id="bc__RegNo">
-                        {" "}
-                        {/* {formatNo(userData.bonafide_no)} */}
-                      </span>
-                    </span>
-                    <span>
-                      Date:{" "}
-                      <span id="TodayDate">
-                        {new Date().getDate() +
-                          "/" +
-                          (Number(new Date().getMonth()) + 1) +
-                          "/" +
-                          new Date().getFullYear()}
-                      </span>
-                    </span>
-                  </p>
-                  {/* Body HERE */}
-                  <span></span>
 
-                  <br />
+                <div id="notice-container">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <img src={logo} alt="logo" />
+
+                    <h3>
+                      PILLAI HOC COLLEGE OF ENGINEERING AND TECHNOLOGY,
+                      RASAYANI.
+                    </h3>
+                  </div>
+                  <h2>NOTICE</h2>
+
+                  <label for="studentName">Student Names</label>
+                  <p id="studentName"></p>
+
+                  <label for="content">Title</label>
+                  <p id="content"></p>
+
+                  <div class="signature">
+                    <label for="sign">Sign</label>
+                    <p id="sign"></p>
+                  </div>
+                  <button type="button">Send</button>
                 </div>
 
                 <div className="bc__Signatures">
