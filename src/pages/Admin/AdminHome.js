@@ -228,7 +228,7 @@ function AdminHome() {
                   width: "250px",
                 }}
               >
-                <div className="text-wrapper">Manage Accounts</div>
+                <div className="text-wrapper">Manage Faculty</div>
               </div>
             </div>
           </Link>
@@ -249,6 +249,23 @@ function AdminHome() {
               </div>
             </div>
           </div>
+          <Link
+            to="ManageAccounts"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <div className="overlap">
+              <div
+                className="rectangle"
+                style={{
+                  flexDirection: "column",
+                  height: "150px",
+                  width: "250px",
+                }}
+              >
+                <div className="text-wrapper">Manage Accounts</div>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
 

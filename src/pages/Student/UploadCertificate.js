@@ -111,9 +111,16 @@ export default function UploadCertificate({ data }) {
             data = snapshot.val();
             point += data;
 
-            update(Ref(db, `StudentsData/${IDRef}`), {
-              points: point,
-            });
+            if (point > 5) {
+              update(Ref(db, `StudentsData/${IDRef}`), {
+                points: point,
+                studentType: "Advance",
+              });
+            } else {
+              update(Ref(db, `StudentsData/${IDRef}`), {
+                points: point,
+              });
+            }
           }
         })
         .catch((error) => {

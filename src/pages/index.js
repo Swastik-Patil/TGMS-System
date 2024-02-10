@@ -24,6 +24,7 @@ import UploadTGData from "./UploadTGData";
 import TTCHome from "./TTC/TTCHome";
 import AdminHome from "./Admin/AdminHome";
 import ManagePage from "./Admin/ManagePage";
+import ManageAccounts from "./Admin/ManageAccounts";
 export {
   ResetPasswordPage,
   ForgotPasswordPage,
@@ -51,4 +52,5 @@ export {
   UploadTGData,
   AdminHome,
   ManagePage,
+  ManageAccounts,
 };

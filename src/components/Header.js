@@ -6,8 +6,10 @@ import {
   Stack,
   useColorModeValue,
   useBreakpointValue,
+  Img,
 } from "@chakra-ui/react";
 import { useAuth } from "../contexts/AuthContext";
+import Logo from "../res/Logo.webp";
 
 export default function Header({ navItems }) {
   const linkColor = useColorModeValue("gray.600", "gray.200");
@@ -45,7 +47,7 @@ export default function Header({ navItems }) {
     }
   }
   return (
-    <Box w="100%" h="12%" p={4} color="white">
+    <Box w="100%" h="12%" p={4} color="white" id="header">
       <Flex
         bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
@@ -58,18 +60,14 @@ export default function Header({ navItems }) {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            fontSize={"lg"}
-            color={useColorModeValue("gray.800", "white")}
-            cursor={"pointer"}
-            onClick={() => {
-              handleredirect();
-            }}
-          >
-            TGMS System
-          </Text>
+          <img
+            src={Logo}
+            alt="TGMS"
+            height="50"
+            width="120"
+            style={{ cursor: "pointer" }}
+            onClick={handleredirect}
+          />
         </Flex>
 
         {navItems && (

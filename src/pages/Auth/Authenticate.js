@@ -7,7 +7,14 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { child, get, ref as Ref, getDatabase } from "firebase/database";
+import {
+  child,
+  get,
+  ref as Ref,
+  getDatabase,
+  update,
+  set,
+} from "firebase/database";
 
 function Authenticate() {
   const [loading, setLoading] = useState(true);
@@ -177,6 +184,18 @@ function Authenticate() {
         if (error.message === "Firebase: Error (auth/user-not-found).") {
           register(logemail, logpassword)
             .then((res) => {
+              const user = res.user;
+              const userId = user.uid;
+              const userEmail = user.email;
+              let path = "/users/faculty/" + userId;
+              if (String(userEmail).toLowerCase().includes("@student")) {
+                path = "/users/student/" + userId;
+              }
+              let db = getDatabase();
+              set(Ref(db, path), {
+                email: userEmail,
+                userId: userId,
+              });
               //redirect to home page
               toast({
                 position: "top-right",
