@@ -25,6 +25,7 @@ import TTCHome from "./TTC/TTCHome";
 import AdminHome from "./Admin/AdminHome";
 import ManagePage from "./Admin/ManagePage";
 import ManageAccounts from "./Admin/ManageAccounts";
+import CertificatesList from "./Admin/CertificatesList";
 export {
   ResetPasswordPage,
   ForgotPasswordPage,
@@ -53,4 +54,5 @@ export {
   AdminHome,
   ManagePage,
   ManageAccounts,
+  CertificatesList,
 };

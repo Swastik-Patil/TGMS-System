@@ -54,7 +54,6 @@ function AdminHome() {
     setccClass(e.target.outerText);
     document.querySelector(".select-wrapper").classList.toggle("active");
   }
-
   function saveCC() {
     let div = ccClass.replace(/\s+/g, "");
     const db = getDatabase();
@@ -236,6 +235,23 @@ function AdminHome() {
               </div>
             </div>
           </div>
+          <Link
+            to="CertificatesList"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <div className="overlap">
+              <div
+                className="rectangle"
+                style={{
+                  flexDirection: "column",
+                  height: "150px",
+                  width: "250px",
+                }}
+              >
+                <div className="text-wrapper">All Certificates</div>
+              </div>
+            </div>
+          </Link>
           <div
             onClick={getGeneratedNotices}
             style={{ display: "flex", justifyContent: "center" }}

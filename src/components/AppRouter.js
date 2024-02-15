@@ -37,6 +37,7 @@ import {
   AdminHome,
   ManagePage,
   ManageAccounts,
+  CertificatesList,
 } from "../pages";
 
 export default function AppRouter() {
@@ -92,6 +93,11 @@ export default function AppRouter() {
 
           <ProtectedRoute exact path="/AdminHome" component={AdminHome} />
           <ProtectedRoute exact path="/ManagePage" component={ManagePage} />
+          <ProtectedRoute
+            exact
+            path="/CertificatesList"
+            component={CertificatesList}
+          />
           <ProtectedRoute
             exact
             path="/ManageAccounts"

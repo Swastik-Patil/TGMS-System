@@ -182,7 +182,7 @@ function TGDataHome() {
       >
         <OverlayOne />
         <ModalContent>
-          <ModalHeader>Add Class Coordinator</ModalHeader>
+          <ModalHeader>Add New Student</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
