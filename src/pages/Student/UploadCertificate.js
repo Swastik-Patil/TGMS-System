@@ -26,16 +26,7 @@ export default function UploadCertificate({ data }) {
   const toast = useToast();
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setFile(reader.result);
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+    setFile(e.target.files[0]);
   };
 
   const handleDateChange = (e) => {
@@ -44,6 +35,7 @@ export default function UploadCertificate({ data }) {
 
   const handleFileNameChange = (e) => {
     setFileName(e.target.value);
+    console.log(e.target.value);
   };
 
   const validCertificates = [
@@ -88,22 +80,24 @@ export default function UploadCertificate({ data }) {
           .includes(String(certificate).toLowerCase())
       );
 
-      if (!detected.includes(certType)) {
+      if (
+        !String(ret.data.text)
+          .toLowerCase()
+          .includes(String(certType).toLowerCase())
+      ) {
         alert("Upload Correct Document of course");
         document.getElementById("uploadButton").innerHTML = `Submit`;
         document.getElementById("uploadButton").disabled = false;
         return;
       }
-
+      const db = database;
+      const IDRef = window.sessionStorage.getItem("selectedStudent");
       let point = points[detected[0]];
       detected.forEach((cert) => {
         if (cert === "winner") {
           point += 1;
         }
       });
-
-      const db = database;
-      const IDRef = window.sessionStorage.getItem("selectedStudent");
       if (!IDRef) window.location.href = "/home";
       get(child(Ref(db), `StudentsData/${IDRef}/points`))
         .then((snapshot) => {
@@ -133,11 +127,45 @@ export default function UploadCertificate({ data }) {
         `Certificates/${data[0].admissionNo}/${certType}/${file.name}`
       );
       let uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on("state_changed", () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURLBC) => {
-          handleSubmit(downloadURLBC);
-        });
-      });
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          switch (snapshot.state) {
+            case "paused":
+              // console.log("Upload is paused");
+              break;
+            case "running":
+              // console.log("Upload is running");
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+          alert("Some error occured ! Please try again");
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURLBC) => {
+            update(
+              Ref(
+                db,
+                "/AllCertificates/" + detected[0] + "/" + IDRef + " " + fileName
+              ),
+              {
+                name: fileName,
+                downloadURL: downloadURLBC,
+                fileName: file.name,
+                uploadedOn: String(new Date()),
+                completionDate: completionDate,
+                certificateType: certType,
+              }
+            );
+            handleSubmit(downloadURLBC);
+          });
+        }
+      );
     }
   };
 
@@ -225,6 +253,7 @@ export default function UploadCertificate({ data }) {
                 <Radio value="Course">Course</Radio>
                 <Radio value="Internship">Internship</Radio>
                 <Radio value="Event">Event</Radio>
+                <Radio value="Hackathon">Hackathon</Radio>
               </Stack>
             </RadioGroup>
           </HStack>

@@ -71,6 +71,13 @@ function Authenticate() {
     document.querySelector(".select-wrapper").classList.toggle("active");
   }
 
+  // Perform Login on Enter Key press
+  function performLoginByKey(e) {
+    if (e.keyCode === 13) {
+      performLogin(e);
+    }
+  }
+
   async function performLogin(e) {
     e.preventDefault();
     document.getElementById("LoginButton").style.disabled = true;
@@ -324,6 +331,7 @@ function Authenticate() {
                                 autoComplete="off"
                                 value={logpassword}
                                 onChange={(e) => setLogPassword(e.target.value)}
+                                onKeyDown={(e) => performLoginByKey(e)}
                               />
                               <i className="input-icon uil uil-lock-alt"></i>
                             </div>

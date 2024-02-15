@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Header from "../../components/Header";
 import {
   Table,
@@ -11,8 +11,13 @@ import {
   TableContainer,
   Skeleton,
   Button,
+  AlertDialog,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
-import { getDatabase, ref as Ref, child, get } from "firebase/database";
+import { getDatabase, ref as Ref, child, get, remove } from "firebase/database";
 
 function ManagePage() {
   const [loading, setLoading] = useState(true);
@@ -20,6 +25,7 @@ function ManagePage() {
   const [CCData, setCCData] = useState(null);
   const [TTCData, setTTCData] = useState(null);
   const [TGCData, setTGCData] = useState(null);
+  const [selectedCC, setSelectedCC] = useState(null);
   const columns = [
     {
       key: "SrNo",
@@ -71,6 +77,46 @@ function ManagePage() {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+  const cancelRef = useRef();
+  async function deleteCC() {
+    const database = getDatabase();
+    const databaseReference = Ref(
+      database,
+      "CCData/" + String(selectedCC.name)
+    );
+
+    await remove(databaseReference);
+    window.location.href = "/AdminHome";
+  }
+
+  const [isOpen1, setIsOpen1] = useState(false);
+  const cancelRef1 = useRef();
+  async function deleteTGC() {
+    const database = getDatabase();
+    const databaseReference = Ref(
+      database,
+      "TGCData/" + String(selectedCC.name)
+    );
+
+    await remove(databaseReference);
+    window.location.href = "/AdminHome";
+  }
+
+  const [isOpen2, setIsOpen2] = useState(false);
+  const cancelRef2 = useRef();
+  async function deleteTTC() {
+    const database = getDatabase();
+    const databaseReference = Ref(
+      database,
+      "TTCData/" + String(selectedCC.name)
+    );
+
+    await remove(databaseReference);
+    window.location.href = "/AdminHome";
   }
 
   useEffect(() => {
@@ -166,8 +212,14 @@ function ManagePage() {
                               String(ele.class).slice(-1)}
                           </Td>
                           <Td>
-                            <Button colorScheme="blue" onClick={() => {}}>
-                              View Details
+                            <Button
+                              colorScheme="red"
+                              onClick={() => {
+                                setIsOpen(true);
+                                setSelectedCC(ele);
+                              }}
+                            >
+                              Delete
                             </Button>
                           </Td>
                         </Tr>
@@ -229,8 +281,11 @@ function ManagePage() {
                           <Td>{++index}</Td>
                           <Td>{ele.name}</Td>
                           <Td>
-                            <Button colorScheme="blue" onClick={() => {}}>
-                              View Details
+                            <Button
+                              colorScheme="red"
+                              onClick={() => isOpen1(true)}
+                            >
+                              Delete
                             </Button>
                           </Td>
                         </Tr>
@@ -292,8 +347,11 @@ function ManagePage() {
                           <Td>{++index}</Td>
                           <Td>{ele.name}</Td>
                           <Td>
-                            <Button colorScheme="blue" onClick={() => {}}>
-                              View Details
+                            <Button
+                              colorScheme="red"
+                              onClick={() => isOpen2(true)}
+                            >
+                              Delete
                             </Button>
                           </Td>
                         </Tr>
@@ -305,6 +363,72 @@ function ManagePage() {
           )}
         </div>
       </div>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Click confirm for deleting CC.
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <Button colorScheme="red" onClick={onClose} ml={3}>
+                Cancel
+              </Button>
+              <Button colorScheme="green" onClick={deleteCC} ml={3}>
+                Confirm
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <AlertDialog
+        isOpen={isOpen1}
+        leastDestructiveRef={cancelRef1}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Click confirm for deleting TG Coordinator.
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <Button colorScheme="red" onClick={onClose} ml={3}>
+                Cancel
+              </Button>
+              <Button colorScheme="green" onClick={deleteTGC} ml={3}>
+                Confirm
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <AlertDialog
+        isOpen={isOpen2}
+        leastDestructiveRef={cancelRef2}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Click confirm for deleting CC.
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <Button colorScheme="red" onClick={onClose} ml={3}>
+                Cancel
+              </Button>
+              <Button colorScheme="green" onClick={deleteTTC} ml={3}>
+                Confirm
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 }

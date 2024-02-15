@@ -106,7 +106,7 @@ function AdminHome() {
     });
   }
 
-  async function getAvailableClasses() {
+  async function getAvailableClasses(isRedirect) {
     const db = dbRef(getDatabase());
     try {
       const snapshot = await get(child(db, "/CCData/"));
@@ -136,6 +136,10 @@ function AdminHome() {
     } catch (error) {
       console.error(error);
     }
+
+    if (isRedirect) {
+      window.location.href = "/ManagePage";
+    }
   }
 
   useEffect(() => {
@@ -149,7 +153,7 @@ function AdminHome() {
     if (usertype === "Class Coordinator") {
       window.location.href = "/CCHome";
     }
-    getAvailableClasses();
+    getAvailableClasses(false);
   }, []);
 
   return (
@@ -215,8 +219,8 @@ function AdminHome() {
               </div>
             </div>
           </div>
-          <Link
-            to="ManagePage"
+          <div
+            onClick={() => getAvailableClasses(true)}
             style={{ display: "flex", justifyContent: "center" }}
           >
             <div className="overlap">
@@ -231,7 +235,7 @@ function AdminHome() {
                 <div className="text-wrapper">Manage Faculty</div>
               </div>
             </div>
-          </Link>
+          </div>
           <div
             onClick={getGeneratedNotices}
             style={{ display: "flex", justifyContent: "center" }}
