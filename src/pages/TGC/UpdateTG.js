@@ -155,7 +155,7 @@ function UpdateTG() {
                         return (
                           <Tr key={index}>
                             <Td>{++index}</Td>
-                            <Td>{ele.facutlyId || "Unknown"}</Td>
+                            <Td>{ele.facultyId || "Unknown"}</Td>
                             <Td>{ele}</Td>
                             <Td style={{ display: "flex", gap: ".5rem" }}>
                               <Button

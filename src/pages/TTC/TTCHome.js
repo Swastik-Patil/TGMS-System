@@ -5,13 +5,12 @@ import { Button } from "@chakra-ui/react";
 import { ref as dbref, update } from "firebase/database";
 import styled from "styled-components";
 import Header from "../../components/Header";
-import { useAuth } from "../../contexts/AuthContext";
 import { database } from "../../utils/init-firebase";
+import { BeatLoader } from "react-spinners";
 
 export const TTCHome = () => {
   const [loading, setLoading] = useState(true);
   const [excelFile, setExcelFile] = useState(null);
-  const { currentUser } = useAuth();
 
   useEffect(() => {
     showLoading();
@@ -106,66 +105,73 @@ export const TTCHome = () => {
   return (
     <>
       <Header />
-      <Container>
-        <Holder>
-          <Instructions>
-            <b style={{ marginBottom: "10px", fontSize: "19px" }}>
-              Instructions
-            </b>
-            <ol>
-              <li>Create Excel file with extension (.xls or .xlsx)</li>
-              <li>
-                Download the template for filling data from here :{" "}
-                <a
-                  style={{ color: "blue" }}
-                  href="https://docs.google.com/spreadsheets/d/1FraYcIGRoTIrRTCKZFQbPofmfxOS3FfE/edit?usp=sharing&ouid=109387194985691076986&rtpof=true&sd=true"
-                  target="_blank"
-                  rel={"noreferrer"}
-                >
-                  View Now
-                </a>
-              </li>
-              <li>
-                Choose that excel file after filling data of all students and
-                click on submit
-              </li>
-              <li>
-                Refresh Page to upload another file after uploading one file
-              </li>
-            </ol>
-          </Instructions>
-          <form id="excelForm" onSubmit={handleSubmit}>
-            <input
-              type="file"
-              onChange={handleFile}
-              id="inputFile"
-              accept=".xls,.xlsx"
-              style={{
-                border: "1px solid black",
-                margin: "0px 20px",
-                borderRadius: "5px",
-              }}
-              required
-            />
 
-            <Button colorScheme={"blue"} type="submit">
-              submit
-            </Button>
-            <h3
-              style={{
-                paddingLeft: "50px",
-                paddingTop: "25px",
-                color: "green",
-                fontWeight: "bold",
-                display: "none",
-              }}
-              id="status"
-            >
-              Uploading data... Please wait
-            </h3>
-          </form>
-        </Holder>
-      </Container>
+      {loading ? (
+        <>
+          <BeatLoader color="#1A2B40" size={18} margin={2} loading={loading} />
+        </>
+      ) : (
+        <Container>
+          <Holder>
+            <Instructions>
+              <b style={{ marginBottom: "10px", fontSize: "19px" }}>
+                Instructions
+              </b>
+              <ol>
+                <li>Create Excel file with extension (.xls or .xlsx)</li>
+                <li>
+                  Download the template for filling data from here :{" "}
+                  <a
+                    style={{ color: "blue" }}
+                    href="https://docs.google.com/spreadsheets/d/1FraYcIGRoTIrRTCKZFQbPofmfxOS3FfE/edit?usp=sharing&ouid=109387194985691076986&rtpof=true&sd=true"
+                    target="_blank"
+                    rel={"noreferrer"}
+                  >
+                    View Now
+                  </a>
+                </li>
+                <li>
+                  Choose that excel file after filling data of all students and
+                  click on submit
+                </li>
+                <li>
+                  Refresh Page to upload another file after uploading one file
+                </li>
+              </ol>
+            </Instructions>
+            <form id="excelForm" onSubmit={handleSubmit}>
+              <input
+                type="file"
+                onChange={handleFile}
+                id="inputFile"
+                accept=".xls,.xlsx"
+                style={{
+                  border: "1px solid black",
+                  margin: "0px 20px",
+                  borderRadius: "5px",
+                }}
+                required
+              />
+
+              <Button colorScheme={"blue"} type="submit">
+                submit
+              </Button>
+              <h3
+                style={{
+                  paddingLeft: "50px",
+                  paddingTop: "25px",
+                  color: "green",
+                  fontWeight: "bold",
+                  display: "none",
+                }}
+                id="status"
+              >
+                Uploading data... Please wait
+              </h3>
+            </form>
+          </Holder>
+        </Container>
+      )}
     </>
   );
 };

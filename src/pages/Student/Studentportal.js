@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import BeatLoader from "react-spinners/BeatLoader";
-import Header from "../../components/Header";
-import { getDatabase, ref as Ref, child, get, set } from "firebase/database";
+import { getDatabase, ref as Ref, child, get } from "firebase/database";
 import { useAuth } from "../../contexts/AuthContext";
-import Details from "../../components/Details";
 import StudentDetails from "../StudentDetail";
 
 function Studentportal() {

@@ -83,7 +83,7 @@ export default function UploadCertificate({ data }) {
       if (
         !String(ret.data.text)
           .toLowerCase()
-          .includes(String(certType).toLowerCase())
+          .includes(String(certType).toLowerCase() && !detected)
       ) {
         alert("Upload Correct Document of course");
         document.getElementById("uploadButton").innerHTML = `Submit`;
@@ -253,7 +253,6 @@ export default function UploadCertificate({ data }) {
                 <Radio value="Course">Course</Radio>
                 <Radio value="Internship">Internship</Radio>
                 <Radio value="Event">Event</Radio>
-                <Radio value="Hackathon">Hackathon</Radio>
               </Stack>
             </RadioGroup>
           </HStack>
@@ -274,6 +273,7 @@ export default function UploadCertificate({ data }) {
               isRequired
               width="auto"
               style={{ padding: "5px" }}
+              accept={"image/png, image/jpeg, image/jpg"}
               onChange={handleFileChange}
             />
           </HStack>
