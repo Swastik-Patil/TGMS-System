@@ -4,35 +4,16 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { useAuth } from "../../contexts/AuthContext";
 import { child, get, getDatabase, ref } from "firebase/database";
-import CheckAuthorization from "../../utils/CheckAuthorization";
 
 function CChome() {
   const { currentUser } = useAuth();
 
-  async function getCurrentUserData() {
-    const db = ref(getDatabase());
-    try {
-      const snapshot = await get(child(db, "/CCData/"));
-      if (snapshot.exists()) {
-        let data = snapshot.val();
-        data = Object.keys(data)
-          .map((key) => data[key])
-          .filter((ele) => ele.email === currentUser.email);
-        window.localStorage.setItem("currClass", data[0].class);
-      } else {
-        console.log("No data available");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
     let usertype = window.localStorage.getItem("usertype");
-    if (usertype === "Teacher Guide") {
+    if (usertype === "Teacher Guardian") {
       window.location.href = "/TGHome";
     }
-    if (usertype === "Teacher Guide Coordinator") {
+    if (usertype === "Teacher Guardian Coordinator") {
       window.location.href = "/TGCHome";
     }
     if (usertype === "Admin") {
@@ -41,8 +22,26 @@ function CChome() {
     if (usertype === "Select an option") {
       window.location.href = "/home";
     }
-    getCurrentUserData();
-  }, []);
+
+    (async () => {
+      const db = ref(getDatabase());
+      try {
+        const snapshot = await get(child(db, "/CCData/"));
+        if (snapshot.exists()) {
+          let data = snapshot.val();
+          data = Object.keys(data)
+            .map((key) => data[key])
+            .filter((ele) => ele.email === currentUser.email);
+          window.localStorage.setItem("currClass", data[0].class);
+        } else {
+          console.log("No data available");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+    return () => {};
+  }, [currentUser.email]);
 
   return (
     <div className="frame" style={{ flexDirection: "column" }}>

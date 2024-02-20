@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { ref as dbref, get, child } from "firebase/database";
 import { database } from "../../utils/init-firebase";
 import { useAuth } from "../../contexts/AuthContext";
-import BeatLoader from "react-spinners/BeatLoader";
 import "../../styles/pagenotfound.css";
 
 export default function NotEligiblePage() {
@@ -10,22 +9,17 @@ export default function NotEligiblePage() {
   const [pending, setPending] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  function checkIfEligible() {
+  useEffect(() => {
     const db = dbref(database);
     get(child(db, "/users/" + currentUser.uid)).then((snapshot) => {
       if (snapshot.exists()) {
         setPending(true);
       }
     });
-  }
-
-  useEffect(() => {
-    checkIfEligible();
-
     setTimeout(() => {
       setLoading(false);
     }, 1500);
-  }, []);
+  }, [currentUser.uid]);
 
   return (
     <div className="Parent">

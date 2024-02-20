@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import { getDatabase, ref as Ref, child, get, remove } from "firebase/database";
 import { getStorage, ref as storageRef, deleteObject } from "firebase/storage";
 import CertificateImage from "../../res/certificate.png";
@@ -24,7 +23,6 @@ export default function UploadedCertificates() {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
-  const { currentUser } = useAuth();
   const cancelRef = useRef();
 
   function getData() {

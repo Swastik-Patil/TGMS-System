@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Studentportal from "./Student/Studentportal";
 
 export default function HomePage() {
-  const [userType, setUserType] = useState(false);
   function checkAuthorization() {
     let usertype = window.localStorage.getItem("usertype");
 
-    if (usertype === "Teacher Guide") {
+    if (usertype === "Teacher Guardian") {
       window.location.href = "/TGHome";
     }
-    if (usertype === "Teacher Guide Coordinator") {
+    if (usertype === "Teacher Guardian Coordinator") {
       window.location.href = "/TGCHome";
     }
     if (usertype === "Class Coordinator") {
@@ -17,6 +16,9 @@ export default function HomePage() {
     }
     if (usertype === "Admin") {
       window.location.href = "/AdminHome";
+    }
+    if (usertype === "Exam Deck") {
+      window.location.href = "/ExamDeck";
     }
     if (usertype === "Select an option") {
       window.location.href = "/home";

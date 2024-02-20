@@ -38,6 +38,7 @@ import {
   ManagePage,
   ManageAccounts,
   CertificatesList,
+  ExamDeck,
 } from "../pages";
 
 export default function AppRouter() {
@@ -103,6 +104,8 @@ export default function AppRouter() {
             path="/ManageAccounts"
             component={ManageAccounts}
           />
+
+          <ProtectedRoute exact path="/ExamDeck" component={ExamDeck} />
 
           <ProtectedRoute exact path="/Details" component={StudentDetails} />
 

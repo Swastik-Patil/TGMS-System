@@ -1,13 +1,4 @@
-import {
-  Box,
-  Flex,
-  Text,
-  Button,
-  Stack,
-  useColorModeValue,
-  useBreakpointValue,
-  Img,
-} from "@chakra-ui/react";
+import { Box, Flex, Button, Stack, useColorModeValue } from "@chakra-ui/react";
 import { useAuth } from "../contexts/AuthContext";
 import Logo from "../res/Logo.webp";
 
@@ -22,7 +13,7 @@ export default function Header({ navItems }) {
       window.location.href = "/home";
     }
     if (
-      usertype === "Teacher Guide" &&
+      usertype === "Teacher Guardian" &&
       window.location.pathname !== "/TGHome"
     ) {
       window.location.href = "/TGHome";
@@ -34,7 +25,7 @@ export default function Header({ navItems }) {
       window.location.href = "/CCHome";
     }
     if (
-      usertype === "Teacher Guide Coordinator" &&
+      usertype === "Teacher Guardian Coordinator" &&
       window.location.pathname !== "/TGCHome"
     ) {
       window.location.href = "/TGCHome";

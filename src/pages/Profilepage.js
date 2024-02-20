@@ -8,7 +8,7 @@ export default function Profilepage() {
     if (usertype === "Student") {
       window.location.href = "/profile";
     }
-    if (usertype === "Teacher Guide") {
+    if (usertype === "Teacher Guardian") {
       window.location.href = "/TGHome";
     }
     if (usertype === "Class Coordinator") {

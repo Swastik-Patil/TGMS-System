@@ -1,15 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/CCHome.css";
 import Header from "../../components/Header";
-import { useToast } from "@chakra-ui/react";
 import { getDatabase, ref as Ref, child, get } from "firebase/database";
-import CheckAuthorization from "../../utils/CheckAuthorization";
 
 function TGCHome() {
-  const [data, setData] = useState(null);
-
-  const toast = useToast();
   function sendNotice() {
     const dbRef = Ref(getDatabase());
     let str = "https://mail.google.com/mail/?view=cm&fs=1&to=";
@@ -68,7 +63,7 @@ function TGCHome() {
 
   useEffect(() => {
     let usertype = window.localStorage.getItem("usertype");
-    if (usertype === "Teacher Guide") {
+    if (usertype === "Teacher Guardian") {
       window.location.href = "/TGHome";
     }
     if (usertype === "Class Coordinator") {

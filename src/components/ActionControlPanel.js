@@ -20,7 +20,6 @@ import {
   FormControl,
   FormLabel,
   Textarea,
-  Input,
 } from "@chakra-ui/react";
 
 function ActionControlPanel({ ele }) {

@@ -11,7 +11,6 @@ import {
   TableCaption,
   TableContainer,
   Button,
-  Input,
   AlertDialog,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -26,16 +25,13 @@ import {
   getDatabase,
   remove,
 } from "firebase/database";
-import { useAuth } from "../../contexts/AuthContext";
 import { BeatLoader } from "react-spinners";
 
 function UpdateTG() {
   const [loading, setLoading] = useState(true);
   const [tgData, setTGData] = useState([]);
-  const [tgNames, setTGNames] = useState([]);
   const [selectedTG, setSelectedTG] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const onClose = () => setIsOpen(false);
   const cancelRef = useRef();
 
@@ -65,15 +61,7 @@ function UpdateTG() {
     }, 1500);
   }, []);
 
-  function showApplicationDetails(index, ele) {
-    let data = tgData[index - 1];
-    if (!Array.isArray(data)) {
-      data = Object.keys(data).map((key) => {
-        return data[key];
-      });
-    }
-
-    window.sessionStorage.setItem("tgData", JSON.stringify(data));
+  function showApplicationDetails(ele) {
     window.sessionStorage.setItem("selectedTG", ele);
     window.location.href = "/TGDataHome";
   }
@@ -82,29 +70,27 @@ function UpdateTG() {
     const db = dbref(getDatabase());
 
     try {
-      const snapshot = await get(child(db, "/tgmsData"));
+      const snapshot = await get(child(db, "/TGData"));
       if (snapshot.exists()) {
         let data = snapshot.val();
-        let tgNames = Object.keys(data);
-        let d = Object.keys(data).map((key) => {
+        data = Object.keys(data).map((key) => {
           return data[key];
         });
-        setTGData(d);
-        setTGNames(tgNames);
+        setTGData(data);
       } else {
         console.log("No data available");
       }
     } catch (error) {
       console.error(error);
-    } finally {
     }
   }
 
   async function deleteTG() {
     const db = getDatabase();
     const databaseReference = dbref(db, "tgmsData/" + String(selectedTG));
-
+    const databaseReference1 = dbref(db, "TGData/" + String(selectedTG));
     await remove(databaseReference);
+    await remove(databaseReference1);
     setIsOpen(false);
   }
 
@@ -119,18 +105,6 @@ function UpdateTG() {
         <TableParent>
           {tgData && (
             <>
-              <div className="flex flex-col gap-4">
-                <div className="flex justify-between gap-3 items-end">
-                  <Input
-                    className="w-full sm:max-w-[44%]"
-                    placeholder="Search by name or roll number"
-                    value={searchTerm}
-                    onChange={(e) =>
-                      setSearchTerm(e.target.value.toLowerCase())
-                    }
-                  />
-                </div>
-              </div>
               <TableContainer>
                 <Table id="myTable1" variant="simple">
                   <TableCaption>TG List</TableCaption>
@@ -142,43 +116,34 @@ function UpdateTG() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {tgNames
-                      .filter((ele) => {
-                        return searchTerm === ""
-                          ? ele
-                          : ele.toLowerCase().includes(searchTerm);
-                      })
-                      .map((ele, index) => {
-                        ele = String(ele)
-                          .toLowerCase()
-                          .replace(/\b(\w)/g, (s) => s.toUpperCase());
-                        return (
-                          <Tr key={index}>
-                            <Td>{++index}</Td>
-                            <Td>{ele.facultyId || "Unknown"}</Td>
-                            <Td>{ele}</Td>
-                            <Td style={{ display: "flex", gap: ".5rem" }}>
-                              <Button
-                                colorScheme="blue"
-                                onClick={() => {
-                                  showApplicationDetails(index, ele);
-                                }}
-                              >
-                                View Details
-                              </Button>
-                              <Button
-                                colorScheme="red"
-                                onClick={() => {
-                                  setSelectedTG(ele);
-                                  setIsOpen(true);
-                                }}
-                              >
-                                Delete
-                              </Button>
-                            </Td>
-                          </Tr>
-                        );
-                      })}
+                    {tgData.map((ele, index) => {
+                      return (
+                        <Tr key={index}>
+                          <Td>{++index}</Td>
+                          <Td>{ele.facultyId || "Unknown"}</Td>
+                          <Td>{ele.name}</Td>
+                          <Td style={{ display: "flex", gap: ".5rem" }}>
+                            <Button
+                              colorScheme="blue"
+                              onClick={() => {
+                                showApplicationDetails(ele.name);
+                              }}
+                            >
+                              View Details
+                            </Button>
+                            <Button
+                              colorScheme="red"
+                              onClick={() => {
+                                setSelectedTG(ele.name);
+                                setIsOpen(true);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </Td>
+                        </Tr>
+                      );
+                    })}
                   </Tbody>
                 </Table>
               </TableContainer>

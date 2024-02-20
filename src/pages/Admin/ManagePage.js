@@ -21,33 +21,10 @@ import { getDatabase, ref as Ref, child, get, remove } from "firebase/database";
 
 function ManagePage() {
   const [loading, setLoading] = useState(true);
-  const [ccNames, setCCNames] = useState(null);
   const [CCData, setCCData] = useState(null);
   const [TTCData, setTTCData] = useState(null);
   const [TGCData, setTGCData] = useState(null);
   const [selectedCC, setSelectedCC] = useState(null);
-  const columns = [
-    {
-      key: "SrNo",
-      label: "Sr. No.",
-    },
-    {
-      key: "empId",
-      label: "Faculty Id",
-    },
-    {
-      key: "NameoftheFaculty",
-      label: "Name of the Faculty",
-    },
-    {
-      key: "Post",
-      label: "Post",
-    },
-    {
-      key: "actions",
-      label: "Actions",
-    },
-  ];
 
   async function getAllData() {
     let data = JSON.parse(window.localStorage.getItem("CCData"));
@@ -283,7 +260,7 @@ function ManagePage() {
                           <Td>
                             <Button
                               colorScheme="red"
-                              onClick={() => isOpen1(true)}
+                              onClick={() => setIsOpen1(true)}
                             >
                               Delete
                             </Button>
@@ -349,7 +326,7 @@ function ManagePage() {
                           <Td>
                             <Button
                               colorScheme="red"
-                              onClick={() => isOpen2(true)}
+                              onClick={() => setIsOpen2(true)}
                             >
                               Delete
                             </Button>

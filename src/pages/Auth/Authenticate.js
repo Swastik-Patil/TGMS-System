@@ -7,14 +7,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {
-  child,
-  get,
-  ref as Ref,
-  getDatabase,
-  update,
-  set,
-} from "firebase/database";
+import { child, get, ref as Ref, getDatabase, set } from "firebase/database";
 
 function Authenticate() {
   const [loading, setLoading] = useState(true);
@@ -44,14 +37,23 @@ function Authenticate() {
     if (usertype === "Student") {
       window.location.href = "/home";
     }
-    if (usertype === "Teacher Guide") {
+    if (usertype === "Teacher Guardian") {
       window.location.href = "/TGHome";
     }
     if (usertype === "Class Coordinator") {
       window.location.href = "/CCHome";
     }
-    if (usertype === "Teacher Guide Coordinator") {
+    if (usertype === "Teacher Guardian Coordinator") {
       window.location.href = "/TGCHome";
+    }
+    if (usertype === "Admin") {
+      window.location.href = "/AdminHome";
+    }
+    if (usertype === "Time Table Coordinator") {
+      window.location.href = "/TTCHome";
+    }
+    if (usertype === "Exam Deck") {
+      window.location.href = "/ExamDeck";
     }
     if (usertype === "Select an option") {
       window.location.href = "/profile";
@@ -60,9 +62,11 @@ function Authenticate() {
 
   const Option = [
     "Student",
-    "Teacher Guide",
+    "Teacher Guardian",
     "Class Coordinator",
-    "Teacher Guide Coordinator",
+    "Teacher Guardian Coordinator",
+    "Time Table Coordinator",
+    "Exam Deck",
     "Admin",
   ];
 
@@ -127,21 +131,27 @@ function Authenticate() {
     if (usertype === "Admin") {
       path = "AdminData";
     }
-    if (usertype === "Teacher Guide") {
+    if (usertype === "Teacher Guardian") {
       path = "tgEmails";
     }
     if (usertype === "Class Coordinator") {
       path = "CCData";
     }
-    if (usertype === "Teacher Guide Coordinator") {
+    if (usertype === "Teacher Guardian Coordinator") {
       path = "TGCData";
+    }
+    if (usertype === "Time Table Coordinator") {
+      path = "TTCData";
+    }
+    if (usertype === "Exam Deck") {
+      path = "ExamDeckData";
     }
     if (usertype !== "Student") {
       const snapshot = await get(child(db, path));
       if (snapshot.exists()) {
         let data = snapshot.val();
         data = Object.keys(data).map((key) => data[key]);
-        data = data.map((ele) => {
+        data = data.foreach((ele) => {
           if (ele.email !== undefined) {
             authUserArray.push(ele.email);
           } else {

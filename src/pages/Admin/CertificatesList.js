@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import {
   Table,
@@ -9,36 +9,15 @@ import {
   Td,
   TableCaption,
   TableContainer,
-  FormControl,
-  FormLabel,
-  Input,
   Button,
   Skeleton,
-  Box,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
-import {
-  update,
-  ref as dbRef,
-  getDatabase,
-  get,
-  child,
-} from "firebase/database";
-import styled from "styled-components";
+import { ref as dbRef, getDatabase, get, child } from "firebase/database";
 
 function CertificatesList() {
   const [National, setNational] = useState(null);
   const [InterNational, setInterNational] = useState(null);
   const [Rest, setRest] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   async function getAllCertificates() {
@@ -83,25 +62,6 @@ function CertificatesList() {
       console.error(error);
     }
   }
-
-  const columns = [
-    {
-      key: "RNo",
-      label: "Roll No.",
-    },
-    {
-      key: "Class",
-      label: "Class",
-    },
-    {
-      key: "NameoftheStudents",
-      label: "Name of the Student",
-    },
-    {
-      key: "actions",
-      label: "Actions",
-    },
-  ];
 
   useEffect(() => {
     getAllCertificates();
@@ -376,7 +336,5 @@ function CertificatesList() {
     </>
   );
 }
-const TableParent = styled.div`
-  padding: 1rem;
-`;
+
 export default CertificatesList;

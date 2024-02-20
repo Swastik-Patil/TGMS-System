@@ -21,7 +21,6 @@ import {
   ModalCloseButton,
   useDisclosure,
   FormControl,
-  FormLabel,
   Textarea,
 } from "@chakra-ui/react";
 import styled from "styled-components";

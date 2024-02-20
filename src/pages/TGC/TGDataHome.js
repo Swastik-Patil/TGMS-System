@@ -93,9 +93,27 @@ function TGDataHome() {
     });
   }
 
+  async function getTGData() {
+    let selectedTG = window.sessionStorage.getItem("selectedTG");
+    const db = dbRef(getDatabase());
+    try {
+      const snapshot = await get(child(db, "/tgmsData/" + selectedTG));
+      if (snapshot.exists()) {
+        let data = snapshot.val();
+        data = Object.keys(data).map((key) => {
+          return data[key];
+        });
+        setData(data);
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
-    let data = JSON.parse(window.sessionStorage.getItem("tgData"));
-    setData(data);
+    getTGData();
   }, []);
 
   return (
@@ -155,16 +173,7 @@ function TGDataHome() {
                           <Td>{ele.RollNo}</Td>
                           <Td>{ele.Class}</Td>
                           <Td>{ele.NameoftheStudents}</Td>
-                          <Td style={{ display: "flex", gap: ".5rem" }}>
-                            <Button
-                              colorScheme="red"
-                              onClick={() => {
-                                alert("Deleted");
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </Td>
+                          <Td></Td>
                         </Tr>
                       );
                     })}

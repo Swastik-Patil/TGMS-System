@@ -88,7 +88,7 @@ function TGHOME() {
 
   useEffect(() => {
     let usertype = window.localStorage.getItem("usertype");
-    if (usertype === "Teacher Guide Coordinator") {
+    if (usertype === "Teacher Guardian Coordinator") {
       window.location.href = "/TGCHome";
     }
     if (usertype === "Class Coordinator") {
@@ -100,47 +100,6 @@ function TGHOME() {
     if (usertype === "Select an option") {
       window.location.href = "/home";
     }
-    checkUser();
-  }, []);
-
-  async function sendNotice() {
-    let str = "https://mail.google.com/mail/?view=cm&fs=1&to=";
-    const dbRef = dbref(getDatabase());
-
-    try {
-      let arr = [];
-
-      data.forEach((ele) => {
-        arr.push(ele.admissionNo);
-      });
-
-      if (arr.length > 0) {
-        const promises = arr.map((ele) =>
-          get(child(dbRef, "/StudentsData/" + ele + "/email"))
-        );
-
-        const snapshots = await Promise.all(promises);
-
-        snapshots.forEach((snapshot) => {
-          if (snapshot.exists()) {
-            let res = snapshot.val();
-            str += String(res) + ",";
-          }
-        });
-        if (str.length > 46) {
-          window.open(str, "_blank");
-        } else {
-          throw Error("No Emails Found");
-        }
-      } else {
-        console.log("No data available");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  function checkUser() {
     const db = dbref(getDatabase());
     get(child(db, "tgEmails"))
       .then(async (snapshot) => {
@@ -198,6 +157,43 @@ function TGHOME() {
       .catch((error) => {
         console.error(error);
       });
+  }, [currentUser.email]);
+
+  async function sendNotice() {
+    let str = "https://mail.google.com/mail/?view=cm&fs=1&to=";
+    const dbRef = dbref(getDatabase());
+
+    try {
+      let arr = [];
+
+      data.forEach((ele) => {
+        arr.push(ele.admissionNo);
+      });
+
+      if (arr.length > 0) {
+        const promises = arr.map((ele) =>
+          get(child(dbRef, "/StudentsData/" + ele + "/email"))
+        );
+
+        const snapshots = await Promise.all(promises);
+
+        snapshots.forEach((snapshot) => {
+          if (snapshot.exists()) {
+            let res = snapshot.val();
+            str += String(res) + ",";
+          }
+        });
+        if (str.length > 46) {
+          window.open(str, "_blank");
+        } else {
+          throw Error("No Emails Found");
+        }
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function addNewObservations() {

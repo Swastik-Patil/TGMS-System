@@ -1,9 +1,9 @@
 export default function CheckAuthorization() {
   let usertype = window.localStorage.getItem("usertype");
-  if (usertype === "Teacher Guide") {
+  if (usertype === "Teacher Guardian") {
     window.location.href = "/TGHome";
   }
-  if (usertype === "Teacher Guide Coordinator") {
+  if (usertype === "Teacher Guardian Coordinator") {
     window.location.href = "/TGCHome";
   }
   if (usertype === "Class Coordinator") {

@@ -26,6 +26,7 @@ import AdminHome from "./Admin/AdminHome";
 import ManagePage from "./Admin/ManagePage";
 import ManageAccounts from "./Admin/ManageAccounts";
 import CertificatesList from "./Admin/CertificatesList";
+import ExamDeck from "./ExamDeck/ExamDeck";
 export {
   ResetPasswordPage,
   ForgotPasswordPage,
@@ -55,4 +56,5 @@ export {
   ManagePage,
   ManageAccounts,
   CertificatesList,
+  ExamDeck,
 };

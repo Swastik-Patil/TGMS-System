@@ -7,10 +7,9 @@ import StudentDetails from "../StudentDetail";
 
 function Studentportal() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
   const { currentUser } = useAuth();
 
-  function readUserPastData() {
+  useEffect(() => {
     const dbRef = Ref(getDatabase());
     get(child(dbRef, `/EmailAdmissionNo`))
       .then((snapshot) => {
@@ -27,7 +26,6 @@ function Studentportal() {
           }
           window.sessionStorage.setItem("selectedStudent", d[0].admissionNo);
           window.sessionStorage.setItem("path", "StudentsData");
-          setData(d);
           window.localStorage.setItem("data", JSON.stringify(d));
           setLoading(false);
         } else {
@@ -37,11 +35,7 @@ function Studentportal() {
       .catch((error) => {
         console.log(error);
       });
-  }
-
-  useEffect(() => {
-    readUserPastData();
-  }, []);
+  }, [currentUser.email]);
 
   const navItems = [
     {

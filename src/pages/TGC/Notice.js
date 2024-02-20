@@ -6,44 +6,37 @@ import BeatLoader from "react-spinners/BeatLoader";
 import logo from "../../res/MES Flower.png";
 import Header from "../../components/Header";
 import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
-import { Table, Tr, Td, Th, Tbody, toast } from "@chakra-ui/react";
-import {
-  ref as dbref,
-  get,
-  child,
-  getDatabase,
-  orderByChild,
-  equalTo,
-} from "firebase/database";
+import { Table, Tr, Td, Th, Tbody } from "@chakra-ui/react";
+import { ref as dbref, get, child, getDatabase } from "firebase/database";
 import { useToast } from "@chakra-ui/react";
 
 export default function Notice() {
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
   // const [branch, setBranch] = useState(null);
   // const [enroll, setEnroll] = useState(null);
   // const [actionDate, setActionDate] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  function readNoticeData() {
-    let data = JSON.parse(window.localStorage.getItem("SlowStudents")).map(
-      (ele) => {
-        return JSON.parse(ele);
-      }
-    );
+  // function readNoticeData() {
+  //   let data = JSON.parse(window.localStorage.getItem("SlowStudents")).map(
+  //     (ele) => {
+  //       return JSON.parse(ele);
+  //     }
+  //   );
 
-    data = data.map((ele) => {
-      return {
-        admissionNo: ele.admissionNo,
-        name: ele.name,
-        rNo: ele.rNo,
-        class: "TE A",
-      };
-    });
+  //   data = data.map((ele) => {
+  //     return {
+  //       admissionNo: ele.admissionNo,
+  //       name: ele.name,
+  //       rNo: ele.rNo,
+  //       class: "TE A",
+  //     };
+  //   });
 
-    setUserData(data);
-    console.log(userData);
-    setLoading(false);
-  }
+  //   setUserData(data);
+  //   console.log(userData);
+  //   setLoading(false);
+  // }
 
   function handleBack() {
     window.location.href = "/home";
@@ -162,7 +155,7 @@ export default function Notice() {
 
   useEffect(() => {
     let usertype = window.localStorage.getItem("usertype");
-    if (usertype === "Teacher Guide") {
+    if (usertype === "Teacher Guardian") {
       window.location.href = "/TGHome";
     }
     if (usertype === "Student") {
