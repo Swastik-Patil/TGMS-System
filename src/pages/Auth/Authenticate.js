@@ -151,7 +151,7 @@ function Authenticate() {
       if (snapshot.exists()) {
         let data = snapshot.val();
         data = Object.keys(data).map((key) => data[key]);
-        data = data.foreach((ele) => {
+        data = data.map((ele) => {
           if (ele.email !== undefined) {
             authUserArray.push(ele.email);
           } else {
