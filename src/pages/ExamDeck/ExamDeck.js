@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import UploadPage from "./UploadPage";
 import Header from "../../components/Header";
 import styled from "styled-components";
 import { useToast } from "@chakra-ui/react";
