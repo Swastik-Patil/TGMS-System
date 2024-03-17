@@ -26,12 +26,15 @@ import {
 import styled from "styled-components";
 import { ref as dbref, get, child, getDatabase, set } from "firebase/database";
 import { database } from "../../utils/init-firebase";
+import youtube from "../../api/youtube";
+import dotenv from "dotenv";
 
 function SlowLearners() {
   const [data, setData] = useState(null);
   const [currUID, setCurrUID] = useState("");
   const observationsRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;
   const {
@@ -77,6 +80,7 @@ function SlowLearners() {
 
   useEffect(() => {
     checkUser();
+    dotenv.config();
   }, []);
 
   function showApplicationDetails(uid) {
@@ -126,16 +130,39 @@ function SlowLearners() {
     }
   }
 
-  function addNewObservations() {
+  async function addNewObservations() {
+    // Adding loading spinner
+    setLoading(true);
     if ((observationsRef.current?.value).trim() !== "") {
-      set(
-        dbref(database, `StudentsData/${currUID}/observations`),
-        observationsRef.current?.value
-      ).then(() => {
-        onClose1();
-        window.location.reload();
+      let observations = (observationsRef.current?.value).toLowerCase();
+
+      const response = await youtube.get("/search", {
+        params: {
+          q: observations,
+          part: "snippet",
+          maxResults: 3,
+          type: "video",
+          key: process.env.REACT_APP_KEY,
+        },
       });
+
+      set(
+        dbref(database, `StudentsData/${currUID}/observations/`),
+        observations
+      );
+
+      if (response.data.items.length > 0) {
+        set(dbref(database, `StudentsData/${currUID}/facultyObservations/`), {
+          observations: observationsRef.current?.value,
+          resources: response.data.items,
+        }).then(() => {
+          onClose1();
+          window.location.reload();
+        });
+      }
     }
+    // Remove loading spinner
+    setLoading(false);
   }
 
   return (
@@ -235,10 +262,17 @@ function SlowLearners() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={addNewObservations}>
-              Save
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={addNewObservations}
+              isDisabled={loading}
+            >
+              {loading ? "Processing..." : "Save"}
             </Button>
-            <Button onClick={onClose1}>Cancel</Button>
+            <Button onClick={onClose1} isDisabled={loading}>
+              Cancel
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

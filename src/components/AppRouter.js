@@ -39,6 +39,7 @@ import {
   ManageAccounts,
   CertificatesList,
   ExamDeck,
+  ContactTg,
 } from "../pages";
 
 export default function AppRouter() {
@@ -106,8 +107,8 @@ export default function AppRouter() {
           />
 
           <ProtectedRoute exact path="/ExamDeck" component={ExamDeck} />
-
-          <ProtectedRoute exact path="/Details" component={StudentDetails} />
+          <ProtectedRoute path="/Details" component={StudentDetails} />
+          <ProtectedRoute exact path="/ContactTg" component={ContactTg} />
 
           <ProtectedRoute
             exact
@@ -153,6 +154,7 @@ function ProtectedRoute(props) {
       <Route {...props} />
     );
   }
+
   return currentUser ? (
     <Route {...props} />
   ) : (

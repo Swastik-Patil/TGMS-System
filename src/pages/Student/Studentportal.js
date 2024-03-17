@@ -50,25 +50,31 @@ function Studentportal() {
       label: "Uploaded Certificates",
       href: "uploadedCertificates",
     },
+    {
+      label: "Contact TG",
+      href: "ContactTg",
+    },
   ];
 
+  const subNavItems = ["Student Details", "Academics", "Faculty Suggestions"];
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100%",
-      }}
-    >
+    <div>
       {loading ? (
-        <>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100%",
+          }}
+        >
           <BeatLoader color="#1A2B40" size={18} margin={2} loading={loading} />
-        </>
+        </div>
       ) : (
         <Contain>
-          <StudentDetails navItems={navItems} />
+          <StudentDetails navItems={navItems} subNavItems={subNavItems} />
         </Contain>
       )}
     </div>
@@ -78,12 +84,8 @@ function Studentportal() {
 export default Studentportal;
 
 const Contain = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
-  @media (max-width: 650px) {
-    position: absolute;
-    width: auto;
-  }
 `;

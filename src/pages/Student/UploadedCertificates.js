@@ -102,6 +102,10 @@ export default function UploadedCertificates() {
       label: "Uploaded Certificates",
       href: "uploadedCertificates",
     },
+    {
+      label: "Contact TG",
+      href: "ContactTg",
+    },
   ];
 
   return (

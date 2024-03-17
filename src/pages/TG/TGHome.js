@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ref as dbref, get, child, getDatabase } from "firebase/database";
 import {
+  Text,
   Table,
   Thead,
   Tbody,
@@ -22,6 +23,7 @@ import {
   FormControl,
   Textarea,
 } from "@chakra-ui/react";
+import { IoIosNotifications, IoIosNotificationsOff } from "react-icons/io";
 
 import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
@@ -33,7 +35,8 @@ function TGHOME() {
   const { currentUser } = useAuth();
   const [data, setData] = useState(null);
   const [filterValue, setFilterValue] = useState("");
-
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
   const [currUID, setCurrUID] = useState("");
   const observationsRef = React.useRef(null);
 
@@ -42,6 +45,11 @@ function TGHOME() {
     isOpen: isOpen1,
     onOpen: onOpen1,
     onClose: onClose1,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen2,
+    onOpen: onOpen2,
+    onClose: onClose2,
   } = useDisclosure();
 
   function showApplicationDetails(uid) {
@@ -79,6 +87,10 @@ function TGHOME() {
     {
       key: "points",
       label: "Points",
+    },
+    {
+      key: "notification",
+      label: "Notification",
     },
     {
       key: "details",
@@ -141,6 +153,7 @@ function TGHOME() {
                     ...res[index],
                     studentType: r.studentType,
                     points: r.points,
+                    mails: r.mails,
                   };
                 }
                 return { ...res[index] };
@@ -205,6 +218,20 @@ function TGHOME() {
         onClose1();
         window.location.reload();
       });
+    }
+  }
+
+  function handleNotification(mails) {
+    mails = Object.keys(mails).map((key) => mails[key]);
+    const lastMail = Object.values(mails).pop();
+
+    if (lastMail) {
+      const { subject, message } = lastMail;
+      setSubject(subject);
+      setMessage(message);
+      onOpen2(); // Open the modal to display mail details
+    } else {
+      console.log("No mails found for this student.");
     }
   }
 
@@ -283,6 +310,31 @@ function TGHOME() {
                             )}
                           </Td>
                           <Td>{ele.points ? ele.points : 0}</Td>
+
+                          <Td
+                            position={"relative"}
+                            display={"flex"}
+                            alignItems={"center"}
+                            justifyContent={"center"}
+                            padding={"1.4rem"}
+                          >
+                            {ele.mails ? (
+                              <>
+                                <IoIosNotifications
+                                  size={30}
+                                  cursor={"pointer"}
+                                  color="#3182ce"
+                                  onClick={() => handleNotification(ele.mails)}
+                                />
+                                <span>{ele.mails.length}</span>
+                              </>
+                            ) : (
+                              <IoIosNotificationsOff
+                                size={30}
+                                color="#3182ce"
+                              />
+                            )}
+                          </Td>
                           <Td>
                             <Button
                               colorScheme="blue"
@@ -330,6 +382,29 @@ function TGHOME() {
                 </ModalFooter>
               </ModalContent>
             </Modal>
+            <Modal
+              isOpen={isOpen2}
+              onClose={onClose2}
+              motionPreset="slideInBottom"
+            >
+              <OverlayOne />
+              <ModalContent>
+                <ModalHeader>Notification</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  {subject && message ? (
+                    <MailCard>
+                      <Subject>{subject}</Subject>
+                      <Message>{message}</Message>
+                    </MailCard>
+                  ) : (
+                    <MailCard>
+                      <Text>No Pending Message</Text>
+                    </MailCard>
+                  )}
+                </ModalBody>
+              </ModalContent>
+            </Modal>
           </>
         )}
       </TableParent>
@@ -338,6 +413,22 @@ function TGHOME() {
 }
 const TableParent = styled.div`
   padding: 1rem;
+`;
+
+const MailCard = styled.div`
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+`;
+
+const Subject = styled.div`
+  font-weight: bold;
+  margin-bottom: 5px;
+`;
+
+const Message = styled.div`
+  margin-bottom: 10px;
 `;
 
 export default TGHOME;

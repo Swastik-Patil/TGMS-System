@@ -29,5 +29,5 @@ export default function HomePage() {
     checkAuthorization();
   }, []);
 
-  return <React.Fragment>{<Studentportal />}</React.Fragment>;
+  return <Studentportal />;
 }

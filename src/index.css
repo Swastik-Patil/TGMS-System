@@ -39,3 +39,10 @@ code {
 .center > * {
   text-align: center !important;
 }
+
+.chakra-modal__content-container {
+  background-color: white;
+}
+.chakra-modal__content {
+  border: 1px solid black;
+}

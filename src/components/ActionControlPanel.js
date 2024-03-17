@@ -21,6 +21,7 @@ import {
   FormLabel,
   Textarea,
 } from "@chakra-ui/react";
+import youtube from "../api/youtube";
 
 function ActionControlPanel({ ele }) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -61,16 +62,45 @@ function ActionControlPanel({ ele }) {
     set(dbref(database, `StudentsData/${data.admissionNo}`), data);
   }
 
-  function addNewObservations() {
+  const [loading, setLoading] = React.useState(false);
+  async function addNewObservations() {
+    let currUID = ele.admissionNo;
+    setLoading(true);
     if ((observationsRef.current?.value).trim() !== "") {
-      set(
-        dbref(database, `StudentsData/${ele.admissionNo}/observations`),
-        observationsRef.current?.value
-      ).then(() => {
-        onClose3();
-        window.location.reload();
-      });
+      let observations = (observationsRef.current?.value).toLowerCase();
+
+      await youtube
+        .get("/search", {
+          params: {
+            q: observations,
+            part: "snippet",
+            maxResults: 3,
+            type: "video",
+            key: process.env.REACT_APP_KEY,
+          },
+        })
+        .then((response) => {
+          set(
+            dbref(database, `StudentsData/${currUID}/observations/`),
+            observations
+          );
+
+          if (response.data.items.length > 0) {
+            set(
+              dbref(database, `StudentsData/${currUID}/facultyObservations/`),
+              {
+                observations: observationsRef.current?.value,
+                resources: response.data.items,
+              }
+            ).then(() => {
+              onClose3();
+              window.location.reload();
+            });
+          }
+        });
     }
+    // Remove loading spinner
+    setLoading(false);
   }
 
   function deleteObservations() {
@@ -190,10 +220,17 @@ function ActionControlPanel({ ele }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={addNewObservations}>
-              Save
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={addNewObservations}
+              isDisabled={loading}
+            >
+              {loading ? "Processing..." : "Save"}
             </Button>
-            <Button onClick={onClose3}>Cancel</Button>
+            <Button onClick={onClose3} isDisabled={loading}>
+              Cancel
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -209,4 +246,8 @@ const Contain = styled.div`
   justify-content: flex-end;
   gap: 10px;
   padding: 5px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;

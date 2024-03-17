@@ -38,7 +38,7 @@ export default function Header({ navItems }) {
     }
   }
   return (
-    <Box w="100%" h="12%" p={4} color="white" id="header">
+    <Box w="100%" p={4} color="white" id="header">
       <Flex
         bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
