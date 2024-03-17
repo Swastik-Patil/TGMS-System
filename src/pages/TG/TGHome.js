@@ -312,7 +312,6 @@ function TGHOME() {
                           <Td>{ele.points ? ele.points : 0}</Td>
 
                           <Td
-                            position={"relative"}
                             display={"flex"}
                             alignItems={"center"}
                             justifyContent={"center"}
@@ -326,12 +325,13 @@ function TGHOME() {
                                   color="#3182ce"
                                   onClick={() => handleNotification(ele.mails)}
                                 />
-                                <span>{ele.mails.length}</span>
+                                <Text>{ele.mails.length}</Text>
                               </>
                             ) : (
                               <IoIosNotificationsOff
                                 size={30}
                                 color="#3182ce"
+                                position={"relative"}
                               />
                             )}
                           </Td>

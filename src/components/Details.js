@@ -533,7 +533,7 @@ function Details({
 
             {FacultySuggestions && (
               <ContentHolder>
-                {pendingData.facultyObservations && (
+                {pendingData.facultyObservations ? (
                   <>
                     <h4>{pendingData.facultyObservations.observations}</h4>
                     {resources && (
@@ -580,6 +580,8 @@ function Details({
                       </div>
                     )}
                   </>
+                ) : (
+                  <div style={{ padding: "2rem" }}>No Faculty Suggetions</div>
                 )}
               </ContentHolder>
             )}

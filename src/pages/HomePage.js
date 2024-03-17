@@ -29,5 +29,9 @@ export default function HomePage() {
     checkAuthorization();
   }, []);
 
-  return <Studentportal />;
+  return (
+    <React.Fragment>
+      <Studentportal />
+    </React.Fragment>
+  );
 }

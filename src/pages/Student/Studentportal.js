@@ -19,7 +19,7 @@ function Studentportal() {
             return data[key];
           });
           let d = data.filter((ele) => {
-            return ele.email === currentUser.email;
+            return ele.mesId === currentUser.email;
           });
           if (d.length === 0) {
             window.location.href = "/";

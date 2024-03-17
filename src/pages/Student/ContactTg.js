@@ -103,7 +103,8 @@ function ContactTg() {
         }
 
         str += `su=${subject}&body=${message}`;
-        window.location.href = str;
+        window.open(str);
+        // window.location.href = str;
       })
       .catch((error) => {
         console.error("Error fetching email addresses: ", error);
@@ -113,7 +114,6 @@ function ContactTg() {
   const handleSendEmail = () => {
     if (subject.trim() !== "" && message.trim() !== "") {
       addMails();
-      composeEmail();
     } else {
       alert("Please fill in both subject and message fields.");
     }
@@ -148,7 +148,7 @@ function ContactTg() {
               );
 
               onClose1();
-              //window.location.reload();
+              composeEmail();
             })
             .catch((error) => {
               console.error("Error adding mail to Firebase: ", error);
