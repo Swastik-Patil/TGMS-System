@@ -93,14 +93,11 @@ function ContactTg() {
   function composeEmail() {
     const dbRef = ref(getDatabase());
     let str = `https://mail.google.com/mail/?view=cm&fs=1&`;
-    get(child(dbRef, "/tgEmails"))
+    get(child(dbRef, "/TGData/" + TGName + "/email"))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          snapshot.forEach((childSnapshot) => {
-            if (TGName === childSnapshot.val().name) {
-              str += `to=${childSnapshot.val().email}&`;
-            }
-          });
+          let data = snapshot.val();
+          str += `to=${data}&`;
         } else {
           console.log("No email addresses available");
         }

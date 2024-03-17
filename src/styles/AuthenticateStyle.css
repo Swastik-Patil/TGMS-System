@@ -264,6 +264,7 @@ h6 span {
 }
 
 .select-wrapper {
+  min-width: 300px;
   max-width: 350px;
   margin: 20px auto;
 }

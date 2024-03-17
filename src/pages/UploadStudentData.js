@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { ref as dbref, update } from "firebase/database";
+import { ref as dbref, set } from "firebase/database";
 import { database } from "../utils/init-firebase";
 import styled from "styled-components";
 import Header from "../components/Header";
+import { useToast } from "@chakra-ui/react";
 
 function UploadStudentData() {
   const [excelFile, setExcelFile] = useState(null);
-
+  const toast = useToast();
   const handleFile = (e) => {
     let selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -45,13 +46,13 @@ function UploadStudentData() {
       });
       dataToSend.forEach((ele) => {
         let IDRef = ele.admissionNo;
-        update(dbref(db, "/StudentsData/" + IDRef), {
+        set(dbref(db, "/StudentsData/" + IDRef), {
           ...ele,
         });
       });
       dataToSend.forEach((ele) => {
         let IDRef = ele.admissionNo;
-        update(dbref(db, "/EmailAdmissionNo/" + IDRef), {
+        set(dbref(db, "/EmailAdmissionNo/" + IDRef), {
           admissionNo: ele.admissionNo,
           mesId: ele.mesId,
         });
@@ -59,12 +60,25 @@ function UploadStudentData() {
       let currClass = window.localStorage.getItem("currClass");
       dataToSend.forEach((ele, index) => {
         let IDRef = ele.admissionNo;
-        update(dbref(db, "/ClassWiseData/" + currClass + "/" + IDRef), {
+        set(dbref(db, "/ClassWiseData/" + currClass + "/" + IDRef), {
           rNo: ele.rNo,
         });
       });
+      toast({
+        position: "top-right",
+        description: "Data Uploaded Successfully.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     } else {
-      alert("Empty file not allowed");
+      toast({
+        position: "top-right",
+        description: "Empty file not allowed.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
