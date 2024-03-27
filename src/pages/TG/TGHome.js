@@ -30,6 +30,9 @@ import { useAuth } from "../../contexts/AuthContext";
 import Header from "../../components/Header";
 import { set } from "firebase/database";
 import { database } from "../../utils/init-firebase";
+import youtube from "../../api/youtube";
+import dotenv from "dotenv";
+
 
 function TGHOME() {
   const { currentUser } = useAuth();
@@ -39,6 +42,7 @@ function TGHOME() {
   const [message, setMessage] = useState("");
   const [currUID, setCurrUID] = useState("");
   const observationsRef = React.useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;
   const {
@@ -209,16 +213,39 @@ function TGHOME() {
     }
   }
 
-  function addNewObservations() {
+  async function addNewObservations() {
+    // Adding loading spinner
+    setLoading(true);
     if ((observationsRef.current?.value).trim() !== "") {
-      set(
-        dbref(database, `StudentsData/${currUID}/observations`),
-        observationsRef.current?.value
-      ).then(() => {
-        onClose1();
-        window.location.reload();
+      let observations = (observationsRef.current?.value).toLowerCase();
+
+      const response = await youtube.get("/search", {
+        params: {
+          q: observations,
+          part: "snippet",
+          maxResults: 3,
+          type: "video",
+          key: process.env.REACT_APP_KEY,
+        },
       });
+
+      set(
+        dbref(database, `StudentsData/${currUID}/observations/`),
+        observations
+      );
+
+      if (response.data.items.length > 0) {
+        set(dbref(database, `StudentsData/${currUID}/facultyObservations/`), {
+          observations: observationsRef.current?.value,
+          resources: response.data.items,
+        }).then(() => {
+          onClose1();
+          window.location.reload();
+        });
+      }
     }
+    // Remove loading spinner
+    setLoading(false);
   }
 
   function handleNotification(mails) {
@@ -375,10 +402,12 @@ function TGHOME() {
                     colorScheme="blue"
                     mr={3}
                     onClick={addNewObservations}
+                    isDisabled={loading}
                   >
-                    Save
+                    
+              {loading ? "Processing..." : "Save"}
                   </Button>
-                  <Button onClick={onClose1}>Cancel</Button>
+                  <Button onClick={onClose1} isDisabled={loading}>Cancel</Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>
