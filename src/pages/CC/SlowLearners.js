@@ -142,7 +142,7 @@ function SlowLearners() {
           part: "snippet",
           maxResults: 3,
           type: "video",
-          key: process.env.REACT_APP_KEY,
+          key: "AIzaSyC6is0G0DZui1TsfTdDwxt3qhaFby7kmgk",
         },
       });
 

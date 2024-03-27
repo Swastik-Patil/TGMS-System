@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ref as dbref, set } from "firebase/database";
 import { database } from "../utils/init-firebase";
 import styled from "styled-components";
@@ -22,8 +22,13 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import youtube from "../api/youtube";
+import dotenv from "dotenv";
 
 function ActionControlPanel({ ele }) {
+  useEffect(() => {
+    dotenv.config();
+  }, []);
+
   const [isOpen, setIsOpen] = React.useState(false);
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef();
@@ -76,7 +81,7 @@ function ActionControlPanel({ ele }) {
             part: "snippet",
             maxResults: 3,
             type: "video",
-            key: process.env.REACT_APP_KEY,
+            key: "AIzaSyC6is0G0DZui1TsfTdDwxt3qhaFby7kmgk",
           },
         })
         .then((response) => {

@@ -116,6 +116,7 @@ function TGHOME() {
     if (usertype === "Select an option") {
       window.location.href = "/home";
     }
+    dotenv.config();
     const db = dbref(getDatabase());
     get(child(db, "tgEmails"))
       .then(async (snapshot) => {
@@ -144,9 +145,7 @@ function TGHOME() {
               const promises = res.map((ele) =>
                 get(child(db, "/StudentsData/" + ele.admissionNo + "/"))
               );
-
               const snapshots = await Promise.all(promises);
-
               res = snapshots.map((snapshot, index) => {
                 if (snapshot.exists()) {
                   let r = snapshot.val();
@@ -156,6 +155,7 @@ function TGHOME() {
                   return {
                     ...res[index],
                     studentType: r.studentType,
+                    observations: r.observations,
                     points: r.points,
                     mails: r.mails,
                   };
@@ -163,6 +163,7 @@ function TGHOME() {
                 return { ...res[index] };
               });
               setData(res);
+          
             } else {
               console.log("No data available");
             }
@@ -225,9 +226,10 @@ function TGHOME() {
           part: "snippet",
           maxResults: 3,
           type: "video",
-          key: process.env.REACT_APP_KEY,
+          key: "AIzaSyC6is0G0DZui1TsfTdDwxt3qhaFby7kmgk",
         },
       });
+      console.log(response.data.items)
 
       set(
         dbref(database, `StudentsData/${currUID}/observations/`),
