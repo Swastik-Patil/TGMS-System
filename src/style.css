@@ -10,20 +10,19 @@
   right: 0;
   top: 0;
   height: 100vh;
-  background-color: #E8F9FD;
-  color: #0AA1DD;
+  background-color: #e8f9fd;
+  color: #0aa1dd;
   line-height: 1.6;
 
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container {
-  margin-top: 5%;
+  margin-block: 5%;
   max-width: 1170px;
   height: fit-content;
   margin-left: auto;
   margin-right: auto;
-
 }
 
 ul {
@@ -60,7 +59,7 @@ ul {
   color: whitesmoke;
   border-radius: 12px;
   font-family: "Josefin Sans";
-  background-color:#2155CD;
+  background-color: #2155cd;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -75,7 +74,6 @@ ul {
 .contact {
   background: #f9feff;
   border-radius: 12px;
- 
 }
 
 /* FORM STYLES */
@@ -84,7 +82,6 @@ ul {
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
   color: black;
- 
 }
 .required-field::after {
   content: "*";
@@ -92,7 +89,7 @@ ul {
   margin-left: 2px;
 }
 #expDesc {
-  color: #0AA1DD;
+  color: #0aa1dd;
   font-weight: 600;
   font-size: x-small;
 }
@@ -123,7 +120,7 @@ ul {
   border: 1px solid transparent;
   border-radius: 4px;
   color: rgb(219, 230, 222);
-  background: #0AA1DD;
+  background: #0aa1dd;
 
   border: 0;
   text-transform: uppercase;
@@ -137,7 +134,7 @@ ul {
   transition: background-color 2s ease-out;
 }
 input[type="file"]::file-selector-button {
-  background-color: #0AA1DD;
+  background-color: #0aa1dd;
   cursor: pointer;
   padding: 2px 0.4em;
   border-radius: 0.5em;
@@ -155,7 +152,6 @@ input[type="file"]::file-selector-button {
 /* LARGE SCREENS */
 @media (min-width: 700px) {
   .wrapper {
-   
     display: grid;
     grid-template-columns: 1fr 2fr;
   }
@@ -173,7 +169,7 @@ input[type="file"]::file-selector-button {
 
 /* Mobile Screens */
 @media (max-width: 426px) {
-  .wrapper{
+  .wrapper {
     position: relative;
   }
   .contact form {
@@ -187,4 +183,3 @@ input[type="file"]::file-selector-button {
     height: 150vh;
   }
 }
-

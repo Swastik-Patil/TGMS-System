@@ -48,8 +48,6 @@ function AdminHome() {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
 
-  function getGeneratedNotices() {}
-
   function handleUserTypeChange(e) {
     setccClass(e.target.outerText);
     document.querySelector(".select-wrapper").classList.toggle("active");
@@ -104,7 +102,6 @@ function AdminHome() {
       });
     });
   }
-
   async function getAvailableClasses(isRedirect) {
     const db = dbRef(getDatabase());
     try {
@@ -252,8 +249,8 @@ function AdminHome() {
               </div>
             </div>
           </Link>
-          <div
-            onClick={getGeneratedNotices}
+          <Link
+            to="GeneratedNotices"
             style={{ display: "flex", justifyContent: "center" }}
           >
             <div className="overlap">
@@ -266,23 +263,6 @@ function AdminHome() {
                 }}
               >
                 <div className="text-wrapper">Generated Notice</div>
-              </div>
-            </div>
-          </div>
-          <Link
-            to="ManageAccounts"
-            style={{ display: "flex", justifyContent: "center" }}
-          >
-            <div className="overlap">
-              <div
-                className="rectangle"
-                style={{
-                  flexDirection: "column",
-                  height: "150px",
-                  width: "250px",
-                }}
-              >
-                <div className="text-wrapper">Manage Accounts</div>
               </div>
             </div>
           </Link>

@@ -5,28 +5,28 @@
   input {
     display: none;
   }
-  #bc__doc {
+  #notice__doc {
     min-width: 32rem;
     max-width: 32rem;
     margin: auto;
   }
-  .bc__Border1 {
+  .notice__Border1 {
     padding: 0.1em;
     border: solid black thick;
   }
-  .bc__Border2 {
+  .notice__Border2 {
     padding: 1em;
     border: solid black;
   }
-  .bc__heading {
+  .notice__heading {
     display: flex;
     justify-content: space-evenly;
   }
-  .bc__logo {
+  .notice__logo {
     max-height: 70px;
   }
 
-  .bc__heading * {
+  .notice__heading * {
     text-align: center;
     padding: 0;
     margin: 0;
@@ -34,28 +34,30 @@
   .dash {
     border-top: 0.1rem solid black;
   }
-  .bc__title {
+  .notice__title {
     text-align: center;
   }
-  #bc__RegNo {
+  #notice__RegNo {
     font-family: fantasy;
   }
   .date {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
-  .bc__Signatures {
+  .notice__Signatures {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: flex-end;
+    padding-inline: 2rem;
   }
-  .bc__clerk {
+  .notice__clerk {
     display: flex;
     align-items: flex-end;
+    margin-top: 6rem;
   }
-  .bc__Signatures > div {
+  .notice__Signatures > div {
     text-align: center;
   }
 }
@@ -76,29 +78,29 @@ p {
   display: block;
   padding: 2px 20px;
 }
-#bc__doc {
+#notice__doc {
   min-width: 42rem;
   max-width: 42rem;
   margin: auto;
 }
-.bc__Border1 {
+.notice__Border1 {
   padding: 0.1em;
   border: solid black thick;
 }
-.bc__Border2 {
+.notice__Border2 {
   padding: 1em;
   border: solid black;
 }
-.bc__heading {
+.notice__heading {
   display: flex;
   justify-content: space-evenly;
 }
-.bc__heading * {
+.notice__heading * {
   text-align: center;
   padding: 0;
   margin: 0;
 }
-.bc__heading > h1 {
+.notice__heading > h1 {
   font-family: sans-serif;
   font-weight: 1000;
   font-size: x-large;
@@ -106,27 +108,29 @@ p {
 .dash {
   border-top: 0.1rem solid black;
 }
-.bc__title {
+.notice__title {
   text-align: center;
 }
-#bc__RegNo {
+#notice__RegNo {
   font-family: fantasy;
 }
 .date {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
-.bc__Signatures {
+.notice__Signatures {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: flex-end;
+  padding-inline: 2rem;
 }
-.bc__clerk {
+.notice__clerk {
   display: flex;
   align-items: flex-end;
+  margin-top: 6rem;
 }
-.bc__Signatures > div {
+.notice__Signatures > div {
   text-align: center;
 }

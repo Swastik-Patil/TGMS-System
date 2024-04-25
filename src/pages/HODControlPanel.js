@@ -65,7 +65,6 @@ function HODControlPanel() {
       });
       document.getElementById("status").style.display = "block";
       setExcelFile(dataToSend);
-      const db = database;
       let len = 0,
         size = data.length;
       data.forEach((ele) => {
@@ -73,7 +72,7 @@ function HODControlPanel() {
         const registerStatus = {
           isRegistered: false,
         };
-        update(dbref(db, "/orgData/" + IDRef), {
+        update(dbref(database, "/orgData/" + IDRef), {
           ...ele,
           registerStatus: registerStatus,
         }).then((snapshot) => {

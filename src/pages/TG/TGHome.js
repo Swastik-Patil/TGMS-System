@@ -33,7 +33,6 @@ import { database } from "../../utils/init-firebase";
 import youtube from "../../api/youtube";
 import dotenv from "dotenv";
 
-
 function TGHOME() {
   const { currentUser } = useAuth();
   const [data, setData] = useState(null);
@@ -163,7 +162,6 @@ function TGHOME() {
                 return { ...res[index] };
               });
               setData(res);
-          
             } else {
               console.log("No data available");
             }
@@ -229,7 +227,7 @@ function TGHOME() {
           key: "AIzaSyC6is0G0DZui1TsfTdDwxt3qhaFby7kmgk",
         },
       });
-      console.log(response.data.items)
+      console.log(response.data.items);
 
       set(
         dbref(database, `StudentsData/${currUID}/observations/`),
@@ -406,10 +404,11 @@ function TGHOME() {
                     onClick={addNewObservations}
                     isDisabled={loading}
                   >
-                    
-              {loading ? "Processing..." : "Save"}
+                    {loading ? "Processing..." : "Save"}
                   </Button>
-                  <Button onClick={onClose1} isDisabled={loading}>Cancel</Button>
+                  <Button onClick={onClose1} isDisabled={loading}>
+                    Cancel
+                  </Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>

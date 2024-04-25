@@ -14,12 +14,12 @@
 }
 
 #bcTitle {
-  font-family: "PT Serif", serif;
   font-size: larger;
   font-weight: bolder;
 }
+
 #clgTitle {
-  font-size: larger;
+  font-size: medium;
   font-weight: bolder;
 }
 

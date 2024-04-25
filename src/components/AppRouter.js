@@ -40,6 +40,8 @@ import {
   CertificatesList,
   ExamDeck,
   ContactTg,
+  GeneratedNotices,
+  GeneratedNotice,
 } from "../pages";
 
 export default function AppRouter() {
@@ -105,7 +107,12 @@ export default function AppRouter() {
             path="/ManageAccounts"
             component={ManageAccounts}
           />
-
+          <ProtectedRoute
+            exact
+            path="/GeneratedNotices"
+            component={GeneratedNotices}
+          />
+          <Route exact path="/GeneratedNotice" component={GeneratedNotice} />
           <ProtectedRoute exact path="/ExamDeck" component={ExamDeck} />
           <ProtectedRoute path="/Details" component={StudentDetails} />
           <ProtectedRoute exact path="/ContactTg" component={ContactTg} />

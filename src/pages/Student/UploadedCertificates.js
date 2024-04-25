@@ -12,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import styled from "styled-components";
@@ -24,6 +25,7 @@ export default function UploadedCertificates() {
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const cancelRef = useRef();
+  const toast = useToast();
 
   function getData() {
     let data = JSON.parse(window.localStorage.getItem("data"));
@@ -71,10 +73,13 @@ export default function UploadedCertificates() {
       );
 
       await remove(databaseReference);
-
-      console.log("Image deleted successfully.");
-
-      // Add Toast Here
+      toast({
+        position: "top-right",
+        description: "Document Deleted Successfully",
+        status: "success",
+        duration: 2500,
+        isClosable: true,
+      });
       setIsOpen(false);
       window.location.href = "profile";
     } catch (error) {

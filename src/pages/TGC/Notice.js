@@ -1,85 +1,47 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/print.css";
 import "../../styles/BonafidePreview.css";
-// import { ref as dbref, child, get } from "firebase/database";
 import BeatLoader from "react-spinners/BeatLoader";
 import logo from "../../res/MES Flower.png";
 import Header from "../../components/Header";
 import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
 import { Table, Tr, Td, Th, Tbody } from "@chakra-ui/react";
-import { ref as dbref, get, child, getDatabase } from "firebase/database";
+import {
+  update,
+  ref as dbref,
+  get,
+  child,
+  getDatabase,
+} from "firebase/database";
+import { database } from "../../utils/init-firebase";
 import { useToast } from "@chakra-ui/react";
 
 export default function Notice() {
-  // const [userData, setUserData] = useState(null);
-  // const [branch, setBranch] = useState(null);
-  // const [enroll, setEnroll] = useState(null);
-  // const [actionDate, setActionDate] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // function readNoticeData() {
-  //   let data = JSON.parse(window.localStorage.getItem("SlowStudents")).map(
-  //     (ele) => {
-  //       return JSON.parse(ele);
-  //     }
-  //   );
-
-  //   data = data.map((ele) => {
-  //     return {
-  //       admissionNo: ele.admissionNo,
-  //       name: ele.name,
-  //       rNo: ele.rNo,
-  //       class: "TE A",
-  //     };
-  //   });
-
-  //   setUserData(data);
-  //   console.log(userData);
-  //   setLoading(false);
-  // }
+  const [nextDate, setNextDate] = useState(null);
 
   function handleBack() {
     window.location.href = "/home";
   }
-
-  // function formatNo(No) {
-  //   let no = new String(No);
-  //   if (no.length != 3) {
-  //     while (no.length < 3) {
-  //       no = "0" + no;
-  //     }
-  //   }
-  //   return no;
-  // }
-
-  useEffect(() => {
-    // readNoticeData();
-  }, []);
-
   const toast = useToast();
 
   function PrintDoc() {
     let Btns = document.getElementById("Actions");
     let DropDown = document.querySelector(".selectClass");
     let header = document.getElementById("header");
-    let border1 = document.querySelector(".bc__Border1");
-    let border2 = document.querySelector(".bc__Border2");
 
     // Hide
     DropDown.style.visibility = "hidden";
     Btns.style.visibility = "hidden";
     header.style.visibility = "hidden";
-    border1.style.border = "none";
-    border2.style.border = "none";
 
+    saveNotice();
     window.print();
 
     // Display Again
     DropDown.style.visibility = "visible";
     Btns.style.visibility = "visible";
     header.style.visibility = "visible";
-    border1.style.border = "solid black thick";
-    border2.style.border = "solid black";
   }
 
   const [data, setData] = useState([]);
@@ -137,6 +99,7 @@ export default function Notice() {
         });
 
         setData(result);
+        getNextSaturday();
         setLoading(false);
       } else {
         toast({
@@ -153,6 +116,52 @@ export default function Notice() {
     }
   }
 
+  function getNextSaturday() {
+    var date = new Date();
+    var day = date.getDay();
+    var daysUntilSaturday = 6 - day;
+
+    date.setDate(date.getDate() + daysUntilSaturday);
+
+    date.setHours(11);
+    date.setMinutes(15);
+    date.setSeconds(0);
+
+    setNextDate(String(date));
+  }
+
+  function saveNotice() {
+    const notice = {
+      class: Class,
+      students: data.map((student) => {
+        return {
+          admissionNo: student.admissionNo,
+          rNo: student.rNo,
+          name: student.name,
+        };
+      }),
+      noticeOn: String(
+        new Date().getDate() +
+          "/" +
+          (new Date().getMonth() + 1) +
+          "/" +
+          new Date().getFullYear()
+      ),
+      date: nextDate,
+    };
+    update(dbref(database, "/notices/" + Class + "/" + nextDate), {
+      ...notice,
+    }).then(() => {
+      toast({
+        position: "top-right",
+        description: "Notice saved successfully",
+        status: "success",
+        duration: 2500,
+        isClosable: true,
+      });
+    });
+  }
+
   useEffect(() => {
     let usertype = window.localStorage.getItem("usertype");
     if (usertype === "Teacher Guardian") {
@@ -164,6 +173,7 @@ export default function Notice() {
     if (usertype === "Class Coordinator") {
       window.location.href = "/CCHome";
     }
+    getNextSaturday();
   }, []);
 
   return (
@@ -230,105 +240,121 @@ export default function Notice() {
             </div>
           ) : (
             <div className="container">
-              <div id="bc__doc">
-                <div className="bc__Border1">
-                  <div className="bc__Border2">
-                    <div className="bc__heading">
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <img
-                          className="bc__logo"
-                          src={logo}
-                          alt="Logo"
-                          id="logo"
-                          srcSet=""
-                        />
-                      </div>
-                      <div>
-                        <p className="bc__header" id="clgTitle">
-                          Pillai HOC College of Engineering and Technology
-                        </p>
-                        <p style={{ fontSize: "small" }}>Header </p>
-                      </div>
-                    </div>
-                    <div className="dash"></div>
-                    <div id="body">
-                      <p className="date">
-                        <span></span>
-                        <span>
-                          Date:{" "}
-                          <span id="TodayDate">
-                            {new Date().getDate() +
-                              "/" +
-                              (new Date().getMonth() + 1) +
-                              "/" +
-                              new Date().getFullYear()}
-                          </span>
-                        </span>
-                      </p>
-                      <div className="bc__title">
-                        <h2 id="bcTitle">NOTICE</h2>
-                      </div>
-                      <span> Content </span> <br />
-                      <label htmlFor="studentName">Student Names :</label>
-                      <Table>
-                        <Tbody>
-                          <Tr>
-                            <Th paddingTop={0} borderBottom={0}>
-                              Admission No.
-                            </Th>
-                            <Th paddingTop={0} borderBottom={0}>
-                              Roll No.
-                            </Th>
-                            <Th paddingTop={0} borderBottom={0}>
-                              Name
-                            </Th>
-                          </Tr>
-                          {data &&
-                            data.map((ele, index) => {
-                              return (
-                                <Tr className="option" key={index}>
-                                  <Td
-                                    className="option-text"
-                                    paddingTop={0}
-                                    borderBottom={0}
-                                  >
-                                    {ele.admissionNo}
-                                  </Td>
-                                  <Td
-                                    className="option-text"
-                                    paddingTop={0}
-                                    borderBottom={0}
-                                  >
-                                    {ele.rNo}
-                                  </Td>
-                                  <Td
-                                    className="option-text"
-                                    paddingTop={0}
-                                    borderBottom={0}
-                                  >
-                                    {ele.name}
-                                  </Td>
-                                </Tr>
-                              );
-                            })}
-                        </Tbody>
-                      </Table>
-                    </div>
+              <div id="notice__doc">
+                <div className="notice__heading">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <img
+                      className="notice__logo"
+                      src={logo}
+                      alt="Logo"
+                      id="logo"
+                      srcSet=""
+                    />
+                  </div>
+                  <div>
+                    <p className="notice__header" id="clgTitle">
+                      Mahatma Education Society's
+                    </p>
+                    <p className="notice__header" id="clgTitle">
+                      Pillai HOC College of Engineering and Technology, Rasayani
+                    </p>
+                    <p className="notice__header" id="clgTitle">
+                      Department of Computer Engineering
+                    </p>
+                  </div>
+                </div>
+                <div className="dash"></div>
+                <div id="doc__body">
+                  <div className="notice__title">
+                    <h2 id="bcTitle">Notice</h2>
+                  </div>
+                  <p className="date">
+                    <span>
+                      Date:{" "}
+                      <span id="TodayDate">
+                        {new Date().getDate() +
+                          "/" +
+                          (new Date().getMonth() + 1) +
+                          "/" +
+                          new Date().getFullYear()}
+                      </span>
+                    </span>
+                  </p>
+                  <p
+                    style={{
+                      textDecoration: "underline",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Subject : Extra Lecture for Slow Learners of class{" "}
+                    <span>{"CLASS"}</span>
+                  </p>
+                  <br />
+                  <p style={{ textIndent: "50px", textAlign: "justify" }}>
+                    Dear Students, An extra class is scheduled for students who
+                    find learning a bit slower. If you're one of these students,
+                    please make sure to attend this session. We'll be covering
+                    topics at a pace that suits everyone, and you'll have plenty
+                    of opportunities to ask questions and get the help you need.
+                    Your participation is important, so mark your calendars and
+                    be there!
+                  </p>{" "}
+                  <p style={{ textIndent: "50px", textAlign: "justify" }}>
+                    The lecture will be held on {nextDate}
+                  </p>{" "}
+                  <br />
+                  <p>Student Names :</p>
+                  <Table marginTop={2}>
+                    <Tbody>
+                      <Tr>
+                        <Th paddingTop={0} borderBottom={0}>
+                          Admission No.
+                        </Th>
+                        <Th paddingTop={0} borderBottom={0}>
+                          Roll No.
+                        </Th>
+                        <Th paddingTop={0} borderBottom={0}>
+                          Name
+                        </Th>
+                      </Tr>
+                      {data &&
+                        data.map((ele, index) => {
+                          return (
+                            <Tr className="option" key={index}>
+                              <Td
+                                className="option-text"
+                                paddingTop={0}
+                                borderBottom={0}
+                              >
+                                {ele.admissionNo}
+                              </Td>
+                              <Td
+                                className="option-text"
+                                paddingTop={0}
+                                borderBottom={0}
+                              >
+                                {ele.rNo}
+                              </Td>
+                              <Td
+                                className="option-text"
+                                paddingTop={0}
+                                borderBottom={0}
+                              >
+                                {ele.name}
+                              </Td>
+                            </Tr>
+                          );
+                        })}
+                    </Tbody>
+                  </Table>
+                </div>
 
-                    <div className="bc__Signatures">
-                      <div className="bc__clerk">
-                        <h3 className="signText">
-                          <br />
-                          HOD
-                        </h3>
-                      </div>
-                      <div className="bc__principal">
-                        <h3 className="signText">
-                          <br />
-                          Principal
-                        </h3>
-                      </div>
-                    </div>
+                <div className="notice__Signatures">
+                  <div className="notice__clerk">
+                    <h3 className="signText">
+                      <br />
+                      HoD
+                    </h3>
                   </div>
                 </div>
               </div>

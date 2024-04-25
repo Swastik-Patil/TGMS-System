@@ -28,6 +28,8 @@ import ManageAccounts from "./Admin/ManageAccounts";
 import CertificatesList from "./Admin/CertificatesList";
 import ExamDeck from "./ExamDeck/ExamDeck";
 import ContactTg from "./Student/ContactTg";
+import GeneratedNotices from "./Admin/GeneratedNotices";
+import GeneratedNotice from "./Admin/GeneratedNotice";
 export {
   ResetPasswordPage,
   ForgotPasswordPage,
@@ -59,4 +61,6 @@ export {
   CertificatesList,
   ExamDeck,
   ContactTg,
+  GeneratedNotices,
+  GeneratedNotice,
 };
