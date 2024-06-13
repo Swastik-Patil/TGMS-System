@@ -48,6 +48,11 @@ function AdminHome() {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
 
+  function addNewCC() {
+    getAvailableClasses(false);
+    onOpen1();
+  }
+
   function handleUserTypeChange(e) {
     setccClass(e.target.outerText);
     document.querySelector(".select-wrapper").classList.toggle("active");
@@ -149,7 +154,7 @@ function AdminHome() {
     if (usertype === "Class Coordinator") {
       window.location.href = "/CCHome";
     }
-    getAvailableClasses(false);
+    // getAvailableClasses(false);
   }, []);
 
   return (
@@ -165,7 +170,7 @@ function AdminHome() {
       >
         <div className="div-3" style={{ display: "grid", width: "70%" }}>
           <div
-            onClick={onOpen1}
+            onClick={addNewCC}
             style={{ display: "flex", justifyContent: "center" }}
           >
             <div className="overlap">

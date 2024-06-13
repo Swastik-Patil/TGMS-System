@@ -73,7 +73,7 @@ export default function AppRouter() {
             component={UploadResults}
           />
           <ProtectedRoute exact path="/UploadPage" component={UploadPage} />
-          <ProtectedRoute exact path="/SlowLearners" component={SlowLearners} />
+          <ProtectedRoute exact path="/ClassData" component={SlowLearners} />
 
           <ProtectedRoute exact path="/TGHome" component={TGHOME} />
           <ProtectedRoute exact path="/Notice" component={Notice} />

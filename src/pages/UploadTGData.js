@@ -32,7 +32,7 @@ function UploadTGData() {
       document.getElementById("uploadBtn").innerHTML =
         '<div class="spinner-border spinner-border-sm" role="status"></div>';
       const workbook = XLSX.read(excelFile, { type: "buffer" });
-      const worksheetName = workbook.SheetNames[1];
+      const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
 

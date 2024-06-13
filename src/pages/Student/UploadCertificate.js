@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, database } from "../../utils/init-firebase";
-import { ref as Ref, child, get, update } from "firebase/database";
+import { ref as Ref, child, get, set, update } from "firebase/database";
 import Header from "../../components/Header";
 import {
   RadioGroup,
@@ -33,7 +33,10 @@ export default function UploadCertificate() {
 
   const handleFileNameChange = (e) => {
     setFileName(e.target.value);
-    console.log(e.target.value);
+  };
+
+  const handleCertficateTypeChange = (e) => {
+    setCertType(e);
   };
 
   const validCertificates = [
@@ -43,7 +46,7 @@ export default function UploadCertificate() {
     "Internship",
     "Course",
     "Participation",
-  ]; // Add your valid certificate names here
+  ];
 
   const points = {
     International: 4,
@@ -77,11 +80,11 @@ export default function UploadCertificate() {
           .toLowerCase()
           .includes(String(certificate).toLowerCase())
       );
-
       if (
         !String(ret.data.text)
           .toLowerCase()
-          .includes(String(certType).toLowerCase() && !detected)
+          .includes(String(certType).toLowerCase()) &&
+        !detected
       ) {
         alert("Upload Correct Document of course");
         document.getElementById("uploadButton").innerHTML = `Submit`;
@@ -103,7 +106,7 @@ export default function UploadCertificate() {
             data = snapshot.val();
             point += data;
 
-            if (point > 5) {
+            if (point > 10) {
               update(Ref(db, `StudentsData/${IDRef}`), {
                 points: point,
                 studentType: "Advance",
@@ -113,6 +116,8 @@ export default function UploadCertificate() {
                 points: point,
               });
             }
+          } else {
+            set(Ref(db, `StudentsData/${IDRef}/points`), point);
           }
         })
         .catch((error) => {
@@ -192,6 +197,10 @@ export default function UploadCertificate() {
           duration: 5000,
           isClosable: true,
         });
+        setFile(null);
+        setCertType("course");
+        setFileName("");
+        setCompletionDate("");
         document.getElementById("uploadButton").innerHTML = `Submit`;
         document.getElementById("uploadButton").disabled = false;
       })
@@ -250,7 +259,7 @@ export default function UploadCertificate() {
           </HStack>
           <HStack p={"2"}>
             <Text>Certificate Type : </Text>
-            <RadioGroup onChange={setCertType} value={certType}>
+            <RadioGroup onChange={handleCertficateTypeChange} value={certType}>
               <Stack direction="row">
                 <Radio value="Course">Course</Radio>
                 <Radio value="Internship">Internship</Radio>

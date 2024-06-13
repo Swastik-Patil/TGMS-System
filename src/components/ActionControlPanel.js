@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ref as dbref, set } from "firebase/database";
+import { ref as dbref, remove, set, child } from "firebase/database";
 import { database } from "../utils/init-firebase";
 import styled from "styled-components";
 import {
@@ -85,14 +85,12 @@ function ActionControlPanel({ ele }) {
           },
         })
         .then((response) => {
-          set(
-            dbref(database, `StudentsData/${currUID}/observations/`),
-            observations
-          );
-
           if (response.data.items.length > 0) {
             set(
-              dbref(database, `StudentsData/${currUID}/facultyObservations/`),
+              dbref(
+                database,
+                `StudentsData/${currUID}/facultyObservations/${observationsRef.current?.value}`
+              ),
               {
                 observations: observationsRef.current?.value,
                 resources: response.data.items,
@@ -108,10 +106,12 @@ function ActionControlPanel({ ele }) {
     setLoading(false);
   }
 
-  function deleteObservations() {
-    set(
-      dbref(database, `StudentsData/${ele.admissionNo}/observations`),
-      ""
+  function deleteObservations(key) {
+    remove(
+      child(
+        dbref(database),
+        `StudentsData/${ele.admissionNo}/facultyObservations/${key}`
+      )
     ).then(() => {
       onClose3();
       window.location.reload();
@@ -201,24 +201,32 @@ function ActionControlPanel({ ele }) {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel> Current Observations</FormLabel>
-              {ele.observations && (
-                <p
-                  style={{
-                    paddingBlock: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    fontSize: "medium",
-                    fontWeight: "normal",
-                  }}
-                >
-                  {" "}
-                  {ele.observations}{" "}
-                  <Button colorScheme="red" mr={3} onClick={deleteObservations}>
-                    Delete
-                  </Button>{" "}
-                </p>
-              )}
+              {ele.facultyObservations
+                ? Object.keys(ele.facultyObservations).map((key, index) => {
+                    return (
+                      <p
+                        style={{
+                          paddingBlock: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          fontSize: "medium",
+                          fontWeight: "normal",
+                        }}
+                        key={index}
+                      >
+                        {key}{" "}
+                        <Button
+                          colorScheme="red"
+                          mr={3}
+                          onClick={() => deleteObservations(key)}
+                        >
+                          Delete
+                        </Button>{" "}
+                      </p>
+                    );
+                  })
+                : "No Current Observations"}
 
               <Textarea placeholder="Observations" ref={observationsRef} />
             </FormControl>

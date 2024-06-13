@@ -227,18 +227,17 @@ function TGHOME() {
           key: "AIzaSyC6is0G0DZui1TsfTdDwxt3qhaFby7kmgk",
         },
       });
-      console.log(response.data.items);
-
-      set(
-        dbref(database, `StudentsData/${currUID}/observations/`),
-        observations
-      );
-
       if (response.data.items.length > 0) {
-        set(dbref(database, `StudentsData/${currUID}/facultyObservations/`), {
-          observations: observationsRef.current?.value,
-          resources: response.data.items,
-        }).then(() => {
+        set(
+          dbref(
+            database,
+            `StudentsData/${currUID}/facultyObservations/${observationsRef.current?.value}`
+          ),
+          {
+            observations: observationsRef.current?.value,
+            resources: response.data.items,
+          }
+        ).then(() => {
           onClose1();
           window.location.reload();
         });
@@ -307,6 +306,9 @@ function TGHOME() {
                             filterValue.toLowerCase()
                           ) ||
                             String(ele.RollNo)
+                              .toLowerCase()
+                              .includes(filterValue.toLowerCase()) ||
+                            String(ele.studentType)
                               .toLowerCase()
                               .includes(filterValue.toLowerCase());
                     })

@@ -97,7 +97,6 @@ export default function Header({ navItems }) {
               fontWeight={600}
               color={"white"}
               bg={"#35c3fe"}
-              href={"#"}
               _hover={{
                 bg: "blue.300",
               }}

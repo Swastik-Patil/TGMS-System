@@ -81,7 +81,7 @@ export default function UploadedCertificates() {
         isClosable: true,
       });
       setIsOpen(false);
-      window.location.href = "profile";
+      window.location.href = "home";
     } catch (error) {
       console.error("Error deleting image and URL:", error);
     }

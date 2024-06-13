@@ -55,7 +55,7 @@ function CChome() {
               </div>
             </div>
           </Link>
-          <Link to="SlowLearners">
+          <Link to="ClassData">
             <div className="add-slow-learners-wrapper">
               <div className="rectangle">
                 <div className="add-slow-learners1">View Class Data</div>

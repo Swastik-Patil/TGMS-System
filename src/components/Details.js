@@ -36,8 +36,8 @@ function Details({
   const [pendingData, setPendingData] = useState(null);
   const [results, setResults] = useState([]);
   const [showPanel, setShowPanel] = useState(false);
-  const [resources, setResources] = useState(null);
   const [selectedResource, setSelectedResource] = useState(null);
+  const [selectedObservation, setSelectedObservation] = useState(null);
 
   function readUserCurrentData() {
     const db = dbref(database);
@@ -51,17 +51,29 @@ function Details({
       .then((snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
-          let results = data.Results;
-          setResults(results);
           setPendingData(data);
-          if (data.facultyObservations) {
-            setResources(data.facultyObservations.resources);
-          }
         }
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  async function loadResults() {
+    const db = dbref(database);
+    const IDRef = window.sessionStorage.getItem("selectedStudent");
+    let res = [];
+    for (let i = 3; i < 9; i++) {
+      let SEM = `SEM ${i}`;
+      await get(child(db, `results/${SEM}/${IDRef}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          let data = snapshot.val();
+          data["SEM"] = SEM;
+          res.push(data);
+        }
+      });
+    }
+    setResults(res);
   }
 
   const OverlayOne = () => <ModalOverlay backdropFilter="blur(10px)" />;
@@ -70,11 +82,12 @@ function Details({
     onOpen: onOpen1,
     onClose: onClose1,
   } = useDisclosure();
+
   function deleteResource() {
     remove(
       child(
         dbref(database),
-        `StudentsData/${pendingData.mesId}/facultyObservations/resources/${selectedResource}`
+        `StudentsData/${pendingData.admissionNo}/facultyObservations/${selectedObservation}/resources/${selectedResource}`
       )
     );
   }
@@ -97,6 +110,7 @@ function Details({
         setDetails(true);
         break;
       case "Academics":
+        loadResults();
         setAcademics(true);
         break;
       case "Extra Curricular":
@@ -532,58 +546,68 @@ function Details({
             )}
 
             {FacultySuggestions && (
-              <ContentHolder>
+              <ContentHolder1>
                 {pendingData.facultyObservations ? (
-                  <>
-                    <h4>{pendingData.facultyObservations.observations}</h4>
-                    {resources && (
-                      <div className="resources">
-                        {resources.map((ele, index) => {
-                          return (
-                            <div
-                              key={index}
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                }}
-                              >
-                                <span style={{ fontSize: "12px" }}>
-                                  {ele.snippet.title}
-                                </span>
-                                {(showActionPanel || showPanel) && (
-                                  <Button
-                                    colorScheme="red"
-                                    onClick={() => {
-                                      onOpen1();
-                                      setSelectedResource(index);
+                  Object.keys(pendingData.facultyObservations).map(
+                    (key, index) => {
+                      return (
+                        <div key={index}>
+                          <h4>{key}</h4>
+
+                          {pendingData.facultyObservations[key].resources && (
+                            <div className="resources">
+                              {pendingData.facultyObservations[
+                                key
+                              ].resources.map((ele, index) => {
+                                return (
+                                  <div
+                                    key={index}
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
                                     }}
                                   >
-                                    Delete
-                                  </Button>
-                                )}
-                              </div>
-                              <iframe
-                                title={ele.snippet.title}
-                                src={`https://www.youtube.com/embed/${ele.id.videoId}`}
-                                key={ele.etag}
-                                allowFullScreen
-                              />
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                      }}
+                                    >
+                                      <span style={{ fontSize: "12px" }}>
+                                        {ele.snippet.title}
+                                      </span>
+                                      {(showActionPanel || showPanel) && (
+                                        <Button
+                                          colorScheme="red"
+                                          onClick={() => {
+                                            onOpen1();
+                                            setSelectedObservation(key);
+                                            setSelectedResource(index);
+                                          }}
+                                        >
+                                          Delete
+                                        </Button>
+                                      )}
+                                    </div>
+                                    <iframe
+                                      title={ele.snippet.title}
+                                      src={`https://www.youtube.com/embed/${ele.id.videoId}`}
+                                      key={ele.etag}
+                                      allowFullScreen
+                                    />
+                                  </div>
+                                );
+                              })}
                             </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </>
+                          )}
+                        </div>
+                      );
+                    }
+                  )
                 ) : (
                   <div style={{ padding: "2rem" }}>No Faculty Suggetions</div>
                 )}
-              </ContentHolder>
+              </ContentHolder1>
             )}
 
             {Academics && (
@@ -591,29 +615,26 @@ function Details({
                 <h3>Results</h3>
                 <div>
                   {results ? (
-                    Object.keys(results).map((semester) => (
-                      <div
-                        key={semester}
-                        style={{
-                          gap: "0",
-                        }}
-                      >
-                        <Text fontWeight={"bold"} color={"red"}>
-                          {semester}
-                        </Text>
+                    results.map((sem) => {
+                      return (
                         <div
+                          key={sem}
                           style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "4rem",
-                            margin: "0",
+                            gap: "0",
                           }}
                         >
-                          {Object.keys(results[semester]).map((exam) => (
-                            <TableHodler key={exam}>
-                              <Text fontWeight={"bold"} fontSize={"16px"}>
-                                {exam}
-                              </Text>
+                          <Text fontWeight={"bold"} color={"red"}>
+                            {sem["SEM"]}
+                          </Text>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              gap: "4rem",
+                              margin: "0",
+                            }}
+                          >
+                            <TableHodler>
                               <Table
                                 variant="simple"
                                 colorScheme="gray"
@@ -621,23 +642,38 @@ function Details({
                                 maxW={{ base: "400px", lg: "1300px" }}
                                 borderRadius={{ lg: "20px" }}
                                 background="white"
+                                border={"2px solid black"}
                               >
                                 <Tbody>
-                                  {Object.entries(results[semester][exam]).map(
+                                  {Object.entries(sem).map(
                                     ([subject, marks]) => (
                                       <Tr key={subject}>
                                         <Td fontWeight={"bold"}>{subject} :</Td>
-                                        <Td>{marks}</Td>
+                                        <Td
+                                          style={{
+                                            backgroundColor:
+                                              (subject.includes("_IA") &&
+                                                marks < 8 &&
+                                                "#ff3434") ||
+                                              (String(subject).includes(
+                                                `_TH`
+                                              ) &&
+                                                marks < 32 &&
+                                                "#ff3434"),
+                                          }}
+                                        >
+                                          {marks}
+                                        </Td>
                                       </Tr>
                                     )
                                   )}
                                 </Tbody>
                               </Table>
                             </TableHodler>
-                          ))}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
                     <div>No Results Uploaded</div>
                   )}
@@ -661,6 +697,7 @@ function Details({
                             target="_blank"
                             rel="noreferrer"
                             key={index}
+                            style={{ width: "min-content" }}
                           >
                             <Button bgColor="#0AA1DD" color="white">
                               {ele.name}
@@ -787,6 +824,73 @@ const TableHodler = styled.div`
     }
   }
 `;
+
+const ContentHolder1 = styled.div`
+  width: 95%;
+  padding-top: 10px;
+
+  h3 {
+    margin: 10px;
+    font-weight: bold;
+  }
+
+  img {
+    height: 186px;
+    width: 186px;
+  }
+
+  div {
+    div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+        margin: 10px;
+        align-items: start;
+        gap: 5px;
+
+        @media (max-width: 649px) {
+          flex-direction: column;
+        }
+      }
+    }
+  }
+
+  .resources {
+    grid-template-columns: 1fr 1fr 1fr;
+
+    @media (max-width: 1268px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 426px) {
+      grid-template-columns: 1fr;
+    }
+
+    iframe {
+      width: 420px;
+      height: 345px;
+
+      @media (max-width: 768px) {
+        width: 250px;
+        height: 200px;
+      }
+    }
+
+    div {
+      @media (max-width: 768px) {
+        width: 250px;
+      }
+    }
+  }
+`;
+
 const ContentHolder = styled.div`
   width: 95%;
   padding-top: 10px;

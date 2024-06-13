@@ -62,7 +62,6 @@ function GeneratedNotices() {
     const db = dbref(getDatabase());
     try {
       let CName = document.querySelector(".select-button-text").innerText;
-      console.log("notices/", CName);
       await get(child(db, "/notices/" + CName)).then((snapshot) => {
         if (snapshot.exists()) {
           let data = snapshot.val();

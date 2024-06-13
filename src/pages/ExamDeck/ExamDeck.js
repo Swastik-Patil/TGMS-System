@@ -2,156 +2,99 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import styled from "styled-components";
 import { useToast } from "@chakra-ui/react";
-import { ref as dbref, update } from "firebase/database";
+import { ref as dbref, remove, update } from "firebase/database";
 import { database } from "../../utils/init-firebase";
 import * as XLSX from "xlsx";
 import { ChevronDownIcon } from "../../utils/ChevronDownIcon";
 
 export default function ExamDeck() {
   const [excelFile, setExcelFile] = useState(null);
-  const [examType, setExamType] = useState("Select an Examination");
   const [sem, setSem] = useState("Select a SEM");
   const [class_y, setClass_Y] = useState("Select a Class");
   const toast = useToast();
 
-  const handleFile = (e) => {
-    let selectedFile = e.target.files[0];
-    if (selectedFile) {
-      if (selectedFile) {
-        let reader = new FileReader();
-        reader.readAsArrayBuffer(selectedFile);
-        reader.onload = (e) => {
-          setExcelFile(e.target.result);
-        };
-      } else {
-        setExcelFile(null);
-      }
-    } else {
-      alert("Please select your file");
-    }
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      setExcelFile(e.target.result);
+    };
+
+    reader.readAsBinaryString(file);
   };
 
-  // submit function
-  const handleSubmit = (e) => {
+  const handleFileSubmit = (e) => {
     e.preventDefault();
     if (
       excelFile !== null &&
-      examType !== "Select an Examination" &&
       sem !== "Select a SEM" &&
       class_y !== "Select a Class"
     ) {
-      const workbook = XLSX.read(excelFile, { type: "buffer" });
-      const worksheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[worksheetName];
-      const data = XLSX.utils.sheet_to_json(worksheet);
+      const binaryStr = excelFile;
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
 
-      toast({
-        position: "top-right",
-        description: "Result Uploading Started.",
-        status: "info",
-        duration: 1000,
-        isClosable: true,
-      });
-      setExcelFile(data);
-      const db = database;
-
-      data.forEach((ele) => {
-        const IDRef = ele.admissionNo;
-
-        update(
-          dbref(db, `/UploadedResults/${class_y}/${sem}/${examType}/${IDRef}/`),
-          {
-            ...ele,
-          }
-        );
-
-        delete ele["name"];
-        delete ele["admissionNo"];
-        delete ele["rNo"];
-
-        if (examType === "IA 1" || examType === "IA 2") {
-          let obj = Object.keys(ele).map((key) => {
-            return ele[key];
-          });
-          try {
-            obj.forEach((e) => {
-              if (e <= 8) {
-                throw new Error("Break the loop.");
-              }
-            });
-          } catch (error) {
-            ele["studentType"] = "Slow";
-          }
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonSheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      jsonSheetData.shift();
+      const headers1 = jsonSheetData[0];
+      const headers2 = jsonSheetData[2];
+      const rows = jsonSheetData.slice(3);
+      let formattedColumns = [];
+      let header = "";
+      for (let i = 0; i < headers1.length; i++) {
+        if (headers1[i] === undefined && headers2[i] !== undefined && i > 3) {
+          formattedColumns.push(header + "_" + headers2[i]);
+          continue;
         } else {
-          let obj = Object.keys(ele).map((key) => {
-            return ele[key];
-          });
-          try {
-            obj.forEach((e) => {
-              if (e <= 32) {
-                throw new Error("Break the loop.");
-              }
-            });
-          } catch (error) {
-            ele["studentType"] = "Slow";
-          }
+          header = headers1[i];
         }
-        if (ele.studentType !== "Slow") {
-          ele["studentType"] = "Advance";
+        if (headers1[i] === undefined && headers2[i] === undefined) {
+          formattedColumns.push("Empty");
+        } else if (headers1[i] === undefined) {
+          formattedColumns.push(headers2[i]);
+        } else if (headers2[i] === undefined) {
+          formattedColumns.push(headers1[i]);
+        } else {
+          formattedColumns.push(headers1[i] + "_" + headers2[i]);
+        }
+      }
+
+      rows.forEach((row) => {
+        if (row[0] === undefined || !String(row[0]).includes("HE")) return;
+
+        let student = {};
+        for (let i = 0; i < formattedColumns.length; i++) {
+          student[formattedColumns[i]] = row[i];
         }
 
-        update(dbref(db, "/StudentsData/" + IDRef + "/"), {
-          studentType: ele.studentType,
-        });
-        delete ele["studentType"];
-        update(
-          dbref(
-            db,
-            "/StudentsData/" + IDRef + "/Results/" + sem + "/" + examType + "/"
-          ),
-          {
-            ...ele,
-          }
-        );
+        const db = database;
+        const IDRef = dbref(db, "results/" + sem + "/" + student["ADM NO"]);
+        update(IDRef, student);
+        if (student["RSLT"] === "F") {
+          update(dbref(db, `StudentsData/${student["ADM NO"]}`), {
+            studentType: "Slow",
+          });
+        } else {
+          update(dbref(db, `StudentsData/${student["ADM NO"]}`), {
+            studentType: "Advance",
+          });
+        }
       });
+
       toast({
         position: "top-right",
-        description: "Result Uploaded Successfully.",
+        title: "Result Uploaded Successfully",
         status: "success",
         duration: 5000,
         isClosable: true,
       });
-    } else {
-      alert("Fill all the fields and select a file to upload.");
     }
   };
 
-  const Option = ["IA 1", "IA 2", "SEM"];
-  const Option1 = [
-    "SE_A",
-    "SE_B",
-    "SE_C",
-    "TE_A",
-    "TE_B",
-    "TE_C",
-    "BE_A",
-    "BE_B",
-  ];
-  const Option2 = [
-    "SEM 1",
-    "SEM 2",
-    "SEM 3",
-    "SEM 4",
-    "SEM 5",
-    "SEM 6",
-    "SEM 7",
-    "SEM 8",
-  ];
-
-  function handleExamTypeChange(e) {
-    setExamType(e.target.outerText);
-    document.querySelector(".exam_select").classList.toggle("active");
-  }
+  const Option1 = ["SE", "TE", "BE"];
+  const Option2 = ["SEM 3", "SEM 4", "SEM 5", "SEM 6", "SEM 7", "SEM 8"];
 
   function handleClassChange(e) {
     setClass_Y(e.target.outerText);
@@ -196,7 +139,8 @@ export default function ExamDeck() {
           </Instructions>
           <form
             id="excelForm"
-            onSubmit={handleSubmit}
+            // onSubmit={handleSubmit}
+            onSubmit={handleFileSubmit}
             style={{
               display: "flex",
               alignItems: "center",
@@ -282,46 +226,9 @@ export default function ExamDeck() {
               </div>
             </div>
             <div className="form-group">
-              <div className="select-wrapper exam_select">
-                <div
-                  className="select-button "
-                  onClick={() => {
-                    document
-                      .querySelector(".exam_select")
-                      .classList.toggle("active");
-                  }}
-                  onBlur={() => {
-                    document
-                      .querySelector(".exam_select")
-                      .classList.toggle("active");
-                  }}
-                >
-                  <div className="select-button-text">{examType}</div>
-                  <i className="bx bx-chevron-down">
-                    <ChevronDownIcon />
-                  </i>
-                </div>
-                <ul className="options">
-                  {Option.map((ele, index) => {
-                    return (
-                      <div
-                        className="option"
-                        onClick={(e) => {
-                          handleExamTypeChange(e);
-                        }}
-                        key={index}
-                      >
-                        <p className="option-text">{ele}</p>
-                      </div>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-            <div className="form-group">
               <input
                 type="file"
-                onChange={handleFile}
+                onChange={handleFileUpload}
                 id="inputFile"
                 accept=".xls,.xlsx"
                 style={{

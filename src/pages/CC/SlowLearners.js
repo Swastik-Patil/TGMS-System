@@ -120,7 +120,6 @@ function SlowLearners() {
             result.push(res);
           }
         });
-
         setData(result);
       } else {
         console.log("No data available");
@@ -146,16 +145,17 @@ function SlowLearners() {
         },
       });
 
-      set(
-        dbref(database, `StudentsData/${currUID}/observations/`),
-        observations
-      );
-
       if (response.data.items.length > 0) {
-        set(dbref(database, `StudentsData/${currUID}/facultyObservations/`), {
-          observations: observationsRef.current?.value,
-          resources: response.data.items,
-        }).then(() => {
+        set(
+          dbref(
+            database,
+            `StudentsData/${currUID}/facultyObservations/${observationsRef.current?.value}`
+          ),
+          {
+            observations: observationsRef.current?.value,
+            resources: response.data.items,
+          }
+        ).then(() => {
           onClose1();
           window.location.reload();
         });
@@ -165,6 +165,43 @@ function SlowLearners() {
     setLoading(false);
   }
 
+  async function sendNotice() {
+    let str = "https://mail.google.com/mail/?view=cm&fs=1&to=";
+    const dbRef = dbref(getDatabase());
+
+    try {
+      let arr = [];
+
+      data.forEach((ele) => {
+        arr.push(ele.admissionNo);
+      });
+
+      if (arr.length > 0) {
+        const promises = arr.map((ele) =>
+          get(child(dbRef, "/StudentsData/" + ele + "/email"))
+        );
+
+        const snapshots = await Promise.all(promises);
+
+        snapshots.forEach((snapshot) => {
+          if (snapshot.exists()) {
+            let res = snapshot.val();
+            str += String(res) + ",";
+          }
+        });
+        if (str.length > 46) {
+          window.open(str, "_blank");
+        } else {
+          throw Error("No Emails Found");
+        }
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       <Header />
@@ -172,13 +209,16 @@ function SlowLearners() {
         {data && (
           <>
             <div className="flex flex-col gap-4">
-              <div className="flex justify-between gap-3 items-end">
+              <div style={{ display: "flex", gap: "1rem" }}>
                 <Input
                   className="w-full sm:max-w-[44%]"
                   placeholder="Search by name or roll number"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
                 />
+                <Button colorScheme="blue" onClick={sendNotice}>
+                  Send Notice
+                </Button>
               </div>
             </div>
             <TableContainer>
@@ -197,7 +237,10 @@ function SlowLearners() {
                       return searchTerm === ""
                         ? ele
                         : ele.name.toLowerCase().includes(searchTerm) ||
-                            String(ele.rNo).includes(searchTerm);
+                            String(ele.rNo).includes(searchTerm) ||
+                            String(ele.studentType)
+                              .toLowerCase()
+                              .includes(searchTerm);
                     })
                     .map((ele, index) => {
                       ele["name"] = String(ele.name)
@@ -211,8 +254,17 @@ function SlowLearners() {
                           <Td>{ele.tg}</Td>
                           <Td>{ele.studentType}</Td>
                           <Td>
-                            {ele.observations ? (
-                              ele.observations
+                            {ele.facultyObservations ? (
+                              Object.keys(ele.facultyObservations).map(
+                                (key, index) => {
+                                  return (
+                                    <span key={index}>
+                                      {key}
+                                      {","}
+                                    </span>
+                                  );
+                                }
+                              )
                             ) : (
                               <Button
                                 colorScheme="blue"
